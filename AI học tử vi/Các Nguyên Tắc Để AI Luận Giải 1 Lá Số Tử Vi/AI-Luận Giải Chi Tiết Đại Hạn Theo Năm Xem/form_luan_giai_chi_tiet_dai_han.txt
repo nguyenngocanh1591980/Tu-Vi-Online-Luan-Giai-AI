@@ -1,0 +1,14 @@
+# Form Mẫu: Luận Giải Chi Tiết Đại Hạn Theo Năm Xem
+Nút 3: Luận Giải Đại Hạn Tại Năm Muốn Xem (Yêu cầu Mặc Định Lấy Dữ liệu Từ Lá Số Tử Vi(Admin) sau khi User đã Xác Nhận Thông tin Thành Công) 
+Mục tiêu: Phóng to vào chu kỳ 10 năm mà người dùng đang trải qua tại thời điểm tra cứu.
+
+Nội dung câu lệnh nạp vào Backend:
+
+"Đương số đang muốn xem vận hạn cho năm [Năm_Xem], tuổi âm lịch là [Tuổi_Âm]. Hãy tự động xác định đương số đang nằm ở Đại hạn nào (thuộc Cung nào trên lá số) và phân tích chuyên sâu.
+Yêu cầu phân tích:
+
+Môi trường Đại hạn: Đại hạn này nằm ở thế Tam hợp nào, ngũ hành sinh khắc với Bản mệnh ra sao?
+
+Đánh giá chi tiết sự tác động của Chính tinh, Cát tinh và Sát tinh tại cung Đại hạn này lên sự nghiệp, tiền tài và sức khỏe.
+
+Kết luận đây là Đại hạn Cát, Hung, hay Bình hòa. Nền tảng 10 năm này đang hỗ trợ hay cản bước đương số?"(Chữ đậm, màu đỏ)

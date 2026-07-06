@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter Web (Frontend)",
+            "request": "launch",
+            "type": "dart",
+            "cwd": "${workspaceFolder}/frontend",
+            "args": [
+                "-d",
+                "chrome"
+            ]
+        },
+        {
+            "name": ".NET Backend (Watch)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/data_service/data_service.csproj"
+            ],
+            "cwd": "${workspaceFolder}/data_service",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Chạy cả Frontend và Backend",
+            "configurations": [
+                ".NET Backend (Watch)",
+                "Flutter Web (Frontend)"
+            ]
+        }
+    ]
+}

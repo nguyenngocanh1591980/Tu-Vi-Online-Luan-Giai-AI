@@ -1,0 +1,11 @@
+// AUTO-GENERATED
+
+class BoneWeightData {
+  static const Map<String, double> yearWeight = {'Giáp Tý': 1.2, 'Bính Tý': 1.6, 'Mậu Tý': 1.5, 'Canh Tý': 0.7, 'Nhâm Tý': 0.5, 'Ất Sửu': 0.9, 'Đinh Sửu': 0.8, 'Kỷ Sửu': 0.8, 'Tân Sửu': 0.7, 'Quý Sửu': 0.5, 'Bính Dần': 0.6, 'Mậu Dần': 0.8, 'Canh Dần': 0.9, 'Nhâm Dần': 0.9, 'Giáp Dần': 0.9, 'Đinh Mão': 0.7, 'Kỷ Mão': 1.9, 'Tân Mão': 1.2, 'Quý Mão': 1.2, 'Ất Mão': 0.8, 'Mậu Thìn': 1.2, 'Canh Thìn': 1.2, 'Nhâm Thìn': 1.0, 'Giáp Thìn': 0.8, 'Bính Thìn': 0.8, 'Kỷ Tỵ': 0.5, 'Tân Tỵ': 0.6, 'Quý Tỵ': 0.7, 'Ất Tỵ': 0.7, 'Đinh Tỵ': 0.6, 'Canh Ngọ': 0.9, 'Nhâm Ngọ': 0.8, 'Giáp Ngọ': 1.5, 'Bính Ngọ': 1.3, 'Mậu Ngọ': 1.9, 'Tân Mùi': 0.8, 'Quý Mùi': 0.7, 'Ất Mùi': 0.6, 'Đinh Mùi': 0.5, 'Kỷ Mùi': 0.6, 'Nhâm Thân': 0.7, 'Giáp Thân': 0.5, 'Bính Thân': 0.5, 'Mậu Thân': 1.4, 'Canh Thân': 0.8, 'Quý Dậu': 0.8, 'Ất Dậu': 1.5, 'Đinh Dậu': 1.4, 'Kỷ Dậu': 0.5, 'Tân Dậu': 1.6, 'Giáp Tuất': 0.5, 'Bính Tuất': 0.6, 'Mậu Tuất': 1.4, 'Canh Tuất': 0.9, 'Nhâm Tuất': 1.0, 'Ất Hợi': 0.9, 'Đinh Hợi': 1.6, 'Kỷ Hợi': 0.9, 'Tân Hợi': 1.7, 'Quý Hợi': 0.7};
+  
+  static const Map<String, double> monthWeight = {'Tháng Giêng': 0.6, 'Tháng Hai': 0.7, 'Tháng Ba': 1.8, 'Tháng Tư': 0.9, 'Tháng Năm': 0.5, 'Tháng Sáu': 1.6, 'Tháng Bảy': 0.9, 'Tháng Tám': 1.5, 'Tháng Chín': 1.8, 'Tháng Mười': 1.8, 'Tháng Mười Một': 0.9, 'Tháng Chạp': 0.5};
+  
+  static const Map<String, double> dayWeight = {'Ngày mùng một': 0.5, 'Ngày mùng hai': 1.0, 'Ngày mùng ba': 0.8, 'Ngày mùng bốn': 1.5, 'Ngày mùng năm': 1.6, 'Ngày mùng sáu': 1.5, 'Ngày mùng bảy': 0.8, 'Ngày mùng tám': 1.6, 'Ngày mùng chín': 0.8, 'Ngày mùng mười': 1.6, 'Ngày mười một': 0.9, 'Ngày mười hai': 1.7, 'Ngày mười ba': 0.8, 'Ngày mười bốn': 1.7, 'Ngày mười năm': 1.0, 'Ngày mười sáu': 0.8, 'Ngày mười bảy': 0.9, 'Ngày mười tám': 1.8, 'Ngày mười chín': 0.5, 'Ngày hai mươi': 1.5, 'Ngày hai mươi mốt': 1.0, 'ngày hai mươi hai': 0.9, 'Ngày hai mươi ba': 0.8, 'Ngày hai mươi bốn': 0.9, 'Ngày hai mươi lăm': 1.5, 'Ngày hai mươi sáu': 1.8, 'Ngày hai mươi bảy': 0.7, 'Ngày hai mươi tám': 0.8, 'Ngày hai mươi chín': 1.6, 'Ngày ba mươi': 0.6};
+  
+  static const Map<String, double> hourWeight = {'Giờ Tý': 1.6, 'Giờ Sửu': 0.6, 'Giờ Dần': 0.7, 'Giờ Mẹo': 1.0, 'Giờ Thìn': 0.9, 'Giờ Tỵ': 1.6, 'Giờ Ngọ': 1.0, 'Giờ Mùi': 0.8, 'Giờ Thân': 0.8, 'Giờ Dậu': 0.9, 'Giờ Tuất': 0.6, 'Giờ Hợi': 0.6};
+}

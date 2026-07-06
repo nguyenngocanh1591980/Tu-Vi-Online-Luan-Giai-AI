@@ -1,0 +1,31 @@
+Báo cáo tổng kết lúc 2026-07-03_17-18-48
+Phát hiện các thay đổi sau:
+
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Form Hợp Đồng Đặt Lịch Xem Trực Tiếp Khách Hàng.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\form_yêu cầu file .md thành phẩm vào thư mục (agent.skills)
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\form_yêu cầu về luận giải tiểu hạn năm.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\AI-Giải Pháp Theo Năm Xem\form_giai_phap_nam.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\AI-Luận Giải Chi Tiết Đại Hạn Theo Năm Xem\form_luan_giai_chi_tiet_dai_han.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\AI-Luận Giải Các Cung Lá Số\form_luan_giai_cung.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\AI-Luận Giải Theo Năm Xem\form_luan_giai_han_nam.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\AI-Luận Giải Đại Hạn 12 Đại Hạn Lớn\form_luan_giai_dai_han_12.txt
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\00_Muc_Luc.md
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\01_Phan_Tich_Cach_Cuc.md
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\02_Y_Nghia_Cac_Sao.md
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\03_Phan_Tich_12_Cung.md
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\04_Van_Han.md
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi\Yêu cầu Chung Cho AI- Khi Thực hiện Luận Giải\05_Cac_Truong_Hop_Dac_Biet.md
+  Trạng thái: added

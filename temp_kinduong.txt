@@ -1,0 +1,3 @@
+261: 'LỘC TỒN', 'KÌNH DƯƠNG', 'ĐÀ LA', 'QUỐC ẤN', 'ĐƯỜNG PHÙ',
+573: _addStar(palaces, saoTheoCanTable[canGiapNam][1], 'L.KÌNH DƯƠNG', 'KIM', false, isLeft: false);
+699: _addStar(palaces, saoTheoCanTable[canGiapDH][1], 'L.ĐV KÌNH DƯƠNG', 'KIM', false, isLeft: false);

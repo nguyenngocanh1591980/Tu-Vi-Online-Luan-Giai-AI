@@ -1,0 +1,4 @@
+In startsWith: "if (lookupName.startsWith('L.ĐV ')) {"
+b"if (lookupName.startsWith('L.\xc4\x90V ')) {"
+In _addStar: "_addStar(palaces, saoTheoCanTable[canGiapDH][1], 'L.ĐV KÌNH DƯƠNG', 'KIM', false, isLeft: false);"
+b"_addStar(palaces, saoTheoCanTable[canGiapDH][1], 'L.\xc4\x90V K\xc3\x8cNH D\xc6\xaf\xc6\xa0NG', 'KIM', false, isLeft: false);"

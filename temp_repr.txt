@@ -1,0 +1,3 @@
+an_kinduong: 'KÌNH DƯƠNG'
+star_kinduong: 'KÌNH DƯƠNG'
+equal: True

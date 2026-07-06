@@ -1,0 +1,29 @@
+Báo cáo tổng kết lúc 2026-07-03_17-18-58
+Phát hiện các thay đổi sau:
+
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Bảng An Phạm Giờ Sinh Ý nghĩa và Cách Hóa Giải.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Bảng Cân Xương Tính Số Dựa theo Năm Tháng Ngày Sinh.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Bảng Sao Hạn Theo Tuổi Năm Xem.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Các Sao Lưu Tiểu Vận.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Các Sao Lưu Đại Vận.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Lục Thập Hoa Giáp Theo Ngũ Hành.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Quy Định Màu sắc ngũ hành.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Thứ Tự sắp xếp 83 Sao Phụ Tinh(An theo 2 cột).xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Trạng thái đắc hãm và ngũ hành của 14 chính tinh và 83 phụ tinh.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Tu vi dau so Tan Bien.docx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Tu Vi dau so toan thu.pdf
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Tính Tuổi Năm xem nằm Cung Nào.xlsx
+  Trạng thái: added
+- File: E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học\Tầng 1- Dữ Liệu Chuẩn Hóa\Xem Diễn biến vận hạn từng năm.xlsx
+  Trạng thái: added

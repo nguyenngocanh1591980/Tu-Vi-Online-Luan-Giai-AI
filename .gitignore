@@ -1,0 +1,15 @@
+node_modules/
+build/
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+*.pyc
+__pycache__/
+*.exe
+*.dll
+*.so
+*.dylib
+
+*.docx
+*.pdf

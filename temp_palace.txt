@@ -1,0 +1,16 @@
+80: 'THIÊN KHÔI', 'THIÊN VIỆT', 'TẢ PHỤ', 'HỮU BẬT', 'HÓA QUYỀN', 'HÓA KHOA', 'HÓA LỘC',
+91: 'THÁI TUẾ', 'ĐỊA KHÔNG', 'ĐỊA KIẾP', 'KÌNH DƯƠNG', 'ĐÀ LA', 'LINH TINH', 'HỎA TINH',
+92: 'HÓA KỊ', 'BẠCH HỔ', 'THIÊN HÌNH', 'KIẾP SÁT', 'THIÊN KHÔNG', 'THIÊN LA', 'ĐỊA VÕNG',
+105: // Bỏ tiền tố L.ĐV và L. để tra cứu đúng thứ tự của sao gốc
+108: if (lookupName.startsWith('L.ĐV ')) {
+131: final saoCatTinhGoc = palace.stars.where((s) => !s.isMajor && s.isLeft && !s.name.startsWith('L.') && !s.name.startsWith('L.ĐV')).toList()
+140: 'L.LỘC TỒN', 'L.KÌNH DƯƠNG', 'L.ĐÀ LA',
+146: 'L.HÓA LỘC', 'L.HÓA QUYỀN', 'L.HÓA KHOA', 'L.HÓA KỊ', 'L.HÓA KỴ'
+155: final saoCatTinhLuu = palace.stars.where((s) => !s.isMajor && s.isLeft && s.name.startsWith('L.') && !s.name.startsWith('L.ĐV') && _isAllowedLuu(s.name)).toList()
+163: final saoHungTinhGoc = palace.stars.where((s) => !s.isMajor && !s.isLeft && !s.name.startsWith('L.') && !s.name.startsWith('L.ĐV')).toList()
+171: final saoHungTinhLuu = palace.stars.where((s) => !s.isMajor && !s.isLeft && s.name.startsWith('L.') && !s.name.startsWith('L.ĐV') && _isAllowedLuu(s.name)).toList()
+179: final daiVanCat = !isFullMode ? <Star>[] : palace.stars.where((s) => !s.isMajor && s.isLeft && s.name.startsWith('L.ĐV')).toList()
+187: final daiVanHung = !isFullMode ? <Star>[] : palace.stars.where((s) => !s.isMajor && !s.isLeft && s.name.startsWith('L.ĐV')).toList()
+275: '${s.name}${s.status.isNotEmpty ? ' [${s.status}]' : ''}',
+381: '${s.name}${s.status.isNotEmpty ? ' [${s.status}]' : ''}',
+386: fontWeight: s.isMajor || s.status.isNotEmpty ? FontWeight.bold : FontWeight.normal,

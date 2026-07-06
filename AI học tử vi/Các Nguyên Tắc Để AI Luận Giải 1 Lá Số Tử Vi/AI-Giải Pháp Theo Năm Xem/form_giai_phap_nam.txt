@@ -1,0 +1,15 @@
+# Form Mẫu: Giải Pháp Theo Năm Xem
+Nút 5: Giải Pháp Hóa Giải Theo Năm Xem(Yêu cầu Mặc Định Lấy Dữ liệu Từ Lá Số Tử Vi(Admin) sau khi User đã Xác Nhận Thông tin Thành Công) 
+Mục tiêu: Đưa ra lời khuyên thiết thực, ứng dụng quan điểm "Đức năng thắng số" thay vì mê tín dị đoan.
+
+Nội dung câu lệnh nạp vào Backend:
+
+"Dựa trên các phân tích về Đại hạn và Tiểu hạn của năm [Năm_Xem], hãy đóng vai một bậc thầy cố vấn để đưa ra GIẢI PHÁP thực chiến cho đương số.
+Yêu cầu:
+
+Khuyết điểm cần tránh: Chỉ rõ những rủi ro lớn nhất trong năm nay do các Sát tinh, Kỵ tinh gây ra và hành vi nào dễ dẫn đến thất bại.
+
+Hành động chiến lược: Nên tấn công (đầu tư, khởi nghiệp) hay phòng thủ (giữ nguyên hiện trạng, trau dồi học tập)? Lĩnh vực nào nên chú trọng?
+
+Tu tâm & Phong thủy: Đề xuất các phương pháp cải vận bằng cách thay đổi tính cách, lối sống, cách quản lý tài chính hoặc ứng dụng ngũ hành môi trường sống.
+Tuyệt đối không đề xuất cúng bái mê tín hay dọa dẫm."

@@ -1,0 +1,9 @@
+## Workspace Rules
+
+1. **Quy tắc làm việc với Lá Số Tử Vi**: Mặc định, mọi yêu cầu sửa đổi, bổ sung thông tin hoặc form mẫu của người dùng đều sẽ được áp dụng cho **Lá Số Tử Vi (Admin)** (bản đầy đủ). Nếu người dùng yêu cầu sửa đổi **Lá Số Tử Vi** (bản rút gọn), AI PHẢI yêu cầu người dùng cung cấp mật khẩu. Mật khẩu chính xác là: "Ngocanh sửa". CHỈ KHI người dùng cung cấp đúng mật khẩu này trong đoạn chat thì AI mới được phép tiến hành áp dụng các thay đổi cho **Lá Số Tử Vi** (bản rút gọn).
+
+2. **Quy tắc tự động quét thư viện (10 phút/lần)**: Mặc định khi bắt đầu làm việc, AI phải thiết lập một lịch trình (bằng công cụ `schedule` với CronExpression `*/10 * * * *`) để tự động quét 2 thư mục: `E:\Tu vi online\AI học tử vi\Các Nguyên Tắc Để AI Luận Giải 1 Lá Số Tử Vi` và `E:\Tu vi online\AI học tử vi\Thư Viện cho AI Học`. Nhiệm vụ của lịch trình này là nạp kiến thức mới vào backend. Nếu có bất kỳ tệp nào không đọc được hoặc lỗi định dạng, AI phải tự động báo cáo trực tiếp trong chat để người dùng giải thích hoặc sửa đổi. Về việc lưu báo cáo:
+   - Các Báo Cáo Quét Định Kỳ (không có thay đổi dữ liệu) phải được lưu tập trung vào thư mục `E:\Tu vi online\AI học tử vi\Kiểm Tra Quá Trình Học Kiến Thức Của AI\Báo Cáo Quét Định Kỳ`.
+   - Nếu AI phát hiện có thay đổi/sửa đổi thông tin và nạp dữ liệu mới, AI phải tạo 1 Báo Cáo Tổng Kết và lưu tại 1 trong 4 thư mục con tương ứng với đường dẫn bị sửa đổi bên trong `E:\Tu vi online\AI học tử vi\Kiểm Tra Quá Trình Học Kiến Thức Của AI\...`
+
+3. **Quy tắc dọn dẹp Báo Cáo Quét Định Kỳ**: Mặc định ở mỗi lần mở máy, hệ thống sẽ kiểm tra thư mục `E:\Tu vi online\AI học tử vi\Kiểm Tra Quá Trình Học Kiến Thức Của AI\Báo Cáo Quét Định Kỳ`. Các file báo cáo đã được lưu từ 3 ngày trước (tức là ngày thứ 3 kể từ khi lưu, ví dụ lưu ngày 7 thì ngày 10 sẽ bị xóa) sẽ được tự động chuyển vào Thùng Rác (Recycle Bin) để tránh đầy rác hệ thống.

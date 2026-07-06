@@ -1,0 +1,23 @@
+@echo off
+echo Cleaning up old processes...
+taskkill /f /im data_service.exe >nul 2>&1
+taskkill /f /im APIGateway.exe >nul 2>&1
+
+echo Starting Database...
+docker-compose up -d
+
+echo Starting Data Service (Hidden)...
+start /b cmd /c "cd data_service && dotnet run >nul 2>&1"
+
+echo Starting API Gateway (Hidden)...
+start /b cmd /c "cd APIGateway_CS && dotnet run >nul 2>&1"
+
+echo Starting AI Engine (Hidden)...
+start /b cmd /c "cd AIEngine_Python && python main.py >nul 2>&1"
+
+echo Đang chờ 15 giây để Backend khởi động xong hoàn toàn...
+timeout /t 15 /nobreak
+
+echo Starting Frontend...
+cd frontend
+E:\flutter\bin\flutter.bat run -d chrome

@@ -1,0 +1,1 @@
+"_addStar(palaces, saoTheoCanTable[canGiapDH][1], 'L.ĐV KÌNH DƯƠNG', 'KIM', false, isLeft: false);"

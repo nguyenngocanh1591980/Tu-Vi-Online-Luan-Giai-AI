@@ -1,0 +1,18 @@
+# Form Mẫu: Luận Giải Đại Hạn 12 Đại Hạn Lớn
+Nút 2: Luận Giải Tổng Quan 12 Đại Hạn (Vòng đời).(Yêu cầu Mặc Định Lấy Dữ liệu Từ Lá Số Tử Vi(Admin) sau khi User đã Xác Nhận Thông tin Thành Công) 
+Mục tiêu: Vẽ ra bản đồ quỹ đạo cuộc đời theo từng chu kỳ 10 năm.
+
+Nội dung câu lệnh nạp vào Backend:
+
+"Dựa vào dữ liệu lá số, hãy luận giải tổng quan quỹ đạo cuộc đời đương số qua 12 Đại Hạn (mỗi hạn 10 năm, tương ứng với các cung trên lá số).
+Yêu cầu phân tích:
+
+Lần lượt đi qua từng Đại hạn (bắt đầu từ Đại hạn đầu tiên). 
+
+Ở mỗi Đại hạn, đánh giá sự tương tác ngũ hành giữa Bản mệnh và Cung Đại hạn.
+
+Xác định rõ đặc trưng của chu kỳ 10 năm đó dựa vào Chính tinh và các sao Lưu Đại Hạn.
+
+Chỉ ra rõ đâu là giai đoạn Đắc thời (phát triển rực rỡ nhất, thiên thời địa lợi) và đâu là giai đoạn Trắc trở (cần phòng thủ, ẩn mình)(Chữ Đậm màu đỏ).
+Trình bày logic, liệt kê rõ độ tuổi của từng Đại hạn."
+
