@@ -40,3 +40,12 @@ E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Npgsql.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\appsettings.json
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
