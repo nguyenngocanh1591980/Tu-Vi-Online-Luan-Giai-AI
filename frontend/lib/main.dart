@@ -1,39 +1,48 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'screens/chart_screen.dart';
-import 'screens/login_screen.dart';
+import 'package:frontend/screens/chart_screen.dart';
+import 'package:frontend/screens/login_screen.dart';
+
+import 'package:provider/provider.dart';
+import 'package:frontend/providers/wallet_provider.dart';
 
 void main() {
-  runZonedGuarded(() {
-    FlutterError.onError = (FlutterErrorDetails details) {
-      FlutterError.dumpErrorToConsole(details);
-      runApp(ErrorWidgetApp(errorDetails: details));
-    };
-    runApp(const MyApp());
-  }, (Object error, StackTrace stack) {
-    runApp(ErrorWidgetApp(errorDetails: FlutterErrorDetails(exception: error, stack: stack)));
-  });
-}
-
-class ErrorWidgetApp extends StatelessWidget {
-  final FlutterErrorDetails errorDetails;
-  const ErrorWidgetApp({Key? key, required this.errorDetails}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Error')),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Thiết lập ErrorWidget.builder để hiển thị lỗi ngay trên UI mà không gây crash framework
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        color: Colors.red.shade900,
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
           child: Text(
-            '${errorDetails.exceptionAsString()}\n\n${errorDetails.stack}',
-            style: TextStyle(color: Colors.red, fontSize: 14),
+            '${details.exceptionAsString()}\n\n${details.stack}',
+            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ),
       ),
     );
-  }
+  };
+
+  runZonedGuarded(() {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.dumpErrorToConsole(details);
+    };
+    
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => WalletProvider()),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  }, (Object error, StackTrace stack) {
+    print('ERROR_CAUGHT_BY_ZONE: $error');
+    print(stack);
+  });
 }
 
 class MyApp extends StatelessWidget {

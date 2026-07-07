@@ -24,6 +24,7 @@ async def run_antigravity_agent(action_type: int, la_so_json: dict, action_detai
         3: ".agents/workflows/btn3-luangiai-chitiet-daihan.md",
         4: ".agents/workflows/btn4-luangiai-nam.md",
         5: ".agents/workflows/btn5-giaiphap-nam.md",
+        6: ".agents/workflows/btn6-chot-sale-fomo.md",
     }
     
     workflow_path = workflows.get(action_type)
@@ -68,7 +69,7 @@ async def run_antigravity_agent(action_type: int, la_so_json: dict, action_detai
         error_msg = json.dumps({'error': f'Lỗi khi gọi AI: {str(e)}'}, ensure_ascii=False)
         yield f"data: {error_msg}\n\n"
 
-@app.post("/api/ai/analyze")
+@app.post("/internal/analyze")
 async def analyze_astrology(request: Request):
     data = await request.json()
     action_type = data.get("action_type")

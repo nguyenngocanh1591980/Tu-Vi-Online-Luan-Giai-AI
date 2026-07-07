@@ -80,6 +80,23 @@ app.MapGet("/weatherforecast", () =>
 app.MapAuthEndpoints(builder.Configuration);
 app.MapContractEndpoints();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<data_service.Data.AppDbContext>();
+    db.Database.EnsureCreated();
+    if (!db.Users.Any(u => u.Username == "tester_vip_001"))
+    {
+        db.Users.Add(new data_service.Models.User
+        {
+            Username = "tester_vip_001",
+            Email = "tester@vip.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
+            IsEmailConfirmed = true
+        });
+        db.SaveChanges();
+    }
+}
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'horoscope_info_screen.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -87,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HoroscopeInfoScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HoroscopeInfoScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -143,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade900, Colors.purple.shade500],
+            colors: [const Color(0xFF81D4FA), const Color(0xFF0288D1)], // Xanh da trời
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -152,12 +153,32 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Card(
+              color: const Color(0xFF1E2640), // Nền thẻ tối
               elevation: 8,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  textTheme: Theme.of(context).textTheme.apply(
+                    bodyColor: Colors.white,
+                    displayColor: Colors.white,
+                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                    labelStyle: const TextStyle(color: Colors.white),
+                    prefixIconColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white54),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -166,13 +187,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue.shade800,
+                        color: const Color(0xFFD4AF37), // Vàng Kim
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       _isLogin ? 'Đăng Nhập' : 'Đăng Ký',
-                      style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                      style: TextStyle(fontSize: 18, color: Colors.white70),
                     ),
                     SizedBox(height: 32),
                     TextField(
@@ -193,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: 'Mật khẩu',
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off, color: Colors.yellow),
                           onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                         ),
                         border: OutlineInputBorder(
@@ -234,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Xác nhận mật khẩu (*)',
                           prefixIcon: Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
+                            icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off, color: Colors.yellow),
                             onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                           ),
                           border: OutlineInputBorder(
@@ -314,9 +335,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: _isLoading ? null : _submit,
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10), // Bo góc vuông vức 10px
                           ),
-                          backgroundColor: Colors.blue.shade700,
+                          backgroundColor: const Color(0xFFC62828), // Đỏ Chu Sa
                           foregroundColor: Colors.white,
                         ),
                         child: _isLoading
@@ -338,11 +359,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         _isLogin
                             ? 'Chưa có tài khoản? Đăng ký ngay'
                             : 'Đã có tài khoản? Đăng nhập',
-                        style: TextStyle(color: Colors.blue.shade800),
+                        style: TextStyle(color: const Color(0xFFD4AF37)), // Vàng Kim
                       ),
                     )
                   ],
                 ),
+              ),
               ),
             ),
           ),

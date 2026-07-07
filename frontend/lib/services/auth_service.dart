@@ -16,7 +16,6 @@ class AuthService {
     }
     return 'http://localhost:5169/api/auth';
   }
-
   Future<String?> login(String username, String password) async {
     try {
       final response = await http.post(

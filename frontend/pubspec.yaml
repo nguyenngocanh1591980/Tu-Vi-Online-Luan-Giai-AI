@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.2.3
   lunar: ^1.7.8
   vnlunar: ^1.1.1
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

@@ -27,4 +27,16 @@ E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 E:\Tu vi online\APIGateway_CS\obj\Debug\net9.0\APIGateway_CS.csproj.AssemblyReference.cache
 E:\Tu vi online\APIGateway_CS\obj\Debug\net9.0\APIGatew.067E18E9.Up2Date
-E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
+E:\Tu vi online\APIGateway_CS\obj\Debug\net9.0\APIGateway_CS.sourcelink.json
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Npgsql.dll
+E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

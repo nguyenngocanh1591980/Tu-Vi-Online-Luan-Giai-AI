@@ -1,30 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
+import 'package:provider/provider.dart';
+import 'package:frontend/providers/wallet_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Navigate to HomeScreen without crashing', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => WalletProvider()),
+        ],
+        child: const MyApp(),
+      ),
+    );
+    
+    await tester.pumpAndSettle();
+    
+    // Fill login form
+    await tester.enterText(find.byType(TextField).first, 'testuser');
+    await tester.enterText(find.byType(TextField).last, 'password');
+    
+    // Tap login button (assume it has text 'Đăng Nhập')
+    // Wait, the button might be inside an InkWell or GestureDetector. Let's find by text.
+    final loginButton = find.widgetWithText(ElevatedButton, 'ĐĂNG NHẬP').first;
+    await tester.tap(loginButton);
+    
+    // Pump frames to allow navigation
+    await tester.pumpAndSettle();
+    
+    // Check if HomeScreen is present. HomeScreen has text 'Huyền Học Thời Đại Số'
+    expect(find.text('Huyền Học Thời Đại Số'), findsWidgets);
   });
 }
