@@ -208,22 +208,40 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
     }
   }
 
-  Widget _buildSectionTitle(String title) {
+
+  Widget _buildFormRow(String label, Widget content, {String? hint, Color labelColor = Colors.black}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 4.0),
-      child: Text(
-        title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: labelColor,
+              ),
+            ),
+          ),
+          SizedBox(width: 16),
+          content,
+          if (hint != null) ...[
+            SizedBox(width: 8),
+            Text(hint, style: TextStyle(color: Colors.grey.shade600)),
+          ]
+        ],
       ),
     );
   }
 
-  Widget _buildIndentedRow(List<Widget> children) {
+  Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
+      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
     );
   }
@@ -236,641 +254,415 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: 1200),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 900),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tử vi - Xem tử vi - Lá số tử vi - Luận giải, tư vấn tử vi trực tuyến',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.red.shade900),
+                      ),
+                      SizedBox(height: 8),
+                      Row(
                         children: [
-                          Text(
-                            'Nhập thông tin đầy đủ rồi bấm vào nút xác nhận. Sau đó có thể chia sẻ thông tin hoặc dịch vụ luận giải.',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.red),
-                          ),
-                          
-                          _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Họ tên', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            SizedBox(
-                              width: 200,
-                              child: TextFormField(
-                                controller: _nameController,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Text('(Có thể ẩn thông tin này)', style: TextStyle(color: Colors.grey.shade700)),
-                          ]),
-
-                          _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Địa chỉ', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            SizedBox(
-                              width: 200,
-                              child: TextFormField(
-                                controller: _addressController,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Text('(Chỉ mình bạn biết)', style: TextStyle(color: Colors.grey.shade700)),
-                          ]),
-
-                          _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Điện thoại', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            SizedBox(
-                              width: 200,
-                              child: TextFormField(
-                                controller: _phoneController,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Text('(Chỉ mình bạn biết)', style: TextStyle(color: Colors.grey.shade700)),
-                          ]),
-
-                                                    _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Kiểu an sao', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            Text('An Thông Thường'),
-                            Radio<String>(
-                              value: 'An Thông Thường',
-                              groupValue: _kieuAnSao,
-                              onChanged: (value) => setState(() => _kieuAnSao = value!),
-                            ),
-                            SizedBox(width: 16),
-                            Text('An Đặc Biệt'),
-                            Radio<String>(
-                              value: 'An Đặc Biệt',
-                              groupValue: _kieuAnSao,
-                              onChanged: (value) => setState(() => _kieuAnSao = value!),
-                            ),
-                          ]),
-                          SizedBox(height: 16),
-                          _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Kiểu Sinh', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            Text('Sinh Bình Thường'),
-                            Radio<String>(
-                              value: 'Sinh Bình Thường',
-                              groupValue: _kieuSinh,
-                              onChanged: (value) => setState(() => _kieuSinh = value!),
-                            ),
-                            SizedBox(width: 16),
-                            Text('Sinh Đôi Ra trước'),
-                            Radio<String>(
-                              value: 'Sinh Đôi Ra trước',
-                              groupValue: _kieuSinh,
-                              onChanged: (value) => setState(() => _kieuSinh = value!),
-                            ),
-                            SizedBox(width: 16),
-                            Text('Sinh Đôi Ra Sau'),
-                            Radio<String>(
-                              value: 'Sinh Đôi Ra Sau',
-                              groupValue: _kieuSinh,
-                              onChanged: (value) => setState(() => _kieuSinh = value!),
-                            ),
-                          ]),
-                          SizedBox(height: 16),
-_buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Giới tính', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            Text('Nam'),
-                            Radio<String>(
-                              value: 'Nam',
-                              groupValue: _gender,
-                              onChanged: (value) => setState(() => _gender = value!),
-                            ),
-                            SizedBox(width: 16),
-                            Text('Nữ'),
-                            Radio<String>(
-                              value: 'Nữ',
-                              groupValue: _gender,
-                              onChanged: (value) => setState(() => _gender = value!),
-                            ),
-                          ]),
-
-                          _buildIndentedRow([
-                            SizedBox(width: 120, child: Text('Loại lịch', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                            Text('Dương lịch:'),
-                            Radio<String>(
-                              value: 'Dương lịch',
-                              groupValue: _calendarType,
-                              onChanged: (value) => setState(() => _calendarType = value!),
-                            ),
-                            SizedBox(width: 16),
-                            Text('Âm lịch:'),
-                            Radio<String>(
-                              value: 'Âm lịch',
-                              groupValue: _calendarType,
-                              onChanged: (value) => setState(() => _calendarType = value!),
-                            ),
-                          ]),
-
-                          Padding(
-                            padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
-                            child: Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                            SizedBox(width: 120, child: Text('Ngày sinh', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                                Text('Giờ'),
-                                SizedBox(
-                                  width: 80,
-                                  child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    value: _selectedHour,
-                                    items: List.generate(24, (index) => index.toString().padLeft(2, '0'))
-                                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                        .toList(),
-                                    onChanged: (val) => setState(() => _selectedHour = val),
-                                    validator: (val) => val == null ? 'Trống' : null,
-                                  ),
-                                ),
-                                Text('Phút'),
-                                SizedBox(
-                                  width: 80,
-                                  child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    value: _selectedMinute,
-                                    items: List.generate(60, (index) => index.toString().padLeft(2, '0'))
-                                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                        .toList(),
-                                    onChanged: (val) => setState(() => _selectedMinute = val),
-                                    validator: (val) => val == null ? 'Trống' : null,
-                                  ),
-                                ),
-                                Text('Ngày'),
-                                SizedBox(
-                                  width: 80,
-                                  child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    value: _selectedDay,
-                                    items: List.generate(31, (index) => (index + 1).toString().padLeft(2, '0'))
-                                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                        .toList(),
-                                    onChanged: (val) => setState(() => _selectedDay = val),
-                                    validator: (val) => val == null ? 'Trống' : null,
-                                  ),
-                                ),
-                                Text('Tháng'),
-                                SizedBox(
-                                  width: 80,
-                                  child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    value: _selectedMonth,
-                                    items: List.generate(12, (index) => (index + 1).toString().padLeft(2, '0'))
-                                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                        .toList(),
-                                    onChanged: (val) => setState(() => _selectedMonth = val),
-                                    validator: (val) => val == null ? 'Trống' : null,
-                                  ),
-                                ),
-                                Text('Năm'),
-                                SizedBox(
-                                  width: 80,
-                                  child: TextFormField(
-                                    controller: _yearController,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                      errorStyle: TextStyle(height: 0.1),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    validator: (val) {
-                                      if (val == null || val.trim().isEmpty) return 'Trống';
-                                      final year = int.tryParse(val.trim());
-                                      if (year == null || year <= 0) return 'Sai';
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ],
+                          Icon(Icons.star_border, color: Colors.red, size: 18),
+                          SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              'Dịch vụ lấy lá số tử vi nhanh, hiệu quả, đẹp, chính xác và miễn phí. Tư vấn, luận giải tử vi bằng AI chuẩn xác. Đội ngũ Chuyên Gia Tử Vi có uy tín, xem tử vi trọn đời, vận hạn từng năm. Có thể quản lý danh sách lá số của mình và chia sẻ lá số thuận tiện.',
+                              style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
                             ),
                           ),
-
-                          Padding(
-                            padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                            SizedBox(width: 120, child: Text('Năm xem', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
-                                Text('(Nhập năm xem theo dương lịch hoặc tuổi âm lịch)'),
-                                SizedBox(height: 4),
-                                SizedBox(
-                                  width: 200,
-                                  child: TextFormField(
-                                    controller: _viewYearController,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                      border: OutlineInputBorder(),
-                                      errorStyle: TextStyle(height: 0.8),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    validator: (val) {
-                                      if (val == null || val.trim().isEmpty) return null;
-                                      final year = int.tryParse(val.trim());
-                                      if (year == null || year <= 0) return 'Phải là số nguyên dương';
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          _buildSectionTitle('Tùy chọn'),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text('Ẩn họ tên'),
-                                    Checkbox(
-                                      value: _hideName,
-                                      onChanged: (val) => setState(() => _hideName = val ?? false),
-                                    ),
-                                    SizedBox(width: 16),
-                                    Text('Ẩn ngày sinh'),
-                                    Checkbox(
-                                      value: _hideBirthday,
-                                      onChanged: (val) => setState(() => _hideBirthday = val ?? false),
-                                    ),
-                                    SizedBox(width: 16),
-                                    Text('Theo âm lịch GMT+8'),
-                                    Checkbox(
-                                      value: _lunarGmt8,
-                                      onChanged: (val) => setState(() => _lunarGmt8 = val ?? false),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Tuổi Nhâm sao Thiên Phủ hóa Khoa'),
-                                    Checkbox(
-                                      value: _tuoiNham,
-                                      onChanged: (val) => setState(() => _tuoiNham = val ?? false),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          _buildSectionTitle('Mô tả bản thân'),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 24.0, bottom: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Thông tin về hình dáng, tính tình, gia cảnh, một số vận hạn đã trải qua. Nêu câu hỏi cần giải đáp'),
-                                SizedBox(height: 8),
-                                TextFormField(
-                                  controller: _descriptionController,
-                                  maxLines: 5,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          _buildSectionTitle('Phân quyền xem'),
-                          _buildIndentedRow([
-                            SizedBox(
-                              width: 200,
-                              child: DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  border: OutlineInputBorder(),
-                                ),
-                                value: _viewPermission,
-                                items: ['Tất cả mọi người', 'Chỉ mình tôi']
-                                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                    .toList(),
-                                onChanged: (val) => setState(() => _viewPermission = val!),
-                              ),
-                            ),
-                          ]),
-
-                          _buildSectionTitle('Phân quyền luận'),
-                          _buildIndentedRow([
-                            SizedBox(
-                              width: 200,
-                              child: DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  border: OutlineInputBorder(),
-                                ),
-                                value: _discussPermission,
-                                items: ['Tất cả mọi người', 'Chỉ mình tôi']
-                                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                                    .toList(),
-                                onChanged: (val) => setState(() => _discussPermission = val!),
-                              ),
-                            ),
-                          ]),
-
-                          SizedBox(height: 32),
-                          
-                          // Bottom Buttons
-                          // Dòng 1
-                          Container(
-                            height: 70,
-                            alignment: Alignment.center,
-                            child: Wrap(
-                              spacing: 16,
-                              runSpacing: 16,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() {
-                                        _isConfirmed = true;
-                                      });
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
-                                      );
-                                    }
-                                  },
-                                  child: Text('Xác nhận'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    if (!_formKey.currentState!.validate()) return;
-                                    Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
-                                      initialIsFullMode: true,
-                                      name: _nameController.text,
-                                      gender: _gender,
-                                      calendarType: _calendarType,
-                                      hour: int.tryParse(_selectedHour ?? '0') ?? 0,
-                                      minute: int.tryParse(_selectedMinute ?? '0') ?? 0,
-                                      day: int.tryParse(_selectedDay ?? '1') ?? 1,
-                                      month: int.tryParse(_selectedMonth ?? '1') ?? 1,
-                                      year: int.tryParse(_yearController.text) ?? 2000,
-                                      viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
-                                    )));
-                                  },
-                                  child: Text('Lá Số Tử Vi (Admin)'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    if (!_formKey.currentState!.validate()) return;
-                                    Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
-                                      initialIsFullMode: false,
-                                      name: _nameController.text,
-                                      gender: _gender,
-                                      calendarType: _calendarType,
-                                      hour: int.tryParse(_selectedHour ?? '0') ?? 0,
-                                      minute: int.tryParse(_selectedMinute ?? '0') ?? 0,
-                                      day: int.tryParse(_selectedDay ?? '1') ?? 1,
-                                      month: int.tryParse(_selectedMonth ?? '1') ?? 1,
-                                      year: int.tryParse(_yearController.text) ?? 2000,
-                                      viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
-                                    )));
-                                  },
-                                  child: Text('Lá Số Tử Vi'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 48),
-                          
-                          // Dòng 2
-                          Container(
-                            height: 70,
-                            alignment: Alignment.center,
-                            child: Wrap(
-                              spacing: 16,
-                              runSpacing: 16,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 320,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (!_isConfirmed) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                        );
-                                      }
-                                    },
-                                    child: AbsorbPointer(
-                                      absorbing: !_isConfirmed,
-                                      child: DropdownButtonFormField<String>(
-                                        isExpanded: true,
-                                        decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: Colors.yellow,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        hint: Center(child: Text('AI-Luận giải Các Cung Lá Số', style: TextStyle(color: Colors.black))),
-                                        value: _selectedCung,
-                                        items: [
-                                          'Tổng Luận 12 Cung Và Cung An Thân',
-                                          'Luận Giải Cung Mệnh',
-                                          'Luận Giải Cung Phụ Mẫu',
-                                          'Luận Giải Cung Phúc Đức',
-                                          'Luận Giải Cung Điền Trạch',
-                                          'Luận Giải Cung Quan Lộc',
-                                          'Luận Giải Cung Nô bộc',
-                                          'Luận Giải Cung Thiên Di',
-                                          'Luận Giải Cung Tật Ách',
-                                          'Luận Giải Cung Tài Bạch',
-                                          'Luận Giải Cung Tử Tức',
-                                          'Luận Giải Cung Phu Thê',
-                                          'Luận Giải Cung Huynh Đệ',
-                                          'Luận Giải Cung An Thân'
-                                        ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                                        onChanged: (val) {
-                                          if (_isConfirmed && val != null) {
-                                            setState(() => _selectedCung = val);
-                                            _handleAiAction('luan_giai_cung', val);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    _handleAiAction('luan_giai_dai_han_12');
-                                  },
-                                  child: Text('AI-Luận Giải Đại Hạn 12 Đại Hạn Lớn'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    _handleAiAction('luan_giai_chi_tiet_dai_han');
-                                  },
-                                  child: Text('AI-Luận giải Chi Tiết Đại Hạn Theo Năm Xem'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 48),
-                          
-                          // Dòng 3
-                          Container(
-                            height: 70,
-                            alignment: Alignment.center,
-                            child: Wrap(
-                              spacing: 16,
-                              runSpacing: 16,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    _handleAiAction('luan_giai_han_nam');
-                                  },
-                                  child: Text('AI-Luận Giải Hạn Theo Năm Xem'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    _handleAiAction('giai_phap_nam');
-                                  },
-                                  child: Text('AI-Giải Pháp Theo Năm Xem'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                  onPressed: () {
-                                    if (!_isConfirmed) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')),
-                                      );
-                                      return;
-                                    }
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const ContractFormScreen()),
-                                    );
-                                  },
-                                  child: Text('Đặt Lịch Xem Trực Tiếp Chuyên Gia Tử Vi'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 48),
-                          
-                          // Dòng 4
-                          Container(
-                            height: 70,
-                            alignment: Alignment.center,
-                          ),
-                          SizedBox(height: 200),
                         ],
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: -16,
-                  top: -16,
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate back or close modal
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF333344),
-                        shape: BoxShape.circle,
+                      SizedBox(height: 24),
+                      Text(
+                        'Nhập thôngquan đầy đủ rồi bấm vào nút xác nhận. Sau đó có thể chia sẻ thông tin hoặc dịch vụ luận giải. Nếu muốn bạn có thể đặt lịch để xem trực tiếp từ các chuyên gia Tử Vi.',
+                        style: TextStyle(fontSize: 14, color: Colors.black87),
                       ),
-                      child: Icon(Icons.close, color: Colors.white, size: 24),
-                    ),
+                      SizedBox(height: 24),
+                      
+                      _buildFormRow(
+                        'Họ tên',
+                        SizedBox(
+                          width: 250,
+                          child: TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                          ),
+                        ),
+                        hint: '(Có thể ẩn thông tin này)',
+                      ),
+
+                      _buildFormRow(
+                        'Địa chỉ',
+                        SizedBox(
+                          width: 250,
+                          child: TextFormField(
+                            controller: _addressController,
+                            decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                          ),
+                        ),
+                        hint: '(Chỉ mình bạn biết)',
+                      ),
+
+                      _buildFormRow(
+                        'Điện thoại',
+                        SizedBox(
+                          width: 250,
+                          child: TextFormField(
+                            controller: _phoneController,
+                            decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                          ),
+                        ),
+                        hint: '(Chỉ mình bạn biết)',
+                      ),
+
+                      _buildFormRow(
+                        'Kiểu an sao',
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('An Thông Thường'),
+                            Radio<String>(value: 'An Thông Thường', groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
+                            SizedBox(width: 16),
+                            Text('An Đặc Biệt'),
+                            Radio<String>(value: 'An Đặc Biệt', groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
+                          ],
+                        ),
+                        labelColor: Colors.red,
+                      ),
+
+                      _buildFormRow(
+                        'Giới tính',
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Nam'),
+                            Radio<String>(value: 'Nam', groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
+                            SizedBox(width: 16),
+                            Text('Nữ'),
+                            Radio<String>(value: 'Nữ', groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
+                          ],
+                        ),
+                      ),
+
+                      _buildFormRow(
+                        'Kiểu Sinh',
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Sinh Bình Thường'),
+                            Radio<String>(value: 'Sinh Bình Thường', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                            SizedBox(width: 16),
+                            Text('Sinh Đôi Ra trước'),
+                            Radio<String>(value: 'Sinh Đôi Ra trước', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                            SizedBox(width: 16),
+                            Text('Sinh Đôi Ra Sau'),
+                            Radio<String>(value: 'Sinh Đôi Ra Sau', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                          ],
+                        ),
+                        labelColor: Colors.blue,
+                      ),
+
+                      _buildFormRow(
+                        'Loại lịch',
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Dương lịch:'),
+                            Radio<String>(value: 'Dương lịch', groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
+                            SizedBox(width: 16),
+                            Text('Âm lịch:'),
+                            Radio<String>(value: 'Âm lịch', groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
+                          ],
+                        ),
+                      ),
+
+                      _buildFormRow(
+                        'Ngày sinh',
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          children: [
+                            Text('Giờ'),
+                            SizedBox(
+                              width: 60,
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                value: _selectedHour,
+                                items: List.generate(24, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                onChanged: (val) => setState(() => _selectedHour = val),
+                              ),
+                            ),
+                            Text('Phút'),
+                            SizedBox(
+                              width: 60,
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                value: _selectedMinute,
+                                items: List.generate(60, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                onChanged: (val) => setState(() => _selectedMinute = val),
+                              ),
+                            ),
+                            Text('Ngày'),
+                            SizedBox(
+                              width: 60,
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                value: _selectedDay,
+                                items: List.generate(31, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                onChanged: (val) => setState(() => _selectedDay = val),
+                              ),
+                            ),
+                            Text('Tháng'),
+                            SizedBox(
+                              width: 60,
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                value: _selectedMonth,
+                                items: List.generate(12, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                onChanged: (val) => setState(() => _selectedMonth = val),
+                              ),
+                            ),
+                            Text('Năm'),
+                            SizedBox(
+                              width: 70,
+                              child: TextFormField(
+                                controller: _yearController,
+                                decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      _buildFormRow(
+                        'Năm xem',
+                        SizedBox(
+                          width: 100,
+                          child: TextFormField(
+                            controller: _viewYearController,
+                            decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        hint: '(Nhập năm xem dương lịch hoặc tuổi âm lịch)',
+                      ),
+
+                      _buildSectionTitle('Tùy chọn'),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              spacing: 24,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Row(mainAxisSize: MainAxisSize.min, children: [Text('Ẩn họ tên'), Checkbox(value: _hideName, onChanged: (val) => setState(() => _hideName = val ?? false))]),
+                                Row(mainAxisSize: MainAxisSize.min, children: [Text('Ẩn ngày sinh'), Checkbox(value: _hideBirthday, onChanged: (val) => setState(() => _hideBirthday = val ?? false))]),
+                                Row(mainAxisSize: MainAxisSize.min, children: [Text('Theo âm lịch GMT+8'), Checkbox(value: _lunarGmt8, onChanged: (val) => setState(() => _lunarGmt8 = val ?? false))]),
+                              ],
+                            ),
+                            Row(mainAxisSize: MainAxisSize.min, children: [Text('Tuổi Nhâm sao Thiên Phủ hóa Khoa'), Checkbox(value: _tuoiNham, onChanged: (val) => setState(() => _tuoiNham = val ?? false))]),
+                          ],
+                        ),
+                      ),
+
+                      _buildSectionTitle('Mô tả bản thân'),
+                      Text('Thông tin về hình dáng, tính tình, gia cảnh, một số vận hạn đã trải qua. Nêu câu hỏi cần giải đáp'),
+                      SizedBox(height: 8),
+                      TextFormField(
+                        controller: _descriptionController,
+                        maxLines: 5,
+                        decoration: InputDecoration(border: OutlineInputBorder()),
+                      ),
+
+                      _buildSectionTitle('Phân quyền xem'),
+                      SizedBox(
+                        width: 200,
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                          value: _viewPermission,
+                          items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (val) => setState(() => _viewPermission = val!),
+                        ),
+                      ),
+
+                      _buildSectionTitle('Phân quyền luận'),
+                      SizedBox(
+                        width: 200,
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                          value: _discussPermission,
+                          items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (val) => setState(() => _discussPermission = val!),
+                        ),
+                      ),
+
+                      SizedBox(height: 32),
+                      
+                      // Bottom Buttons
+                      Container(
+                        alignment: Alignment.center,
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    _isConfirmed = true;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
+                                  );
+                                }
+                              },
+                              child: Text('Xác nhận'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                              onPressed: () {
+                                if (!_isConfirmed) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
+                                  return;
+                                }
+                                if (!_formKey.currentState!.validate()) return;
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
+                                  initialIsFullMode: true, name: _nameController.text, gender: _gender, calendarType: _calendarType,
+                                  hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
+                                )));
+                              },
+                              child: Text('Lá Số Tử Vi (Admin)'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                              onPressed: () {
+                                if (!_isConfirmed) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
+                                  return;
+                                }
+                                if (!_formKey.currentState!.validate()) return;
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
+                                  initialIsFullMode: false, name: _nameController.text, gender: _gender, calendarType: _calendarType,
+                                  hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
+                                )));
+                              },
+                              child: Text('Lá Số Tử Vi'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      
+                      Container(
+                        alignment: Alignment.center,
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 320,
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (!_isConfirmed) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
+                                },
+                                child: AbsorbPointer(
+                                  absorbing: !_isConfirmed,
+                                  child: DropdownButtonFormField<String>(
+                                    isExpanded: true,
+                                    decoration: InputDecoration(filled: true, fillColor: Colors.yellow, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                    hint: Center(child: Text('AI-Luận giải Các Cung Lá Số', style: TextStyle(color: Colors.black))),
+                                    value: _selectedCung,
+                                    items: ['Tổng Luận 12 Cung Và Cung An Thân', 'Luận Giải Cung Mệnh', 'Luận Giải Cung Phụ Mẫu', 'Luận Giải Cung Phúc Đức', 'Luận Giải Cung Điền Trạch', 'Luận Giải Cung Quan Lộc', 'Luận Giải Cung Nô bộc', 'Luận Giải Cung Thiên Di', 'Luận Giải Cung Tật Ách', 'Luận Giải Cung Tài Bạch', 'Luận Giải Cung Tử Tức', 'Luận Giải Cung Phu Thê', 'Luận Giải Cung Huynh Đệ', 'Luận Giải Cung An Thân'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                    onChanged: (val) {
+                                      if (_isConfirmed && val != null) {
+                                        setState(() => _selectedCung = val);
+                                        _handleAiAction('luan_giai_cung', val);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
+                              onPressed: () {
+                                if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
+                                _handleAiAction('luan_giai_dai_han_12');
+                              },
+                              child: Text('AI-Luận Giải Đại Hạn 12 Đại Hạn Lớn'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
+                              onPressed: () {
+                                if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
+                                _handleAiAction('luan_giai_chi_tiet_dai_han');
+                              },
+                              child: Text('AI-Luận giải Chi Tiết Đại Hạn Theo Năm Xem'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      
+                      Container(
+                        alignment: Alignment.center,
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
+                              onPressed: () {
+                                if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
+                                _handleAiAction('luan_giai_han_nam');
+                              },
+                              child: Text('AI-Luận Giải Hạn Theo Năm Xem'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
+                              onPressed: () {
+                                if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
+                                _handleAiAction('giai_phap_nam');
+                              },
+                              child: Text('AI-Giải Pháp Theo Năm Xem'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Chức năng đặt lịch đang được phát triển.')));
+                              },
+                              child: Text('Đặt Lịch Xem Trực Tiếp Chuyên Gia Tử Vi'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
