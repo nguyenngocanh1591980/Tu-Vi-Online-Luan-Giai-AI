@@ -11,6 +11,9 @@ class HoroscopeInfoScreen extends StatefulWidget {
 }
 
 class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
+  String _kieuSinh = 'Sinh Bình Thường';
+  String _kieuAnSao = 'An Thông Thường';
+
   final _formKey = GlobalKey<FormState>();
   
   // Form controllers and state variables
@@ -254,8 +257,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.red),
                           ),
                           
-                          _buildSectionTitle('Họ tên'),
                           _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Họ tên', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                             SizedBox(
                               width: 200,
                               child: TextFormField(
@@ -271,8 +274,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             Text('(Có thể ẩn thông tin này)', style: TextStyle(color: Colors.grey.shade700)),
                           ]),
 
-                          _buildSectionTitle('Địa chỉ'),
                           _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Địa chỉ', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                             SizedBox(
                               width: 200,
                               child: TextFormField(
@@ -288,8 +291,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             Text('(Chỉ mình bạn biết)', style: TextStyle(color: Colors.grey.shade700)),
                           ]),
 
-                          _buildSectionTitle('Điện thoại'),
                           _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Điện thoại', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                             SizedBox(
                               width: 200,
                               child: TextFormField(
@@ -305,8 +308,49 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             Text('(Chỉ mình bạn biết)', style: TextStyle(color: Colors.grey.shade700)),
                           ]),
 
-                          _buildSectionTitle('Giới tính'),
+                                                    _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Kiểu an sao', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
+                            Text('An Thông Thường'),
+                            Radio<String>(
+                              value: 'An Thông Thường',
+                              groupValue: _kieuAnSao,
+                              onChanged: (value) => setState(() => _kieuAnSao = value!),
+                            ),
+                            SizedBox(width: 16),
+                            Text('An Đặc Biệt'),
+                            Radio<String>(
+                              value: 'An Đặc Biệt',
+                              groupValue: _kieuAnSao,
+                              onChanged: (value) => setState(() => _kieuAnSao = value!),
+                            ),
+                          ]),
+                          SizedBox(height: 16),
                           _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Kiểu Sinh', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
+                            Text('Sinh Bình Thường'),
+                            Radio<String>(
+                              value: 'Sinh Bình Thường',
+                              groupValue: _kieuSinh,
+                              onChanged: (value) => setState(() => _kieuSinh = value!),
+                            ),
+                            SizedBox(width: 16),
+                            Text('Sinh Đôi Ra trước'),
+                            Radio<String>(
+                              value: 'Sinh Đôi Ra trước',
+                              groupValue: _kieuSinh,
+                              onChanged: (value) => setState(() => _kieuSinh = value!),
+                            ),
+                            SizedBox(width: 16),
+                            Text('Sinh Đôi Ra Sau'),
+                            Radio<String>(
+                              value: 'Sinh Đôi Ra Sau',
+                              groupValue: _kieuSinh,
+                              onChanged: (value) => setState(() => _kieuSinh = value!),
+                            ),
+                          ]),
+                          SizedBox(height: 16),
+_buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Giới tính', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                             Text('Nam'),
                             Radio<String>(
                               value: 'Nam',
@@ -322,8 +366,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             ),
                           ]),
 
-                          _buildSectionTitle('Loại lịch'),
                           _buildIndentedRow([
+                            SizedBox(width: 120, child: Text('Loại lịch', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                             Text('Dương lịch:'),
                             Radio<String>(
                               value: 'Dương lịch',
@@ -339,7 +383,6 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             ),
                           ]),
 
-                          _buildSectionTitle('Ngày sinh'),
                           Padding(
                             padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
                             child: Wrap(
@@ -347,6 +390,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                               runSpacing: 8,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
+                            SizedBox(width: 120, child: Text('Ngày sinh', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                                 Text('Giờ'),
                                 SizedBox(
                                   width: 80,
@@ -439,12 +483,12 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             ),
                           ),
 
-                          _buildSectionTitle('Năm xem'),
                           Padding(
                             padding: const EdgeInsets.only(left: 24.0, bottom: 8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                            SizedBox(width: 120, child: Text('Năm xem', style: TextStyle(fontWeight: FontWeight.bold))), SizedBox(width: 16),
                                 Text('(Nhập năm xem theo dương lịch hoặc tuổi âm lịch)'),
                                 SizedBox(height: 4),
                                 SizedBox(
