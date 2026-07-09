@@ -663,6 +663,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
             ),
           ),
         ),
+        ),
       );
   }
 }
