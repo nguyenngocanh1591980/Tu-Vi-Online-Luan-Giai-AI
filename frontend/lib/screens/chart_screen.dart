@@ -13,6 +13,8 @@ import 'package:vnlunar/vnlunar.dart';
 import '../utils/lunar_utils.dart';
 import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 import '../utils/chart_generator.dart';
+import '../utils/pdf_generator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class ChartScreen extends StatefulWidget {
   final bool initialIsFullMode;
   final String name;
@@ -46,14 +48,30 @@ class ChartScreen extends StatefulWidget {
 class _ChartScreenState extends State<ChartScreen> {
   late ChartData mockData;
   late bool isFullMode;
+  String _userRole = 'User';
   final GlobalKey _chartKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    isFullMode = widget.initialIsFullMode;
+    isFullMode = false; // Default to false
+    _loadRole();
     _generateChartData();
     _updateOrientation(isFullMode);
+  }
+
+  Future<void> _loadRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userRole = prefs.getString('role') ?? 'User';
+      if ((_userRole == 'Admin' || _userRole == 'Expert') && widget.initialIsFullMode) {
+        isFullMode = true;
+      } else {
+        isFullMode = false;
+      }
+      _updateOrientation(isFullMode);
+      _generateChartData();
+    });
   }
 
   void _updateOrientation(bool fullMode) {
@@ -85,7 +103,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void _generateChartData() {
     mockData = ChartGenerator.generate(
-      isFullMode: widget.initialIsFullMode,
+      isFullMode: isFullMode,
       name: widget.name,
       gender: widget.gender,
       calendarType: widget.calendarType,
@@ -102,75 +120,15 @@ class _ChartScreenState extends State<ChartScreen> {
     try {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đang chuẩn bị trang in, vui lòng chờ trong giây lát...')),
+          const SnackBar(content: Text('Đang tạo bản in PDF, vui lòng chờ...')),
         );
       }
       
       await Future.delayed(const Duration(milliseconds: 100));
 
-      RenderRepaintBoundary boundary = _chartKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 1.5);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final isAdmin = _userRole == 'Admin' || _userRole == 'Expert';
+      await PdfGenerator.printChart(mockData, isAdmin: isAdmin);
 
-      final doc = pw.Document();
-      final pdfImage = pw.MemoryImage(pngBytes);
-      
-      final font = await PdfGoogleFonts.robotoRegular();
-      
-      final now = DateTime.now();
-      int h = now.hour % 12;
-      if (h == 0) h = 12;
-      final amPm = now.hour >= 12 ? 'PM' : 'AM';
-      final dateStr = '${now.month}/${now.day}/${now.year.toString().substring(2)}, $h:${now.minute.toString().padLeft(2, '0')} $amPm';
-      
-      final titleStr = 'Lá số tử vi : ${widget.name} • Tử Vi Online-Luận Giải AI';
-      final urlStr = 'https://lyso.vn/lasotuvi.php?lid=TS41YXRK&act=xem&nx=${widget.viewYear}';
-
-      doc.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(32),
-          build: (pw.Context context) {
-            return pw.Column(
-              children: [
-                // Header
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(dateStr, style: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.black)),
-                    pw.Text(titleStr, style: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.black)),
-                  ]
-                ),
-                pw.SizedBox(height: 10),
-                
-                // Body image
-                pw.Expanded(
-                  child: pw.Center(
-                    child: pw.Image(pdfImage),
-                  ),
-                ),
-                
-                pw.SizedBox(height: 10),
-                
-                // Footer
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(urlStr, style: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.black)),
-                    pw.Text('${context.pageNumber}/${context.pagesCount}', style: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.black)),
-                  ]
-                ),
-              ],
-            );
-          },
-        ),
-      );
-
-      await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => doc.save(),
-        name: 'La_So_Tu_Vi.pdf',
-      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -201,37 +159,43 @@ class _ChartScreenState extends State<ChartScreen> {
             constraints: const BoxConstraints(maxWidth: 1200), // Max width for web
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (widget.initialIsFullMode) ...[
+                if (_userRole == 'Admin' || _userRole == 'Expert')
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: isFullMode ? Colors.red.shade900 : Colors.grey.shade300,
                           foregroundColor: isFullMode ? Colors.white : Colors.black,
                         ),
                         onPressed: () {
-                          setState(() => isFullMode = true);
+                          setState(() {
+                            isFullMode = true;
+                            _generateChartData();
+                          });
                           _updateOrientation(true);
                         },
                         child: const Text('Lá Số Tử Vi (Admin)', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       const SizedBox(width: 16),
-                    ],
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: !isFullMode ? Colors.red.shade900 : Colors.grey.shade300,
-                        foregroundColor: !isFullMode ? Colors.white : Colors.black,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: !isFullMode ? Colors.red.shade900 : Colors.grey.shade300,
+                          foregroundColor: !isFullMode ? Colors.white : Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isFullMode = false;
+                            _generateChartData();
+                          });
+                          _updateOrientation(false);
+                        },
+                        child: const Text('Lá Số Tử Vi', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                      onPressed: () {
-                        setState(() => isFullMode = false);
-                        _updateOrientation(false);
-                      },
-                      child: const Text('Lá Số Tử Vi', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                    ],
+                  ),
+                if (_userRole == 'Admin' || _userRole == 'Expert')
+                  const SizedBox(height: 16),
                 RepaintBoundary(
                   key: _chartKey,
                   child: TuViChart(data: mockData, isFullMode: isFullMode),

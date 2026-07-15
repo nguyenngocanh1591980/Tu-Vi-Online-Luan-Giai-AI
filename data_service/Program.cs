@@ -4,14 +4,37 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using data_service.Services;
+using DotNetEnv;
+
+Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"));
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddSingleton<ISignalRService, SignalRService>();
+builder.Services.AddHttpClient<IAiEngineClientService, AiEngineClientService>();
 
 // Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("UserRateLimit", context =>
+    {
+        var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
+        return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(userId, _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 1,
+            Window = TimeSpan.FromSeconds(2),
+            QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        });
+    });
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
 builder.Services.AddDbContext<data_service.Data.AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -38,9 +61,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.SetIsOriginAllowed(origin => true) // Bắt buộc cho SignalR khi dùng Credentials
                   .AllowAnyMethod()
-                  .AllowAnyHeader();
+                  .AllowAnyHeader()
+                  .AllowCredentials();
         });
 });
 
@@ -77,8 +101,12 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.UseRateLimiter();
 app.MapAuthEndpoints(builder.Configuration);
 app.MapContractEndpoints();
+app.MapHoroscopeEndpoints();
+app.MapControllers();
+app.MapHub<data_service.Hubs.TuViHub>("/tuvihub");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -91,11 +119,34 @@ using (var scope = app.Services.CreateScope())
             Username = "tester_vip_001",
             Email = "tester@vip.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-            IsEmailConfirmed = true
+            IsEmailVerified = true,
+            Role = "User"
         });
-        db.SaveChanges();
     }
+
+    var rootAdmin = db.Users.FirstOrDefault(u => u.Username == "admin");
+    if (rootAdmin == null)
+    {
+        db.Users.Add(new data_service.Models.User
+        {
+            Username = "admin",
+            Email = "nguyenngocanh.1591980@gmail.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Ngocanh@admin1"), // Mật khẩu root admin
+            IsEmailVerified = true,
+            Role = "Admin"
+        });
+    }
+    else
+    {
+        // Cơ chế Khóa Bất tử: luôn ép lại Role Admin cho root_admin
+        rootAdmin.Role = "Admin";
+        rootAdmin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Ngocanh@admin1");
+    }
+
+    db.SaveChanges();
 }
+
+app.MapUserEndpoints();
 
 app.Run();
 

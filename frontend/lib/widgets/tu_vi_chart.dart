@@ -23,15 +23,21 @@ class TuViChart extends StatelessWidget {
       return data.palaces.firstWhere((p) => p.index == index, orElse: () => data.palaces[0]);
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Cố gắng giữ tỷ lệ khổ A4 ngang hoặc vuông (tuỳ màn hình)
-        // Trừ đi 4 pixel cho viền (2 border * 2 pixel) để không bị overflow
-        final cellWidth = (constraints.maxWidth - 4) / 4;
-        // Cố gắng giữ tỷ lệ khổ A4 dọc (297 / 210 = 1.414)
-        final cellHeight = isFullMode ? cellWidth * (297 / 210) : cellWidth * 1.2;
-        
-        return Container(
+    // Kích thước Canvas Ảo
+    const double virtualWidth = 1200.0;
+    // Bù trừ 4 pixel viền cho 2 bên (trái, phải)
+    final double cellWidth = (virtualWidth - 4) / 4;
+    final double cellHeight = isFullMode ? cellWidth * (297 / 210) : cellWidth * 1.2;
+    // Bù trừ 4 pixel viền cho 2 bên (trên, dưới)
+    final double virtualHeight = (cellHeight * 4) + 4;
+
+    return AspectRatio(
+      aspectRatio: virtualWidth / virtualHeight,
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Container(
+          width: virtualWidth,
+          height: virtualHeight,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 2),
           ),
@@ -96,8 +102,8 @@ class TuViChart extends StatelessWidget {
               if (getPalace(10).tuanTriet.isNotEmpty) _buildTuanTrietBox(getPalace(10).tuanTriet, cellWidth * 3.5, cellHeight * 3),
             ],
           ),
-        );
-      }
+        ),
+      ),
     );
   }
 
@@ -120,7 +126,7 @@ class TuViChart extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 13, fontFamily: 'Arial', color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontFamily: 'Arial', color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
       ),

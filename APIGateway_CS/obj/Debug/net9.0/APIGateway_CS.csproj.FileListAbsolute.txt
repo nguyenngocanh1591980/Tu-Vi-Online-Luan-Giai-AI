@@ -49,3 +49,4 @@ E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 E:\Tu vi online\APIGateway_CS\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+E:\Tu vi online\APIGateway_CS\obj\Debug\net9.0\swae.build.ex.cache

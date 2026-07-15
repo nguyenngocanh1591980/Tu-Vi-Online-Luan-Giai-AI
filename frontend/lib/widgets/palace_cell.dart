@@ -219,7 +219,7 @@ class PalaceCell extends StatelessWidget {
                           child: Text(
                             palace.cungChi.isNotEmpty ? palace.cungChi : palace.branch,
                             style: TextStyle(
-                              fontSize: isFullMode ? 10 : 11,
+                              fontSize: isFullMode ? 13 : 14,
                               fontFamily: 'Arial',
                               color: _getBranchColor(palace.branch),
                               fontWeight: FontWeight.bold,
@@ -231,7 +231,7 @@ class PalaceCell extends StatelessWidget {
                           child: Text(
                             _getBranchElementPolarity(palace.branch),
                             style: TextStyle(
-                              fontSize: isFullMode ? 10 : 11,
+                              fontSize: isFullMode ? 13 : 14,
                               fontFamily: 'Arial',
                               color: _getBranchColor(palace.branch),
                               fontWeight: FontWeight.bold,
@@ -248,7 +248,7 @@ class PalaceCell extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         isFullMode ? palace.name : palace.name.replaceFirst('CUNG ', ''),
-                        style: TextStyle(fontSize: isFullMode ? 13 : 14, fontFamily: 'Arial', color: Colors.blue.shade800, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: isFullMode ? 16 : 17, fontFamily: 'Arial', color: Colors.blue.shade800, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -260,7 +260,7 @@ class PalaceCell extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                         color: Colors.black,
-                        child: Text(palace.daiHan, style: TextStyle(fontSize: isFullMode ? 9 : 10, fontFamily: 'Arial', color: Colors.white, fontWeight: FontWeight.bold)),
+                        child: Text(palace.daiHan, style: TextStyle(fontSize: isFullMode ? 12 : 13, fontFamily: 'Arial', color: Colors.white, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
@@ -277,7 +277,7 @@ class PalaceCell extends StatelessWidget {
                       Text(
                         '${majorStars[i].name}${majorStars[i].status.isNotEmpty ? ' [${majorStars[i].status}]' : ''}',
                         style: TextStyle(
-                          fontSize: isFullMode ? 13 : 14,
+                          fontSize: isFullMode ? 16 : 17,
                           fontFamily: 'Arial',
                           fontWeight: FontWeight.bold,
                           color: _getElementColor(majorStars[i].element)
@@ -287,7 +287,7 @@ class PalaceCell extends StatelessWidget {
                       Text(
                         '\u00A0', // Non-breaking space to reserve exact line height
                         style: TextStyle(
-                          fontSize: isFullMode ? 13 : 14,
+                          fontSize: isFullMode ? 16 : 17,
                           fontFamily: 'Arial',
                           fontWeight: FontWeight.bold,
                         ),
@@ -297,7 +297,7 @@ class PalaceCell extends StatelessWidget {
                       Text(
                         '${majorStars[i].name}${majorStars[i].status.isNotEmpty ? ' [${majorStars[i].status}]' : ''}',
                         style: TextStyle(
-                          fontSize: isFullMode ? 13 : 14,
+                          fontSize: isFullMode ? 16 : 17,
                           fontFamily: 'Arial',
                           fontWeight: FontWeight.bold,
                           color: _getElementColor(majorStars[i].element)
@@ -390,9 +390,9 @@ class PalaceCell extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(isFullMode ? palace.cornerLeft : palace.cornerLeft.replaceFirst('Năm ', 'năm '), style: TextStyle(fontSize: isFullMode ? 10 : 11, fontFamily: 'Arial', color: _getBranchColor(palace.cornerLeft), fontWeight: FontWeight.bold)),
-                    Text(palace.vongNhanSinh, style: TextStyle(fontSize: isFullMode ? 10 : 11, fontFamily: 'Arial', color: _getVongNhanSinhColor(palace.vongNhanSinhElement), fontStyle: isFullMode ? FontStyle.italic : FontStyle.normal, fontWeight: FontWeight.bold)),
-                    Text(isFullMode ? palace.thangSinh : palace.thangSinh.toLowerCase(), style: TextStyle(fontSize: isFullMode ? 10 : 11, fontFamily: 'Arial', color: isFullMode ? Colors.black : Colors.black54, fontWeight: FontWeight.bold)),
+                    Text(isFullMode ? palace.cornerLeft : palace.cornerLeft.replaceFirst('Năm ', 'năm '), style: TextStyle(fontSize: isFullMode ? 13 : 14, fontFamily: 'Arial', color: _getBranchColor(palace.cornerLeft), fontWeight: FontWeight.bold)),
+                    Text(palace.vongNhanSinh, style: TextStyle(fontSize: isFullMode ? 13 : 14, fontFamily: 'Arial', color: _getVongNhanSinhColor(palace.vongNhanSinhElement), fontStyle: isFullMode ? FontStyle.italic : FontStyle.normal, fontWeight: FontWeight.bold)),
+                    Text(isFullMode ? palace.thangSinh : palace.thangSinh.toLowerCase(), style: TextStyle(fontSize: isFullMode ? 13 : 14, fontFamily: 'Arial', color: isFullMode ? Colors.black : Colors.black54, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -410,7 +410,7 @@ class PalaceCell extends StatelessWidget {
       child: Text(
         '${s.name}${s.status.isNotEmpty ? ' [${s.status}]' : ''}',
         style: TextStyle(
-          fontSize: isFullMode ? 9 : 11, 
+          fontSize: isFullMode ? 12 : 14, 
           fontFamily: 'Arial',
           color: _getElementColor(s.element),
           fontWeight: s.isMajor || s.status.isNotEmpty ? FontWeight.bold : FontWeight.normal,
@@ -448,7 +448,7 @@ class PalaceCell extends StatelessWidget {
               TextSpan(
                 text: '${parts[0]}:',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 14,
                   fontFamily: 'Arial',
                   color: textColor,
                   fontWeight: FontWeight.bold,
@@ -457,7 +457,7 @@ class PalaceCell extends StatelessWidget {
               TextSpan(
                 text: parts.sublist(1).join(':'),
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 14,
                   fontFamily: 'Arial',
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -479,7 +479,7 @@ class PalaceCell extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 11,
+          fontSize: 14,
           fontFamily: 'Arial',
           color: textColor,
           fontWeight: FontWeight.bold,
@@ -507,7 +507,7 @@ class PalaceCell extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 13,
           fontFamily: 'Arial',
           color: _getPhiHoaColor(text),
         ),

@@ -128,3 +128,6 @@ E:\Tu vi online\data_service\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.
 E:\Tu vi online\data_service\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 E:\Tu vi online\data_service\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 E:\Tu vi online\data_service\obj\Debug\net9.0\data_service.sourcelink.json
+E:\Tu vi online\data_service\obj\Debug\net9.0\swae.build.ex.cache
+E:\Tu vi online\data_service\bin\Debug\net9.0\DotNetEnv.dll
+E:\Tu vi online\data_service\bin\Debug\net9.0\Superpower.dll

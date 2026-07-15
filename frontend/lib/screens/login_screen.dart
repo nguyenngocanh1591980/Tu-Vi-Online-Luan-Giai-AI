@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'horoscope_info_screen.dart';
 import 'home_screen.dart';
+import 'forgot_password_screen.dart';
+import 'terms_screen.dart';
+import 'waiting_verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  final bool initialIsLogin;
+  
+  const LoginScreen({Key? key, this.initialIsLogin = true}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -19,35 +26,62 @@ class _LoginScreenState extends State<LoginScreen> {
   final _addressController = TextEditingController();
   DateTime? _selectedDate;
   bool _isLoading = false;
-  bool _isLogin = true;
+  late bool _isLogin;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   int _passwordStrength = 0;
+  bool _hasMinLength = false;
+  bool _hasUpper = false;
+  bool _hasLower = false;
+  bool _hasNumber = false;
+  bool _hasSpecial = false;
+  bool _rememberMe = false;
+  bool _hideOnlineStatus = false;
+  int _loginFails = 0;
 
   @override
   void initState() {
     super.initState();
+    _isLogin = widget.initialIsLogin;
     _passwordController.addListener(_updatePasswordStrength);
   }
 
   void _updatePasswordStrength() {
     final password = _passwordController.text;
     if (password.isEmpty) {
-      setState(() => _passwordStrength = 0);
+      setState(() {
+        _passwordStrength = 0;
+        _hasMinLength = false;
+        _hasUpper = false;
+        _hasLower = false;
+        _hasNumber = false;
+        _hasSpecial = false;
+      });
       return;
     }
     
-    bool hasLetters = RegExp(r'[a-zA-Z]').hasMatch(password);
-    bool hasNumbers = RegExp(r'[0-9]').hasMatch(password);
-    bool hasSpecialChars = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
-    
-    if (password.length >= 8 && hasLetters && hasNumbers && hasSpecialChars) {
-      setState(() => _passwordStrength = 3);
-    } else if (password.length >= 6 && hasLetters && hasNumbers) {
-      setState(() => _passwordStrength = 2);
-    } else {
-      setState(() => _passwordStrength = 1);
-    }
+    setState(() {
+      _hasMinLength = password.length >= 8;
+      _hasUpper = RegExp(r'[A-Z]').hasMatch(password);
+      _hasLower = RegExp(r'[a-z]').hasMatch(password);
+      _hasNumber = RegExp(r'\d').hasMatch(password);
+      _hasSpecial = RegExp(r'[^\da-zA-Z]').hasMatch(password);
+      
+      int strength = 0;
+      if (_hasMinLength) strength++;
+      if (_hasUpper) strength++;
+      if (_hasLower) strength++;
+      if (_hasNumber) strength++;
+      if (_hasSpecial) strength++;
+      
+      if (strength == 5) {
+        _passwordStrength = 3;
+      } else if (strength >= 3) {
+        _passwordStrength = 2;
+      } else {
+        _passwordStrength = 1;
+      }
+    });
   }
 
   Future<void> _submit() async {
@@ -63,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (!_isLogin && _passwordStrength < 2) {
+    if (!_isLogin && (_passwordStrength < 3 || !_hasMinLength || !_hasUpper || !_hasLower || !_hasNumber || !_hasSpecial)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mật khẩu quá yếu. Vui lòng chọn mật khẩu mức độ Trung bình trở lên.')),
+        SnackBar(content: Text('Mật khẩu chưa đạt tiêu chuẩn bảo mật. Vui lòng kiểm tra lại.')),
       );
       return;
     }
@@ -84,16 +118,50 @@ class _LoginScreenState extends State<LoginScreen> {
         final errorMsg = await _authService.login(username, password);
         if (errorMsg == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Đăng nhập thành công! Vui lòng điền thông tin lá số.')),
+            SnackBar(
+              backgroundColor: const Color(0xFFC62828),
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              content: Text(
+                'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
+                style: const TextStyle(
+                  color: Color(0xFFD4AF37),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMsg)),
-          );
+          _loginFails++;
+          if (_loginFails >= 3) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Đăng nhập sai 3 lần. Đang chuyển hướng về diễn đàn chính.')),
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          } else {
+            if (errorMsg.contains('chưa kích hoạt')) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(errorMsg),
+                  backgroundColor: Colors.deepOrange.shade600,
+                  duration: const Duration(seconds: 4),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$errorMsg (Lần $_loginFails/3)')),
+              );
+            }
+          }
         }
       } else {
         final errorMsg = await _authService.register(
@@ -106,12 +174,9 @@ class _LoginScreenState extends State<LoginScreen> {
           address: _addressController.text.trim(),
         );
         if (errorMsg == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Đăng ký thành công! Vui lòng điền thông tin lá số.')),
-          );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const WaitingVerificationScreen()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -183,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Tử Vi Online',
+                      'Tử Vi Online-AI',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -192,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      _isLogin ? 'Đăng Nhập' : 'Đăng Ký',
+                      _isLogin ? 'Đăng Nhập' : 'Đăng Ký Thành Viên Diễn Đàn',
                       style: TextStyle(fontSize: 18, color: Colors.white70),
                     ),
                     SizedBox(height: 32),
@@ -233,20 +298,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           Expanded(child: Container(height: 4, color: _passwordStrength >= 3 ? Colors.green : Colors.grey.shade300)),
                         ],
                       ),
-                      SizedBox(height: 4),
-                      if (_passwordStrength > 0)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _passwordStrength == 1 ? 'Yếu (Cần ít nhất 6 ký tự gồm chữ và số)' :
-                            _passwordStrength == 2 ? 'Trung bình' : 'Mạnh',
-                            style: TextStyle(
-                              color: _passwordStrength == 1 ? Colors.red :
-                                     _passwordStrength == 2 ? Colors.orange : Colors.green,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
+                      SizedBox(height: 8),
+                      _buildCheckListItem('Tối thiểu 8 ký tự', _hasMinLength),
+                      _buildCheckListItem('Ít nhất 1 chữ viết hoa (A-Z)', _hasUpper),
+                      _buildCheckListItem('Ít nhất 1 chữ viết thường (a-z)', _hasLower),
+                      _buildCheckListItem('Ít nhất 1 số (0-9)', _hasNumber),
+                      _buildCheckListItem('Ít nhất 1 ký tự đặc biệt (!@#\$...)', _hasSpecial),
                       SizedBox(height: 16),
                       TextField(
                         controller: _confirmPasswordController,
@@ -322,7 +379,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _selectedDate == null
                                 ? 'Chọn ngày sinh'
                                 : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
                       ),
@@ -351,9 +408,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
-                        setState(() {
-                          _isLogin = !_isLogin;
-                        });
+                        if (_isLogin) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const TermsScreen()),
+                          );
+                        } else {
+                          setState(() {
+                            _isLogin = true;
+                          });
+                        }
                       },
                       child: Text(
                         _isLogin
@@ -361,7 +425,94 @@ class _LoginScreenState extends State<LoginScreen> {
                             : 'Đã có tài khoản? Đăng nhập',
                         style: TextStyle(color: const Color(0xFFD4AF37)), // Vàng Kim
                       ),
-                    )
+                    ),
+                    if (_isLogin) ...[
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                          );
+                        },
+                        child: const Text('Quên tên đăng nhập / Mật khẩu?', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('Gửi lại email kích hoạt tài khoản', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Theme(
+                            data: ThemeData(unselectedWidgetColor: Colors.white70),
+                            child: Checkbox(
+                              value: _rememberMe,
+                              onChanged: (val) {
+                                setState(() => _rememberMe = val ?? false);
+                              },
+                              activeColor: const Color(0xFFD4AF37),
+                            ),
+                          ),
+                          const Text('Ghi nhớ tôi', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Theme(
+                            data: ThemeData(unselectedWidgetColor: Colors.white70),
+                            child: Checkbox(
+                              value: _hideOnlineStatus,
+                              onChanged: (val) {
+                                setState(() => _hideOnlineStatus = val ?? false);
+                              },
+                              activeColor: const Color(0xFFD4AF37),
+                            ),
+                          ),
+                          const Text('Ẩn trạng thái trực tuyến', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE0E0E0),
+                              foregroundColor: Colors.black,
+                              side: const BorderSide(color: Colors.grey),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            ),
+                            child: const Text('Facebook'),
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE0E0E0),
+                              foregroundColor: Colors.black,
+                              side: const BorderSide(color: Colors.grey),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            ),
+                            child: const Text('Google'),
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE0E0E0),
+                              foregroundColor: Colors.black,
+                              side: const BorderSide(color: Colors.grey),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            ),
+                            child: const Text('Zalo'),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -384,4 +535,28 @@ class _LoginScreenState extends State<LoginScreen> {
     _addressController.dispose();
     super.dispose();
   }
+  
+  Widget _buildCheckListItem(String text, bool isChecked) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Row(
+        children: [
+          Icon(
+            isChecked ? Icons.check_circle : Icons.cancel,
+            color: isChecked ? Colors.greenAccent : Colors.grey,
+            size: 16,
+          ),
+          SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              color: isChecked ? Colors.greenAccent : Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+

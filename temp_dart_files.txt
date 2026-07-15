@@ -1,3 +1,0 @@
-frontend/lib\AI học tử vi\an_hon_100_sao_bang_dart_co_the_chinh_sua.dart
-frontend/lib\AI học tử vi\star_data.dart
-frontend/lib\widgets\palace_cell.dart

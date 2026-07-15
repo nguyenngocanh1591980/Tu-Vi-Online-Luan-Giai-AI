@@ -23,6 +23,17 @@ class Star {
     'isItalic': isItalic,
     'isLeft': isLeft,
   };
+
+  factory Star.fromJson(Map<String, dynamic> json) {
+    return Star(
+      name: json['name'] ?? '',
+      status: json['status'] ?? '',
+      element: json['element'] ?? '',
+      isMajor: json['isMajor'] ?? false,
+      isItalic: json['isItalic'] ?? false,
+      isLeft: json['isLeft'] ?? true,
+    );
+  }
 }
 
 class Palace {
@@ -124,6 +135,30 @@ class Palace {
     'canChiNam': canChiNam,
     'canChiDaiHan': canChiDaiHan,
   };
+
+  factory Palace.fromJson(Map<String, dynamic> json) {
+    return Palace(
+      name: json['name'] ?? '',
+      branch: json['branch'] ?? '',
+      stem: json['stem'] ?? '',
+      element: json['element'] ?? '',
+      index: json['index'] ?? 0,
+      stars: (json['stars'] as List?)?.map((s) => Star.fromJson(s)).toList() ?? [],
+      tuanTriet: json['tuanTriet'] ?? '',
+      daiHan: json['daiHan'] ?? '',
+      cungChi: json['cungChi'] ?? '',
+      nguHanhCung: json['nguHanhCung'] ?? '',
+      vongNhanSinh: json['vongNhanSinh'] ?? '',
+      vongNhanSinhElement: json['vongNhanSinhElement'] ?? '',
+      thangSinh: json['thangSinh'] ?? '',
+      daiVanStars: (json['daiVanStars'] as List?)?.map((s) => Star.fromJson(s)).toList(),
+      saoLuuStars: (json['saoLuuStars'] as List?)?.map((s) => Star.fromJson(s)).toList(),
+      phiHoaLeft: (json['phiHoaLeft'] as List?)?.map((e) => e.toString()).toList(),
+      phiHoaRight: (json['phiHoaRight'] as List?)?.map((e) => e.toString()).toList(),
+      canChiNam: json['canChiNam'] ?? '',
+      canChiDaiHan: json['canChiDaiHan'] ?? '',
+    );
+  }
 }
 
 class NativeInfo {
@@ -265,6 +300,46 @@ class NativeInfo {
     'tuoiAmNam': tuoiAmNam,
     'tuoiDaiVan': tuoiDaiVan,
   };
+
+  factory NativeInfo.fromJson(Map<String, dynamic> json) {
+    return NativeInfo(
+      name: json['name'] ?? '',
+      birthYearStr: json['birthYearStr'] ?? '',
+      birthMonthStr: json['birthMonthStr'] ?? '',
+      birthDayStr: json['birthDayStr'] ?? '',
+      birthTimeStr: json['birthTimeStr'] ?? '',
+      lunarMonthStr: json['lunarMonthStr'] ?? '',
+      lunarDayStr: json['lunarDayStr'] ?? '',
+      lunarTimeStr: json['lunarTimeStr'] ?? '',
+      yearStemBranch: json['yearStemBranch'] ?? '',
+      monthStemBranch: json['monthStemBranch'] ?? '',
+      dayStemBranch: json['dayStemBranch'] ?? '',
+      timeStemBranch: json['timeStemBranch'] ?? '',
+      lunarYear: json['lunarYear'] ?? '',
+      gender: json['gender'] ?? '',
+      yinYang: json['yinYang'] ?? '',
+      element: json['element'] ?? '',
+      destiny: json['destiny'] ?? '',
+      lifeRule: json['lifeRule'] ?? '',
+      destinyLord: json['destinyLord'] ?? '',
+      bodyLord: json['bodyLord'] ?? '',
+      thanCu: json['thanCu'] ?? '',
+      boneWeight: json['boneWeight'] ?? '',
+      solarAge: json['solarAge'] ?? 0,
+      lunarAge: json['lunarAge'] ?? 0,
+      viewingYear: json['viewingYear'] ?? '',
+      timeViolation: json['timeViolation'] ?? '',
+      elementMeaning: json['elementMeaning'] ?? '',
+      viewingYearElement: json['viewingYearElement'] ?? '',
+      viewingYearStar: json['viewingYearStar'] ?? '',
+      smallLimitPalace: json['smallLimitPalace'] ?? '',
+      annualSmallLimitPalace: json['annualSmallLimitPalace'] ?? '',
+      daiVanPalace: json['daiVanPalace'] ?? '',
+      luuNienCung: json['luuNienCung'] ?? '',
+      tuoiAmNam: json['tuoiAmNam'] ?? 0,
+      tuoiDaiVan: json['tuoiDaiVan'] ?? 0,
+    );
+  }
 }
 
 class ChartData {
@@ -277,4 +352,11 @@ class ChartData {
     'native': native.toJson(),
     'palaces': palaces.map((p) => p.toJson()).toList(),
   };
+
+  factory ChartData.fromJson(Map<String, dynamic> json) {
+    return ChartData(
+      native: NativeInfo.fromJson(json['native']),
+      palaces: (json['palaces'] as List).map((p) => Palace.fromJson(p)).toList(),
+    );
+  }
 }

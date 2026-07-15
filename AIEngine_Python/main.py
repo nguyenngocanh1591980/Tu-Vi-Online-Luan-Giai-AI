@@ -4,6 +4,10 @@ import asyncio
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Nạp file .env từ thư mục gốc
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_API_KEY_HERE")
 genai.configure(api_key=API_KEY)
@@ -79,6 +83,41 @@ async def analyze_astrology(request: Request):
     return StreamingResponse(
         run_antigravity_agent(action_type, la_so_json, action_detail), 
         media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive"
+        }
+    )
+
+async def stream_gemini_analysis(action_type: str, laso_data: dict, target_language: str):
+    system_instruction = f"Dựa vào dữ liệu lá số Tử Vi này, hãy luận giải chi tiết 12 cung bằng ngôn ngữ {target_language}. Hãy đóng vai một chuyên gia chiêm tinh học phương Đông."
+    model = genai.GenerativeModel(
+        model_name='gemini-2.5-flash', # Sử dụng 2.5 flash cho tốc độ nhanh (hoặc gemini-pro tùy chọn)
+        system_instruction=system_instruction
+    )
+    user_prompt = f"Yêu cầu: {action_type}\nDữ liệu lá số: {json.dumps(laso_data, ensure_ascii=False)}"
+
+    try:
+        response = await model.generate_content_async(user_prompt, stream=True)
+        async for chunk in response:
+            if chunk.text:
+                yield chunk.text
+        yield "[DONE]"
+    except Exception as e:
+        yield f"\n\n[LỖI AI ENGINE]: {str(e)}"
+
+@app.post("/api/v1/analyze/stream")
+async def analyze_stream(request: Request):
+    data = await request.json()
+    
+    # Lấy payload đúng với những gì C# gửi sang
+    action_type = data.get("action_type", "")
+    laso_data = data.get("laso_data", {})
+    target_language = data.get("target_language", "vi")
+
+    return StreamingResponse(
+        stream_gemini_analysis(action_type, laso_data, target_language),
+        media_type="text/plain",
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive"

@@ -42,8 +42,8 @@ class CenterInfo extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(flex: 22, child: Text('Phạm Giờ:', style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
-                                Expanded(flex: 78, child: Text(info.timeViolation.isEmpty ? 'Không phạm giờ xấu' : info.timeViolation, style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
+                                Expanded(flex: 22, child: Text('Phạm Giờ:', style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
+                                Expanded(flex: 78, child: Text(info.timeViolation.isEmpty ? 'Không phạm giờ xấu' : info.timeViolation, style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
                               ],
                             ),
                           ),
@@ -71,10 +71,10 @@ class CenterInfo extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(flex: 40, child: Text('Tuổi Năm Xem', style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
-                                Expanded(flex: 12, child: Text('', textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold))),
-                                Expanded(flex: 20, child: Text('${info.tuoiAmNam} Tuổi', textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
-                                Expanded(flex: 28, child: Text(info.annualSmallLimitPalace, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
+                                Expanded(flex: 40, child: Text('Tuổi Năm Xem', style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
+                                Expanded(flex: 12, child: Text('', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold))),
+                                Expanded(flex: 20, child: Text('${info.tuoiAmNam} Tuổi', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
+                                Expanded(flex: 28, child: Text(info.annualSmallLimitPalace, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: Colors.red))),
                               ],
                             ),
                           ),
@@ -150,12 +150,12 @@ class CenterInfo extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Theo Đại Vận', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
+                          const Text('Theo Đại Vận', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
                           const SizedBox(height: 2),
                           ..._buildTheoDaiVanList(context),
                           
                           const SizedBox(height: 8),
-                          const Text('Theo Tiểu Vận', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
+                          const Text('Theo Tiểu Vận', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
                           const SizedBox(height: 2),
                           ..._buildTheoTieuVanList(context),
                         ],
@@ -170,10 +170,12 @@ class CenterInfo extends StatelessWidget {
           // Footer
           Container(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 16, bottom: 8),
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: const Text(
               'Credit By: Nguyễn Ngọc Anh. Liên hệ Giải Đoán Lá số : 0867.186.288', 
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.black)
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -293,7 +295,7 @@ class CenterInfo extends StatelessWidget {
         text,
         textAlign: textAlign,
         style: TextStyle(
-          fontSize: 11, 
+          fontSize: 14, 
           fontFamily: 'Arial', 
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           color: color ?? Colors.black,
@@ -324,14 +326,14 @@ class CenterInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (onlyCol2) ...[
-            Expanded(flex: 45, child: Text(col1, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col1Color))),
-            Expanded(flex: 55, child: Text(col2, textAlign: TextAlign.left, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col2Color)))
+            Expanded(flex: 45, child: Text(col1, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col1Color))),
+            Expanded(flex: 55, child: Text(col2, textAlign: TextAlign.left, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col2Color)))
           ] else ...[
-            Expanded(flex: 28, child: Text(col1, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col1Color))),
-            Expanded(flex: 12, child: Text(col2, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col2Color))),
-            Expanded(flex: 12, child: Text(col3, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col3Color))),
-            Expanded(flex: 20, child: Text(col4, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col4Color))),
-            Expanded(flex: 28, child: Text(col5, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col5Color))),
+            Expanded(flex: 28, child: Text(col1, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col1Color))),
+            Expanded(flex: 12, child: Text(col2, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col2Color))),
+            Expanded(flex: 12, child: Text(col3, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col3Color))),
+            Expanded(flex: 20, child: Text(col4, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col4Color))),
+            Expanded(flex: 28, child: Text(col5, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold, color: col5Color))),
           ]
         ],
       ),
@@ -447,7 +449,7 @@ class CenterInfo extends StatelessWidget {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Các sao L.ĐV tại $col2', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  title: Text('Các sao L.ĐV tại $col2', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                   content: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,7 +462,7 @@ class CenterInfo extends StatelessWidget {
                           child: Text(
                             sName,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: _getColorFromElement(s.element),
                             ),
@@ -484,7 +486,7 @@ class CenterInfo extends StatelessWidget {
             child: Text(
               firstStarName,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 13,
                 fontFamily: 'Arial',
                 fontWeight: FontWeight.bold,
                 color: _getColorFromElement(firstStar.element),
@@ -507,7 +509,7 @@ class CenterInfo extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text(col1, style: const TextStyle(fontSize: 10, fontFamily: 'Arial', fontWeight: FontWeight.bold))
+                    child: Text(col1, style: const TextStyle(fontSize: 13, fontFamily: 'Arial', fontWeight: FontWeight.bold))
                   )
                 )
               ),
@@ -518,7 +520,7 @@ class CenterInfo extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text(col2, style: const TextStyle(fontSize: 10, fontFamily: 'Arial', fontWeight: FontWeight.bold))
+                    child: Text(col2, style: const TextStyle(fontSize: 13, fontFamily: 'Arial', fontWeight: FontWeight.bold))
                   )
                 )
               ),
@@ -585,7 +587,7 @@ class CenterInfo extends StatelessWidget {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Các sao Lưu tại $col2', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  title: Text('Các sao Lưu tại $col2', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                   content: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,7 +599,7 @@ class CenterInfo extends StatelessWidget {
                           child: Text(
                             sName,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: _getColorFromElement(s.element),
                             ),
@@ -621,7 +623,7 @@ class CenterInfo extends StatelessWidget {
             child: Text(
               firstStarName,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 13,
                 fontFamily: 'Arial',
                 fontWeight: FontWeight.bold,
                 color: _getColorFromElement(firstStar.element),
@@ -644,7 +646,7 @@ class CenterInfo extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text(col1, style: const TextStyle(fontSize: 10, fontFamily: 'Arial', fontWeight: FontWeight.bold))
+                    child: Text(col1, style: const TextStyle(fontSize: 13, fontFamily: 'Arial', fontWeight: FontWeight.bold))
                   )
                 )
               ),
@@ -655,7 +657,7 @@ class CenterInfo extends StatelessWidget {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text(col2, style: const TextStyle(fontSize: 10, fontFamily: 'Arial', fontWeight: FontWeight.bold))
+                    child: Text(col2, style: const TextStyle(fontSize: 13, fontFamily: 'Arial', fontWeight: FontWeight.bold))
                   )
                 )
               ),
@@ -715,7 +717,7 @@ class CenterInfo extends StatelessWidget {
               children: 'Lá\nSố\nTử\nVi\nLuận\nGiải\nAI'.split('\n').map((word) => Text(
                 word,
                 style: GoogleFonts.unifrakturMaguntia(
-                  fontSize: 26,
+                  fontSize: 29,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
                 ),
@@ -729,7 +731,7 @@ class CenterInfo extends StatelessWidget {
             bottom: 14,
             child: Text(
               'Credit By: Nguyễn Ngọc Anh. Liên hệ Giải Đoán Lá số : 0867.186.288',
-              style: TextStyle(fontSize: 13, fontFamily: 'Arial', color: Colors.red),
+              style: TextStyle(fontSize: 16, fontFamily: 'Arial', color: Colors.red),
               textAlign: TextAlign.center,
             ),
           ),
@@ -745,8 +747,8 @@ class CenterInfo extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 130, child: Text(label, style: TextStyle(fontSize: 21, fontFamily: 'Arial', fontWeight: FontWeight.w600, color: labelColor))),
-          Expanded(child: Text(value, style: TextStyle(fontSize: 21, fontFamily: 'Arial', color: valueColor, fontWeight: isBold ? FontWeight.bold : FontWeight.normal))),
+          SizedBox(width: 130, child: Text(label, style: TextStyle(fontSize: 24, fontFamily: 'Arial', fontWeight: FontWeight.w600, color: labelColor))),
+          Expanded(child: Text(value, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: valueColor, fontWeight: isBold ? FontWeight.bold : FontWeight.normal))),
         ],
       ),
     );
@@ -778,11 +780,11 @@ class CenterInfo extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 0.0),
-          child: Text(label, style: const TextStyle(fontSize: 21, fontFamily: 'Arial', fontWeight: FontWeight.bold)),
+          child: Text(label, style: const TextStyle(fontSize: 24, fontFamily: 'Arial', fontWeight: FontWeight.bold)),
         ),
-        Text(col1, style: TextStyle(fontSize: 21, fontFamily: 'Arial', color: Colors.indigo.shade900)),
-        Text(col2, style: TextStyle(fontSize: 21, fontFamily: 'Arial', color: Colors.indigo.shade900)),
-        Text(col3, style: TextStyle(fontSize: 21, fontFamily: 'Arial', color: Colors.indigo.shade900)),
+        Text(col1, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: Colors.indigo.shade900)),
+        Text(col2, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: Colors.indigo.shade900)),
+        Text(col3, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: Colors.indigo.shade900)),
       ],
     );
   }

@@ -13,3 +13,11 @@ __pycache__/
 
 *.docx
 *.pdf
+
+# --- Security & Environment Variables ---
+.env
+.env.development
+.env.production
+.env.local
+.env.test
+*.env

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../widgets/action_and_comment_widget.dart';
+import '../widgets/tu_vi_chart.dart';
+import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 import '../utils/chart_generator.dart';
-import '../screens/contract_form_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/horoscope_provider.dart';
+import '../models/saved_chart_model.dart';
+import '../models/chart_model.dart';
 import 'chart_screen.dart';
+import '../screens/contract_form_screen.dart';
 import 'create_post_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class HoroscopeInfoScreen extends StatefulWidget {
   @override
   _HoroscopeInfoScreenState createState() => _HoroscopeInfoScreenState();
@@ -27,11 +36,37 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   String _gender = 'Nam';
   String _calendarType = 'Dương lịch';
   
+  SavedChartModel? _quickViewData;
+  bool _isSubmitting = false;
+
+  String _userRole = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRole();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HoroscopeProvider>().fetchHoroscopes();
+    });
+  }
+
+  Future<void> _loadRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userRole = prefs.getString('role') ?? 'User';
+    });
+  }
+
   String? _selectedHour;
   String? _selectedMinute;
   String? _selectedDay;
   String? _selectedMonth;
 
+  String? _selectedDateError;
+  String? _selectedTimeError;
+  String? _nameErrorText;
+
+  // Track if user has confirmed to hide inputs
   bool _hideName = false;
   bool _hideBirthday = false;
   bool _lunarGmt8 = false;
@@ -287,7 +322,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Container(
-              constraints: BoxConstraints(maxWidth: 1000),
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -320,9 +355,10 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // LEFT SIDEBAR
-                        Container(
-                          width: 220,
-                          padding: EdgeInsets.only(right: 24),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(right: 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -359,9 +395,82 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                 ]
                               ),
                               SizedBox(height: 24),
-                              Text('ngocanh2', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade900)),
-                              SizedBox(height: 4),
-                              Text('11:10 09/07/2026 [Tử vi]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                              Consumer<HoroscopeProvider>(
+                                builder: (context, provider, child) {
+                                  if (provider.isLoading) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                                  if (provider.horoscopes.isEmpty) {
+                                    return Text('Chưa có lá số nào');
+                                  }
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: provider.horoscopes.length > 5 ? 5 : provider.horoscopes.length,
+                                    itemBuilder: (context, index) {
+                                      final chart = provider.horoscopes[index];
+                                      final dateStr = "${chart.createdAt.hour.toString().padLeft(2, '0')}:${chart.createdAt.minute.toString().padLeft(2, '0')} ${chart.createdAt.day.toString().padLeft(2, '0')}/${chart.createdAt.month.toString().padLeft(2, '0')}/${chart.createdAt.year}";
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 12.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _quickViewData = chart;
+                                                });
+                                              },
+                                              child: Text(chart.chartName, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade900, decoration: TextDecoration.underline)),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Wrap(
+                                              spacing: 4.0,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    try {
+                                                      Navigator.push(context, MaterialPageRoute(
+                                                        builder: (context) => ChartScreen(
+                                                          initialIsFullMode: true,
+                                                          name: chart.chartName,
+                                                          gender: chart.gender,
+                                                          calendarType: 'Dương lịch',
+                                                          hour: chart.dob.hour,
+                                                          minute: chart.dob.minute,
+                                                          day: chart.dob.day,
+                                                          month: chart.dob.month,
+                                                          year: chart.dob.year,
+                                                          viewYear: DateTime.now().year,
+                                                        )
+                                                      ));
+                                                    } catch(e) {
+                                                      print(e);
+                                                    }
+                                                  },
+                                                  child: Text('$dateStr [Tử vi]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // Placeholder cho Bình Giải AI
+                                                  },
+                                                  child: Text('[Bình Giải AI]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    // Placeholder cho Đặt Lịch Xem
+                                                  },
+                                                  child: Text('[Đặt Lịch Xem]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                ),
+                                              ],
+                                            ),
+                                          ]
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                               SizedBox(height: 12),
                               Row(
                                 children: [
@@ -377,11 +486,53 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             ]
                           )
                         ),
+                        ),
                         
                         // RIGHT FORM
                         Expanded(
-                          child: Form(
-                            key: _formKey,
+                          flex: 3,
+                          child: _quickViewData != null 
+                            ? SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Xem nhanh lá số: ${_quickViewData!.chartName}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                                        IconButton(
+                                          icon: Icon(Icons.close, color: Colors.red),
+                                          onPressed: () => setState(() => _quickViewData = null),
+                                        ),
+                                      ]
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 16.0),
+                                      child: TuViChart(
+                                        data: ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData)),
+                                        isFullMode: _userRole == 'Admin' || _userRole == 'Expert',
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
+                                      child: ActionAndCommentWidget(
+                                        chartId: _quickViewData!.id,
+                                        chartName: _quickViewData!.chartName,
+                                        onNewChart: () {
+                                          setState(() => _quickViewData = null);
+                                        },
+                                        onEditChart: () {
+                                          // Placeholder for edit chart
+                                        },
+                                        onDeleteChart: () {
+                                          // Placeholder for delete chart
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Form(
+                                key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -397,7 +548,17 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 250,
                                     child: TextFormField(
                                       controller: _nameController,
-                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                      onChanged: (val) {
+                                        if (_nameErrorText != null) {
+                                          setState(() => _nameErrorText = null);
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        errorText: _nameErrorText,
+                                        isDense: true, 
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
+                                        border: OutlineInputBorder()
+                                      ),
                                     ),
                                   ),
                                   hint: '(Có thể ẩn thông tin này)',
@@ -631,33 +792,84 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     children: [
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                        onPressed: () {
+                                        onPressed: _isSubmitting ? null : () async {
                                           if (_formKey.currentState!.validate()) {
                                             setState(() {
-                                              _isConfirmed = true;
+                                              _isSubmitting = true;
                                             });
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
-                                            );
+                                            try {
+                                              final hour = int.tryParse(_selectedHour ?? '0') ?? 0;
+                                              final minute = int.tryParse(_selectedMinute ?? '0') ?? 0;
+                                              final day = int.tryParse(_selectedDay ?? '1') ?? 1;
+                                              final month = int.tryParse(_selectedMonth ?? '1') ?? 1;
+                                              final year = int.tryParse(_yearController.text) ?? DateTime.now().year;
+                                              final viewYear = int.tryParse(_viewYearController.text) ?? DateTime.now().year;
+
+                                              final chartData = ChartGenerator.generate(
+                                                isFullMode: true,
+                                                name: _nameController.text,
+                                                gender: _gender,
+                                                calendarType: _calendarType,
+                                                hour: hour,
+                                                minute: minute,
+                                                day: day,
+                                                month: month,
+                                                year: year,
+                                                viewYear: viewYear,
+                                              );
+                                              
+                                              final dob = DateTime(year, month, day, hour, minute);
+
+                                              await context.read<HoroscopeProvider>().createHoroscope(
+                                                _nameController.text,
+                                                _gender,
+                                                dob,
+                                                chartData
+                                              );
+
+                                              setState(() {
+                                                _isConfirmed = true;
+                                              });
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
+                                              );
+                                            } catch (e) {
+                                              if (e.toString().contains('đã tồn tại')) {
+                                                setState(() => _nameErrorText = e.toString().replaceFirst('Exception: ', ''));
+                                              } else {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text('Lỗi: $e'), backgroundColor: Colors.red.shade900),
+                                                );
+                                              }
+                                            } finally {
+                                              if (mounted) {
+                                                setState(() {
+                                                  _isSubmitting = false;
+                                                });
+                                              }
+                                            }
                                           }
                                         },
-                                        child: Text('Xác nhận'),
+                                        child: _isSubmitting 
+                                            ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                                            : Text('Xác nhận'),
                                       ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                        onPressed: () {
-                                          if (!_isConfirmed) {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
-                                            return;
-                                          }
-                                          if (!_formKey.currentState!.validate()) return;
-                                          Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
-                                            initialIsFullMode: true, name: _nameController.text, gender: _gender, calendarType: _calendarType,
-                                            hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
-                                          )));
-                                        },
-                                        child: Text('Lá Số Tử Vi (Admin)'),
-                                      ),
+                                      if (_userRole == 'Admin' || _userRole == 'Expert')
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade900, foregroundColor: Colors.white),
+                                          onPressed: () {
+                                            if (!_isConfirmed) {
+                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
+                                              return;
+                                            }
+                                            if (!_formKey.currentState!.validate()) return;
+                                            Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
+                                              initialIsFullMode: true, name: _nameController.text, gender: _gender, calendarType: _calendarType,
+                                              hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
+                                            )));
+                                          },
+                                          child: Text('Lá Số Tử Vi (Admin)'),
+                                        ),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
                                         onPressed: () {

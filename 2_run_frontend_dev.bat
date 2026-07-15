@@ -1,5 +1,9 @@
 @echo off
 cd /d "%~dp0"
+
+REM Doc bien moi truong tu file .env
+FOR /F "eol=# tokens=1,* delims==" %%A IN (.env) DO set %%A=%%B
+
 title Tu Vi Online - Frontend Dev Server (Web-Server)
 
 echo ========================================================
@@ -20,6 +24,6 @@ echo ========================================================
 cd frontend
 
 REM Thu chay bang lenh flutter (neu da co trong PATH), neu khong thi dung duong dan E:\flutter\bin\flutter.bat
-flutter run -d chrome || call E:\flutter\bin\flutter.bat run -d chrome
+flutter run -d chrome --web-port=%FRONTEND_PORT% --dart-define-from-file=../.env || call E:\flutter\bin\flutter.bat run -d chrome --web-port=%FRONTEND_PORT% --dart-define-from-file=../.env
 
 pause

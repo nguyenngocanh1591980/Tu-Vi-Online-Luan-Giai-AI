@@ -42,6 +42,9 @@ dependencies:
   lunar: ^1.7.8
   vnlunar: ^1.1.1
   provider: ^6.1.5+1
+  confetti: ^0.7.0
+  signalr_netcore: ^1.4.4
+  flutter_markdown: ^0.7.7+1
 
 dev_dependencies:
   flutter_test:
