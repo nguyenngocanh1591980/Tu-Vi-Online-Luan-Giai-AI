@@ -320,7 +320,7 @@ class PalaceCell extends StatelessWidget {
                           children: [
                             // Col 1 (Left): Cát Tinh
                             Expanded(
-                              flex: 10,
+                              flex: 14,
                               child: SingleChildScrollView(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,11 +336,11 @@ class PalaceCell extends StatelessWidget {
                             ),
                             
                             // Col 2 (Middle Space)
-                            const Spacer(flex: 10),
+                            const SizedBox(width: 4),
                               
                             // Col 3 (Right): Hung Tinh
                             Expanded(
-                              flex: 10,
+                              flex: 14,
                               child: SingleChildScrollView(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,9 +363,9 @@ class PalaceCell extends StatelessWidget {
                         const SizedBox(height: 15), // 1 line gap
                         Row(
                           children: [
-                            const Spacer(flex: 10),
+                            const Spacer(flex: 1),
                             Expanded(
-                              flex: 10,
+                              flex: 28,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +375,7 @@ class PalaceCell extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Spacer(flex: 10),
+                            const Spacer(flex: 1),
                           ],
                         ),
                       ],
@@ -407,16 +407,20 @@ class PalaceCell extends StatelessWidget {
     if (s.name.isEmpty) return const SizedBox(height: 10);
     return Padding(
       padding: const EdgeInsets.only(bottom: 2),
-      child: Text(
-        '${s.name}${s.status.isNotEmpty ? ' [${s.status}]' : ''}',
-        style: TextStyle(
-          fontSize: isFullMode ? 12 : 14, 
-          fontFamily: 'Arial',
-          color: _getElementColor(s.element),
-          fontWeight: s.isMajor || s.status.isNotEmpty ? FontWeight.bold : FontWeight.normal,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Text(
+          '${s.name}${s.status.isNotEmpty ? ' [${s.status}]' : ''}',
+          style: TextStyle(
+            fontSize: isFullMode ? 12 : 14, 
+            fontFamily: 'Arial',
+            color: _getElementColor(s.element),
+            fontWeight: s.isMajor || s.status.isNotEmpty ? FontWeight.bold : FontWeight.normal,
+          ),
+          maxLines: 1,
+          softWrap: false,
         ),
-        maxLines: 1,
-        overflow: TextOverflow.visible,
       ),
     );
   }

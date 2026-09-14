@@ -1,0 +1,144 @@
+{
+  "solar_date": "3 tháng 9 năm 2026",
+  "lunar_date": "22/7 t",
+  "weekday": "Thứ năm",
+  "lunar_day": 22,
+  "lunar_month": 7,
+  "lunar_year": 2026,
+  "lunar_month_is_leap": false,
+  "year_stem_branch": "Bính Ngọ",
+  "month_stem_branch": "Bính Thân",
+  "day_stem_branch": "Canh Thìn",
+  "sao_28": "Sao -Khuê trực +Thành",
+  "tiet_khi": "Bạch Lộ: 21:41 07/09 - Thu Phân: 07:09 23/09",
+  "sao_tot": [
+    "Nhân Chuyên",
+    "Thiên Hỉ",
+    "Thiên Tài",
+    "Tục Thế",
+    "Tam Hợp",
+    "Vượng Nhật",
+    "Kim Quỹ Hoàng Đạo",
+    "Thiên Quý",
+    "Mẫu Thương"
+  ],
+  "sao_xau": [
+    "Địa Hỏa",
+    "Nguyệt Yếm Đại Họa",
+    "Phi Liêm",
+    "Huyết Kị",
+    "Trùng Tang",
+    "Cô Thần",
+    "Tam Nương",
+    "Thần Hào",
+    "Phi Liêm Đại Sát",
+    "Hỏa tai"
+  ],
+  "dong_1_gio_xuat_hanh": [
+    {
+      "chi": "Tý",
+      "time": "23h - 01h",
+      "que": "Xích Khẩu",
+      "quality": "Hung",
+      "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+    },
+    {
+      "chi": "Sửu",
+      "time": "01h - 03h",
+      "que": "Tiểu Cát",
+      "quality": "Cát",
+      "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+    },
+    {
+      "chi": "Dần",
+      "time": "03h - 05h",
+      "que": "Không Vong",
+      "quality": "Hung",
+      "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+    },
+    {
+      "chi": "Mão",
+      "time": "05h - 07h",
+      "que": "Đại An",
+      "quality": "Cát",
+      "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+    },
+    {
+      "chi": "Thìn",
+      "time": "07h - 09h",
+      "que": "Tốc Hỷ",
+      "quality": "Cát",
+      "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+    },
+    {
+      "chi": "Tỵ",
+      "time": "09h - 11h",
+      "que": "Lưu Niên",
+      "quality": "Hung",
+      "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+    },
+    {
+      "chi": "Ngọ",
+      "time": "11h - 13h",
+      "que": "Xích Khẩu",
+      "quality": "Hung",
+      "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+    },
+    {
+      "chi": "Mùi",
+      "time": "13h - 15h",
+      "que": "Tiểu Cát",
+      "quality": "Cát",
+      "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+    },
+    {
+      "chi": "Thân",
+      "time": "15h - 17h",
+      "que": "Không Vong",
+      "quality": "Hung",
+      "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+    },
+    {
+      "chi": "Dậu",
+      "time": "17h - 19h",
+      "que": "Đại An",
+      "quality": "Cát",
+      "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+    },
+    {
+      "chi": "Tuất",
+      "time": "19h - 21h",
+      "que": "Tốc Hỷ",
+      "quality": "Cát",
+      "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+    },
+    {
+      "chi": "Hợi",
+      "time": "21h - 23h",
+      "que": "Lưu Niên",
+      "quality": "Hung",
+      "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+    }
+  ],
+  "dong_2_gio_hoang_hac_dao": {
+    "hoang_dao": [
+      "Giờ Dần (03h - 05h)",
+      "Giờ Thìn (07h - 09h)",
+      "Giờ Tỵ (09h - 11h)",
+      "Giờ Thân (15h - 17h)",
+      "Giờ Dậu (17h - 19h)",
+      "Giờ Hợi (21h - 23h)"
+    ],
+    "hac_dao": [
+      "Giờ Tý (23h - 01h)",
+      "Giờ Sửu (01h - 03h)",
+      "Giờ Mão (05h - 07h)",
+      "Giờ Ngọ (11h - 13h)",
+      "Giờ Mùi (13h - 15h)",
+      "Giờ Tuất (19h - 21h)"
+    ]
+  },
+  "dong_3_truc": "Trực Thành",
+  "dong_4_ngay_ky": "Ngày 03-09-2026 là ngày Cát lành.",
+  "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Bính Ngọ Thiên Hà Thủy\nNgày: Canh Thìn; tức Can Chi tương đồng (Kim), là ngày cát.\nNạp âm: Bạch Lạp Kim kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Kim khắc hành Hỏa.\nNgày Thìn lục hợp Dậu, tam hợp Thân và Tý thành Thủy cục. Xung Tuất, hình Thìn, hại Mão, phá Sửu, tuyệt Tỵ."
+}

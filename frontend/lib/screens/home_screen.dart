@@ -10,6 +10,8 @@ import 'package:confetti/confetti.dart';
 import 'login_screen.dart';
 import 'terms_screen.dart';
 import 'horoscope_info_screen.dart';
+import 'almanac_screen.dart';
+import 'forum/forum_home_screen.dart';
 import 'package:frontend/features/ai_report/views/ai_report_screen.dart';
 import 'package:frontend/providers/horoscope_provider.dart';
 
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   bool _isHeaderHidden = false;
   bool _isHeroProcessing = false;
   bool _isAppMenuOpen = false;
+  bool _isForumMenuOpen = false;
 
   void _onHeaderRegisterClicked() async {
     setState(() {
@@ -111,9 +114,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     final prefs = await SharedPreferences.getInstance();
     if (mounted) {
       context.read<HoroscopeProvider>().clearHoroscopes();
+      context.read<WalletProvider>().clear();
     }
     await prefs.remove('jwt_token');
     await prefs.remove('username');
+    await prefs.remove('role');
     setState(() {
       _isLoggedIn = false;
       _username = '';
@@ -425,11 +430,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
           
-          // Header (Cổng Thiên Môn) - Sticky Top Glassmorphism
-          Positioned(
-            top: 0, left: 0, right: 0,
-            child: _buildHeader(),
-          ),
           // Pháo hoa (Confetti)
           Align(
             alignment: Alignment.center,
@@ -444,265 +444,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
     );
   }
-
-  // ==================== HEADER ====================
-  Widget _buildHeader() {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0), // Blur 12px
-        child: Container(
-          color: const Color(0xFF0B1021).withOpacity(0.6),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.camera, color: const Color(0xFF00E5FF), size: 32),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Diễn Đàn Tử Vi Online-AI',
-                    style: TextStyle(
-                      color: Color(0xFFD4AF37),
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      shadows: [
-                        Shadow(color: Color(0xFFD4AF37), blurRadius: 4),
-                      ]
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  _navItem('Trang chủ', isActive: true),
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                    ),
-                    child: PopupMenuButton<String>(
-                      offset: const Offset(0, 40),
-                      color: const Color(0xFFF5F5F5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      tooltip: 'Ứng dụng',
-                      onOpened: () {
-                        setState(() {
-                          _isAppMenuOpen = true;
-                        });
-                      },
-                      onCanceled: () {
-                        setState(() {
-                          _isAppMenuOpen = false;
-                        });
-                      },
-                      onSelected: (String result) {
-                        setState(() {
-                          _isAppMenuOpen = false;
-                        });
-                        if (!_isLoggedIn) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-                              ),
-                              content: const Text(
-                                'Hãy Đăng ký và Đăng Nhập Ngay Để Cảm Nhận Những Tính Năng Đặc Biệt Và Ưu Việt Của Diễn Đàn Tử Vi Online-AI',
-                                style: TextStyle(
-                                  color: Color(0xFFD4AF37),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              duration: const Duration(seconds: 4),
-                            ),
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen(initialIsLogin: true)),
-                          );
-                        } else {
-                          if (result == 'Lá số Tử vi') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => HoroscopeInfoScreen()),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Tính năng $result đang được tích hợp.')),
-                            );
-                          }
-                        }
-                      },
-                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                        const PopupMenuItem<String>(
-                          value: 'Lịch Vạn Sự',
-                          child: Text(
-                            'Lịch Vạn Sự',
-                            style: TextStyle(color: Color(0xFF8B0000), fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'Lá số Tử vi',
-                          child: Text(
-                            'Lá số Tử vi',
-                            style: TextStyle(color: Color(0xFF8B0000), fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'Đổi Lịch Âm Dương',
-                          child: Text(
-                            'Đổi Lịch Âm Dương',
-                            style: TextStyle(color: Color(0xFF8B0000), fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                      ],
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'Ứng dụng ▼',
-                          style: TextStyle(
-                            color: _isAppMenuOpen ? const Color(0xFF00E5FF) : const Color(0xFFD4AF37),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            shadows: _isAppMenuOpen 
-                              ? const [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)] 
-                              : null,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  _navItem('Diễn đàn ▼'),
-                  _navItem('Thư viện'),
-                  _navItem('Liên hệ'),
-                  const SizedBox(width: 24),
-                  if (_isLoggedIn) ...[
-                    Icon(Icons.flash_on, color: const Color(0xFFD4AF37), size: 24),
-                    const SizedBox(width: 16),
-                    Icon(Icons.notifications_outlined, color: Colors.white70, size: 24),
-                    const SizedBox(width: 16),
-                    Icon(Icons.email_outlined, color: Colors.white70, size: 24),
-                    const SizedBox(width: 16),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                      ),
-                      child: PopupMenuButton(
-                        offset: const Offset(0, 48),
-                        color: const Color(0xFF0B1021).withOpacity(0.95),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-                        ),
-                        tooltip: 'Thông Tin Cá Nhân',
-                        child: const CircleAvatar(
-                          backgroundColor: Color(0xFFC62828),
-                          radius: 18,
-                          child: Icon(Icons.person, size: 20, color: Colors.white),
-                        ),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            enabled: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      const CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor: Color(0xFFC62828),
-                                        child: Icon(Icons.person, size: 50, color: Colors.white),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context, rootNavigator: true).pop();
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Chức năng chọn ảnh từ máy đang được tích hợp.')),
-                                          );
-                                        },
-                                        child: const CircleAvatar(
-                                          radius: 14,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(Icons.camera_alt, size: 16, color: Colors.black87),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildUserInfo(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ] else if (!_isHeaderHidden) ...[
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(initialIsLogin: true),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009688),
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Color(0xFFD4AF37), width: 1),
-                        ),
-                      ),
-                      child: const Text('ĐĂNG NHẬP', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _onHeaderRegisterClicked,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFC62828),
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Color(0xFFD4AF37), width: 1),
-                        ),
-                      ),
-                      child: const Text('ĐĂNG KÝ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(String title, {bool isActive = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: isActive ? const Color(0xFFD4AF37) : Colors.white70,
-          fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-
   // ==================== HERO SECTION ====================
   Widget _buildHeroSection() {
     return Container(

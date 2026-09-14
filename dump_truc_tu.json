@@ -1,0 +1,3031 @@
+{
+  "tables": [
+    {
+      "table_index": 0,
+      "rows": [
+        [
+          "Tên Trực",
+          "Tuổi",
+          "Tuổi",
+          "Tuổi",
+          "Tuổi",
+          "Tuổi"
+        ],
+        [
+          "Trực Kiến",
+          "Ất Sửu",
+          "Giáp Tuất",
+          "Quý Mùi",
+          "Nhâm Thìn",
+          "Bính Thìn"
+        ],
+        [
+          "Trực Trừ",
+          "Ất Hợi",
+          "Quý Tỵ",
+          "Nhâm Thân",
+          "Đinh Tỵ",
+          "Canh Thân"
+        ],
+        [
+          "Trực Mãn",
+          "Canh Ngọ",
+          "Mậu Tý",
+          "Quý Mão",
+          "Bính Ngọ",
+          "Tân Dậu"
+        ],
+        [
+          "Trực Bình",
+          "Tân Mùi",
+          "Canh Thìn",
+          "Kỷ Sửu",
+          "Mậu Tuất",
+          "Đinh Mùi"
+        ],
+        [
+          "Trực Định",
+          "Bính Dần",
+          "Tân Tỵ",
+          "Giáp Thân",
+          "Kỷ Hợi",
+          "Mậu Thân"
+        ],
+        [
+          "Trực Chấp",
+          "Đinh Mão",
+          "Ất Dậu",
+          "Giáp Ngọ",
+          "Kỷ Dậu",
+          "Nhâm Tý"
+        ],
+        [
+          "Trực Phá",
+          "Bính Tuất",
+          "Ất Mùi",
+          "Giáp Thìn",
+          "Quý Sửu",
+          "Nhâm Tuất"
+        ],
+        [
+          "Trực Nguy",
+          "Nhâm Thân",
+          "Đinh Hợi",
+          "Canh Dần",
+          "Ất Tỵ",
+          "Quý Hợi"
+        ],
+        [
+          "Trực Thành",
+          "Quý Dậu",
+          "Bính Tý",
+          "Tân Mão",
+          "Canh Tý",
+          "Mậu Ngọ"
+        ],
+        [
+          "Trực Thu",
+          "Mậu Thìn",
+          "Đinh Sửu",
+          "Tân Sửu",
+          "Canh Tuất",
+          "Kỷ Mùi"
+        ],
+        [
+          "Trực Khai",
+          "Kỷ Tỵ",
+          "Mậu Dần",
+          "Bính Thân",
+          "Tân Hợi",
+          "Giáp Dần"
+        ],
+        [
+          "Trực Bế",
+          "Giáp Tý",
+          "Kỷ Mão",
+          "Nhâm Ngọ",
+          "Đinh Dậu",
+          "Ất Mão"
+        ]
+      ]
+    },
+    {
+      "table_index": 1,
+      "rows": [
+        [
+          "12 Trực",
+          "12 Trực",
+          "12 Trực"
+        ],
+        [
+          "Trực Kiến (1)",
+          "Trực Định (5)",
+          "Trực Thành (9)"
+        ],
+        [
+          "Trực Trừ (2)",
+          "Trực Chấp (6)",
+          "Trực Thu (10)"
+        ],
+        [
+          "Trực Mãn (3)",
+          "Trực Phá (7)",
+          "Trực Khai (11)"
+        ],
+        [
+          "Trực Bình (4)",
+          "Trực Nguy (8)",
+          "Trực Bế (12)"
+        ]
+      ]
+    },
+    {
+      "table_index": 2,
+      "rows": [
+        [
+          "Tháng",
+          "Ngày",
+          "Trực",
+          "Tháng",
+          "Ngày",
+          "Trực"
+        ],
+        [
+          "1",
+          "Dần",
+          "Kiến",
+          "7",
+          "Thân",
+          "Phá"
+        ],
+        [
+          "2",
+          "Mão",
+          "Trừ",
+          "8",
+          "Dậu",
+          "Nguy"
+        ],
+        [
+          "3",
+          "Thìn",
+          "Mãn",
+          "9",
+          "Tuất",
+          "Thành"
+        ],
+        [
+          "4",
+          "Tỵ",
+          "Bình",
+          "10",
+          "Hơi",
+          "Thu"
+        ],
+        [
+          "5",
+          "Ngọ",
+          "Định",
+          "11",
+          "Tý",
+          "Khai"
+        ],
+        [
+          "6",
+          "Mùi",
+          "Chấp",
+          "12",
+          "Sửu",
+          "Bế"
+        ]
+      ]
+    },
+    {
+      "table_index": 3,
+      "rows": [
+        [
+          "Thứ trong tuần",
+          "Chòm sao tương ứng (luôn rơi vào thứ này)"
+        ],
+        [
+          "Chủ Nhật",
+          "Phòng, Hư, Mão, Tinh"
+        ],
+        [
+          "Thứ Hai",
+          "Tâm, Nguy, Tất, Trương"
+        ],
+        [
+          "Thứ Ba",
+          "Vĩ, Thất, Chủy, Dực"
+        ],
+        [
+          "Thứ Tư",
+          "Cơ, Bích, Sâm, Chẩn"
+        ],
+        [
+          "Thứ Năm",
+          "Giác, Đẩu, Khuê, Tỉnh"
+        ],
+        [
+          "Thứ Sáu",
+          "Cang, Ngưu, Lâu, Quỷ"
+        ],
+        [
+          "Thứ Bảy",
+          "Đê, Nữ, Vị, Liễu"
+        ]
+      ]
+    }
+  ],
+  "paragraphs": [
+    {
+      "index": 0,
+      "text": "A) Ứng dụng của Thập Nhị Kiến Trừ vào con người"
+    },
+    {
+      "index": 1,
+      "text": "1. Luận theo năm sinh"
+    },
+    {
+      "index": 2,
+      "text": "Bảng trực tuổi như sau"
+    },
+    {
+      "index": 5,
+      "text": "Phú bình giải 12 trực như sau:"
+    },
+    {
+      "index": 7,
+      "text": "Trực Kiến (Thổ)"
+    },
+    {
+      "index": 8,
+      "text": "Khai phá ruộng vườn thuộc trực Kiến"
+    },
+    {
+      "index": 9,
+      "text": "Năm mươi nhà cửa mới bình yên"
+    },
+    {
+      "index": 10,
+      "text": "Tiền của cha mẹ không thừa hưởng"
+    },
+    {
+      "index": 11,
+      "text": "Tự thân lập thân, phụ tự viên"
+    },
+    {
+      "index": 12,
+      "text": "Trực Trừ (Thuỷ)"
+    },
+    {
+      "index": 13,
+      "text": "Trực Trừ thuộc tính thâm trầm"
+    },
+    {
+      "index": 14,
+      "text": "Nhân hậu hiền hoà có thiện tâm"
+    },
+    {
+      "index": 15,
+      "text": "Tuổi trẻ nhiều phen còn lận đận"
+    },
+    {
+      "index": 16,
+      "text": "Về già hưởng phúc lộc do cần"
+    },
+    {
+      "index": 17,
+      "text": "Trực Mãn (Thổ)"
+    },
+    {
+      "index": 18,
+      "text": "Thông minh hào phóng tính trời cho"
+    },
+    {
+      "index": 19,
+      "text": "Gia thất, thê nhi thật khỏi lo"
+    },
+    {
+      "index": 20,
+      "text": "Người đẹp để sầu bao kẻ luỵ"
+    },
+    {
+      "index": 21,
+      "text": "Sông kia bến cũ mấy con đò"
+    },
+    {
+      "index": 22,
+      "text": "Trực Định (Mộc)"
+    },
+    {
+      "index": 23,
+      "text": "Mộc tinh trực Định sống thanh thản"
+    },
+    {
+      "index": 24,
+      "text": "Dù gặp tai nguy cũng hóa an"
+    },
+    {
+      "index": 25,
+      "text": "Nữ mệnh lấy chồng, nam mệnh quý"
+    },
+    {
+      "index": 26,
+      "text": "Không giàu cũng thuộc giàu sang"
+    },
+    {
+      "index": 27,
+      "text": "Trực Chấp (Hoả)"
+    },
+    {
+      "index": 28,
+      "text": "Khẩu xà tâm phật tính trương phi"
+    },
+    {
+      "index": 29,
+      "text": "Chấp hỏa lôi hành nóng kể chi"
+    },
+    {
+      "index": 30,
+      "text": "Lận đận lửa đen vì lửa giận"
+    },
+    {
+      "index": 31,
+      "text": "Năm mươi tài lộc phúc triều quy"
+    },
+    {
+      "index": 32,
+      "text": "Trực Phá (Hỏa)"
+    },
+    {
+      "index": 33,
+      "text": "Phá hoại đây là lửa cháy rừng"
+    },
+    {
+      "index": 34,
+      "text": "Suốt đời vì bạn phải gian truân"
+    },
+    {
+      "index": 35,
+      "text": "Lôi đình sấm dậy thê nhi khóc"
+    },
+    {
+      "index": 36,
+      "text": "Yêu ghét buồn vui khó thẳng thừng"
+    },
+    {
+      "index": 37,
+      "text": "Trực Nguy (Thuỷ)"
+    },
+    {
+      "index": 38,
+      "text": "Trực Nguy là nước chảy loanh quanh"
+    },
+    {
+      "index": 39,
+      "text": "Lưu trước đi đôi với bại thành"
+    },
+    {
+      "index": 40,
+      "text": "Đa mệnh, đa tài. đa hệ luỵ"
+    },
+    {
+      "index": 41,
+      "text": "Phong lưu âu số trời xanh"
+    },
+    {
+      "index": 42,
+      "text": "Trực Thành (Kim)"
+    },
+    {
+      "index": 43,
+      "text": "Trực Thành là kiếm của trời ban"
+    },
+    {
+      "index": 44,
+      "text": "Đời trai ngang dọc giữa giang san"
+    },
+    {
+      "index": 45,
+      "text": "Nữ Nhi khuê các buồn tơ liễu"
+    },
+    {
+      "index": 46,
+      "text": "Nhung lụa vàng son lệ vẫn tràn"
+    },
+    {
+      "index": 47,
+      "text": "Trực Thu (Thuỷ)"
+    },
+    {
+      "index": 48,
+      "text": "Trực Thu là nước ở hồ tiên"
+    },
+    {
+      "index": 49,
+      "text": "Là lẫm, là kho bạc chứa tiền"
+    },
+    {
+      "index": 50,
+      "text": "Gái giỏi tề gia, ích phu tử"
+    },
+    {
+      "index": 51,
+      "text": "Trai vì khắc khổ họa đeo phiền"
+    },
+    {
+      "index": 52,
+      "text": "Trực Khai (Kim)"
+    },
+    {
+      "index": 53,
+      "text": "Trực Khai sinh thuận giống vàng mười"
+    },
+    {
+      "index": 54,
+      "text": "Học giỏi thông minh thích nói cười"
+    },
+    {
+      "index": 55,
+      "text": "Trai đỗ cao sang gái phận mỏng"
+    },
+    {
+      "index": 56,
+      "text": "Chồng ghen còn khổ kém vui tươi"
+    },
+    {
+      "index": 57,
+      "text": "Trực Bế (Kim)"
+    },
+    {
+      "index": 58,
+      "text": "Trực Bế bốn bề đóng lại rồi"
+    },
+    {
+      "index": 59,
+      "text": "Một mình tự lập, một mình thôi"
+    },
+    {
+      "index": 60,
+      "text": "Tính hoả nên thường hay nổi giận"
+    },
+    {
+      "index": 61,
+      "text": "Danh dở công danh lẫn lứa đôi"
+    },
+    {
+      "index": 62,
+      "text": "Trực Bình (Thuỷ)"
+    },
+    {
+      "index": 63,
+      "text": "Trực Bình thuộc thủy tính nước dương"
+    },
+    {
+      "index": 64,
+      "text": "Tài trí khôn ngoan đủ mọi đường"
+    },
+    {
+      "index": 65,
+      "text": "Gái đẹp, trai hiền mà thẳng thắn"
+    },
+    {
+      "index": 66,
+      "text": "Cháu đàn con lũ khéo lưu phương"
+    },
+    {
+      "index": 67,
+      "text": "2. Luận theo tháng sinh"
+    },
+    {
+      "index": 68,
+      "text": "Bảng trực tháng như sau:"
+    },
+    {
+      "index": 71,
+      "text": "Ứng dụng của Thập Nhị Kiến Trừ luận theo tháng sinh"
+    },
+    {
+      "index": 72,
+      "text": "Lời giải 12 trực:"
+    },
+    {
+      "index": 73,
+      "text": "Trực Kiến"
+    },
+    {
+      "index": 74,
+      "text": "Kiến, Thổ khai phá nhiều nơi,"
+    },
+    {
+      "index": 75,
+      "text": "Người sanh trực ấy trọn đời gian nan."
+    },
+    {
+      "index": 76,
+      "text": "Của cha, của mẹ không ham,"
+    },
+    {
+      "index": 77,
+      "text": "Một mình thân lập bạn cùng người dưng."
+    },
+    {
+      "index": 78,
+      "text": "Cửa nhà ăn ở chẳng an,"
+    },
+    {
+      "index": 79,
+      "text": "Năm mươi mới đặng an nhàn tấm thân"
+    },
+    {
+      "index": 80,
+      "text": "Trực Trừ"
+    },
+    {
+      "index": 81,
+      "text": "Trực Trừ, Thuỷ tánh thật thà,"
+    },
+    {
+      "index": 82,
+      "text": "Lời ăn tiếng nói thuận hoà ngọt ngon"
+    },
+    {
+      "index": 83,
+      "text": ".Khó hèn ít cậy bà con,"
+    },
+    {
+      "index": 84,
+      "text": "Tự mình tạo lập không bòn của ai."
+    },
+    {
+      "index": 85,
+      "text": "Cũng vì cây chẳng nên chồi,"
+    },
+    {
+      "index": 86,
+      "text": "Cho nên số ấy không trông cậy nhờ."
+    },
+    {
+      "index": 87,
+      "text": "Trực Mãn"
+    },
+    {
+      "index": 88,
+      "text": "Mãn, Thổ như thảo sơn lâm,"
+    },
+    {
+      "index": 89,
+      "text": "Người sanh trực ấy thông minh ai bì."
+    },
+    {
+      "index": 90,
+      "text": "Sanh con nuôi nấng dễ dàng,"
+    },
+    {
+      "index": 91,
+      "text": "Tin vật, vật ở, bạn bè người ưa."
+    },
+    {
+      "index": 92,
+      "text": "Cũng vì nhờ sức non cao,"
+    },
+    {
+      "index": 93,
+      "text": "Cầm thú, biết hết, lựu đào thiếu chí."
+    },
+    {
+      "index": 94,
+      "text": "Trực Bình"
+    },
+    {
+      "index": 95,
+      "text": "Bình, Thuỷ như nước trong sông,"
+    },
+    {
+      "index": 96,
+      "text": "Sóng xao sao đặng thì lòng xuyên qua."
+    },
+    {
+      "index": 97,
+      "text": "Luận xem ngôn ngữ đoán ra,"
+    },
+    {
+      "index": 98,
+      "text": "Thật thà ít nói, thuận hoà ngọt ngon."
+    },
+    {
+      "index": 99,
+      "text": "Đàn bà thì dễ nuôi con,"
+    },
+    {
+      "index": 100,
+      "text": "Đàn ông số ấy không giàu cũng sang."
+    },
+    {
+      "index": 101,
+      "text": "Trực Định"
+    },
+    {
+      "index": 102,
+      "text": "Định, Mộc cây hãy đương xanh,"
+    },
+    {
+      "index": 103,
+      "text": "Người sanh số ấy ăn chơi thanh nhàn."
+    },
+    {
+      "index": 104,
+      "text": "Đàn ông số ấy làm quan,"
+    },
+    {
+      "index": 105,
+      "text": "Đàn bà hoá khẩu ngửa ngang xẳngchồng."
+    },
+    {
+      "index": 106,
+      "text": "Của, con có cũng như không,"
+    },
+    {
+      "index": 107,
+      "text": "Bởi cây tươi tốt, trái bông thiếu gì"
+    },
+    {
+      "index": 108,
+      "text": "Trực Chấp"
+    },
+    {
+      "index": 109,
+      "text": "Chấp, Hoả như lửa trong xe,"
+    },
+    {
+      "index": 110,
+      "text": "Ai mà phạm đến thời nghe tưng bừng."
+    },
+    {
+      "index": 111,
+      "text": "Chẳng giận, giận thì hành hung,"
+    },
+    {
+      "index": 112,
+      "text": "Ai phải, phải cùng, ai quấy, quấy cho."
+    },
+    {
+      "index": 113,
+      "text": "Thuở xưa đại thánh thành thân,"
+    },
+    {
+      "index": 114,
+      "text": "Phá tan xe lửa cháy tiêu chẳng còn"
+    },
+    {
+      "index": 115,
+      "text": "Trực Phá"
+    },
+    {
+      "index": 116,
+      "text": "Phá, Hoả như lửa cháy non,"
+    },
+    {
+      "index": 117,
+      "text": "Người sanh trực ấy hao con, tổn tài."
+    },
+    {
+      "index": 118,
+      "text": "Hết lòng, hết dạ cùng người,"
+    },
+    {
+      "index": 119,
+      "text": "Một lời chuốt ngót phủi rồi tay không."
+    },
+    {
+      "index": 120,
+      "text": "Cũng vì hoả pháp diệm sơn,"
+    },
+    {
+      "index": 121,
+      "text": "Nào còn biết nghĩa, biết ơn đến mình."
+    },
+    {
+      "index": 122,
+      "text": "Trực Nguy"
+    },
+    {
+      "index": 123,
+      "text": "Bình, Thuỷ như nước trong sông,"
+    },
+    {
+      "index": 124,
+      "text": "Sóng xao sao đặng thì lòng xuyên qua."
+    },
+    {
+      "index": 125,
+      "text": "Luận xem ngôn ngữ đoán ra,"
+    },
+    {
+      "index": 126,
+      "text": "Thật thà ít nói, thuận hoà ngọt ngon."
+    },
+    {
+      "index": 127,
+      "text": "Đàn bà thì dễ nuôi con,"
+    },
+    {
+      "index": 128,
+      "text": "Đàn ông số ấy không giàu cũng sang."
+    },
+    {
+      "index": 129,
+      "text": "Trực Thành"
+    },
+    {
+      "index": 130,
+      "text": "Thành, Kim vàng đúc song phi,"
+    },
+    {
+      "index": 131,
+      "text": "Một đôi song kiếm ai mà dám đương."
+    },
+    {
+      "index": 132,
+      "text": "Khôn ngoan trí tuệ thông minh,"
+    },
+    {
+      "index": 133,
+      "text": "Số người khéo léo, lập binh cầm quyền."
+    },
+    {
+      "index": 134,
+      "text": "Đàn ông sạch việc mỹ miều,"
+    },
+    {
+      "index": 135,
+      "text": "Đàn bà lận đận, vui chiều buồn mai."
+    },
+    {
+      "index": 136,
+      "text": "Trực Thu"
+    },
+    {
+      "index": 137,
+      "text": "Trực Thu như nước trong ao,"
+    },
+    {
+      "index": 138,
+      "text": "Tuy không chỗ chứa mà còn tự nhiên."
+    },
+    {
+      "index": 139,
+      "text": "Bông sen mọc tận dưới bùn,"
+    },
+    {
+      "index": 140,
+      "text": "Khi nở đỏ thắm, mùi hương ngạt ngào."
+    },
+    {
+      "index": 141,
+      "text": "Trực Khai"
+    },
+    {
+      "index": 142,
+      "text": "Khai, Kim vàng đúc một đời,"
+    },
+    {
+      "index": 143,
+      "text": "Kẻ đòi đũ xuyến, người đòi đúc trâm."
+    },
+    {
+      "index": 144,
+      "text": "Đàn ông chức phận trong dòng,"
+    },
+    {
+      "index": 145,
+      "text": "Đàn bà đưa đẩy trong lòng bao dung."
+    },
+    {
+      "index": 146,
+      "text": "Trực Bế"
+    },
+    {
+      "index": 147,
+      "text": "Bế, Hoả tợ lửa mới nhen,"
+    },
+    {
+      "index": 148,
+      "text": "Người sanh trực ấy hao công tốn tiền."
+    },
+    {
+      "index": 149,
+      "text": "Một mình không cậy nhờ ai,"
+    },
+    {
+      "index": 150,
+      "text": "Nam tần, bắc hải một mình lập thân."
+    },
+    {
+      "index": 155,
+      "text": "Giới thiệu về Thập Nhị Kiến Trừ"
+    },
+    {
+      "index": 156,
+      "text": "1. Thập Nhị Kiến Trừ là gì?"
+    },
+    {
+      "index": 157,
+      "text": "Các bậc tri giả Trung Hoa cổ xưa còn tiến hành từng loại công việc theo trực ngày. Họ cho rằng mỗi ngày có 1 trực chiếu xuống trái đất, mỗi loại trực có ảnh hưởng tốt xấu khác nhau đến kết quả của từng loại công việc. Có tất cả 12 trực lần lượt theo thứ tự lặp đi lặp lại chiếu xuống trái đất đó là:"
+    },
+    {
+      "index": 160,
+      "text": "Chu kỳ này lặp đi lặp lại theo 1 vòng tròn khép kín có mối nối. Vì tháng âm lịch hay can chi được dựng theo tiết khí, nên đến một tiết khí mới thì đổi trực để thay đúng quy luật của trực trong tháng đến ngày đó có hiện tượng hòa trực có nghĩa hai ngày gần nhau sẽ đồng trực.Các trực nói trên chính là các sao (trực tinh) trong chòm sao đại hùng tinh mà cổ nhângọi là Đạo Quang Tinh, là những sao thuộc đuôi chòm sao Bắc Đẩu. Bắt đầu chập tối ngày lập xuân (kể từ đây mới là tháng giêng âm lịch) các sao này bắt đầu chiếu hướng dàn trên trái đất(hướng Đông Bắc)."
+    },
+    {
+      "index": 161,
+      "text": "Người xưa chia các hướng hay phương trên trái đất theo 12 cung. Hướng Bắc cung Tý, hướng Đông cung Mão, hướng Nam cung Ngọ, hướng Tây cung Dậu, do vậy ta có bảng chiếu của các trực như sau"
+    },
+    {
+      "index": 165,
+      "text": "2. Cách tính ngày trực"
+    },
+    {
+      "index": 166,
+      "text": "Có 12 trực theo trình tự từ trực Kiến đến trực Bế và mỗi ngày 1 trực. Có 3 loại trực là trực tốt, trực thường và trực xấu."
+    },
+    {
+      "index": 167,
+      "text": "Trực tốt:  trực Kiến, trực Mãn, trực Bình, trực Định, trực Thành, trực Khai"
+    },
+    {
+      "index": 168,
+      "text": "Trực thường: trực Trừ, trực Chấp, trực Thu"
+    },
+    {
+      "index": 169,
+      "text": "Trực xấu: trực Phá, trực Bế, trực Nguy"
+    },
+    {
+      "index": 170,
+      "text": "Cách tính các trực như sau:"
+    },
+    {
+      "index": 171,
+      "text": "Sau lập xuân: Trực Kiến tại Dần sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 172,
+      "text": "Sau kinh trập: Trực Kiến tại Mão sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 173,
+      "text": "Sau thanh minh: Trực Kiến tại Thìn sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 174,
+      "text": "Sau lập hạ: Trực Kiến tại Tỵ sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 175,
+      "text": "Sau mang chủng: Trực Kiến tại Ngọ sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 176,
+      "text": "Sau tiểu thử: Trực Kiến tại Mùi sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 177,
+      "text": "Sau lập thu: Trực Kiến tại Thân sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 178,
+      "text": "Sau bạch lộ: Trực Kiến tại Dậu sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 179,
+      "text": "Sau hàn lộ: Trực Kiến tại Tuất sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 180,
+      "text": "Sau lập đông: Trực Kiến tại Hợi sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 181,
+      "text": "Sau đại tuyết: Trực Kiến tại Tý sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 182,
+      "text": "Sau tiểu hàn: Trực Kiến tại Sửu sau đó sẽ luân chuyển cho đến hết tháng"
+    },
+    {
+      "index": 190,
+      "text": "3. Ý nghĩa của 12 trực:"
+    },
+    {
+      "index": 191,
+      "text": "3.1. Trực Kiến (+) (Thuộc hành Thổ): Khởi đầu mới, sinh sôi. Ngày tốt, mọi việc đều suôn sẻ. Ngày trực Kiến vô cùng cát lợi cho các việc như: khởi công, xây dựng, khai trương, xuất hành, nhậm chức, cưới hỏi, trồng cây, đền ơn đáp nghĩa. Xấu cho các việc động thổ, chôn cất, đào giếng, lợp nhà."
+    },
+    {
+      "index": 192,
+      "text": "3.2. Trực Trừ (+)(Thuộc hành Thủy):  Loại bỏ điều xấu, thanh tẩy. Ngày tốt, giúp loại bỏ điều xấu, thích hợp để giải quyết tai họa, chữa bệnh và cầu an. Ngày có trực Trừ nên tiến hành các công việc như: trừ phục, dâng sao giải hạn, tỉa chân nhang, thay bát hương… Bên cạnh đó cũng không nên làm các việc như chi xuất tiền lớn, ký hợp đồng, khai trương, cưới hỏi."
+    },
+    {
+      "index": 193,
+      "text": "3.3. Trực Mãn (+) (Thuộc hành Thổ): Tròn đầy, sung túc. Ngày xấu, không nên thực hiện bất kỳ việc gì, dễ gặp khó khăn và thất bại. Ngày có trực Mãn nên làm những việc như cúng lễ, xuất hành, sửa kho. Ngoài ra cần lưu ý ngày này xấu cho việc chôn cất, kiện tụng, hay nhậm chức."
+    },
+    {
+      "index": 194,
+      "text": "3.4. Trực Bình (-) (Thuộc hành Thủy): Cân bằng, hòa hợp. Ngày trung bình, không tốt cũng không xấu, có thể thực hiện những công việc thông thường. Tốt nhất cho các việc di dời bếp, Sửa sang nhà cửa, tu tạo, giao thương, mua bán, Cầu tự. Việc nên tránh Khai trương, nhậm chức. An táng, mai tang, Kiện tụng."
+    },
+    {
+      "index": 195,
+      "text": "3.5. Trực Định (+) (Thuộc hành Mộc): Ổn định, vững vàng. Ngày tốt, mọi thứ ổn định, phù hợp để ký kết hợp đồng, giao dịch và cầu tài lộc. Ngày có trực Định lên làm các việc buôn bán giao thương, làm chuồng gia súc. Bên cạnh đó cần tránh những việc như thưa kiện, xuất hành đi xa."
+    },
+    {
+      "index": 196,
+      "text": "3.6. Trực Chấp (-) (Thuộc hành Hỏa): Giữ gìn, thu giữ. Ngày trung bình, thuận lợi cho việc bắt đầu công việc mới, nhưng cần thận trọng trong các mối quan hệ. Ngày có trực Chấp tốt cho các việc tu sửa, tuyển dụng, thuê mướn người làm. Ngoài ra nên chú ý không nên xuất nhập kho, truy xuất tiền nong, an sàng."
+    },
+    {
+      "index": 197,
+      "text": "3.7. Trực Phá (-) (Thuộc hành Hỏa): Phá vỡ, dỡ bỏ. Ngày xấu, có nguy cơ phá hoại, đổ vỡ, không nên làm bất cứ việc gì. Việc tốt nên làm trong ngày có trực này là đi xa, phá bỏ công trình, nhà ở cũ kỹ. Cần lưu ý thêm rất xấu cho những việc mở hàng, hội họp, đặc biệt là xây dựng và cưới hỏi."
+    },
+    {
+      "index": 198,
+      "text": "3.8. Trực Nguy (-) (Thuộc hành Mộc): Cẩn trọng, đề phòng nguy hiểm. Ngày xấu, có nguy hiểm, rủi ro, không nên xuất hành, di chuyển hay động thổ. Ngày có trực Nguy cực kỳ xấu, rất ít người lựa chọn làm các công việc làm ăn kinh doanh buôn bán, khai trương hay cưới xin, thăm hỏi. Vào ngày có Trực Nguy nên làm lễ bái, cầu tự, tụng kinh."
+    },
+    {
+      "index": 199,
+      "text": "3.9. Trực Thành (+) (Thuộc hành Thổ): Thành tựu, kết quả tốt. Ngày tốt, thành công, viên mãn, thích hợp cho kết hôn, khai trương và ký kết. Nên làm các việc như nhập học, dọn về nhà mới. Tránh các việc kiện tụng, cãi vã, tranh chấp."
+    },
+    {
+      "index": 200,
+      "text": "3.10. Trực Thu (+) (Thuộc hành Kim): Thu hoạch, gom góp. Ngày xấu, thu hẹp, có thể bị thất thoát, không nên đầu tư, kinh doanh hay xuất hành. Ngày có trực Thu nên làm các việc mở cửa hàng, cửa tiệm, lập kho, buôn bán. Không nên làm các việc như ma chay, an táng, tảo mộ."
+    },
+    {
+      "index": 201,
+      "text": "3.11. Trực Khai (+) (Thuộc hành Kim): Mở thông, hanh thông. Ngày tốt, mở mang, phát triển, thích hợp cho khai trương, khởi nghiệp và học tập. Ngày có trực này thường được nhiều người sử dụng để làm các việc lớn như động thổ làm nhà, kết hôn vì đây là ngày có nhiều cát lành, may mắn. Bên cạnh đó, cần lưu ý kiêng các việc như an táng, động thổ vì người ta quan niệm nó không được sạch sẽ."
+    },
+    {
+      "index": 202,
+      "text": "3.12. Trực Bế (-) (Thuộc hành Thổ): Đóng lại, bế tặc. Ngày xấu, gặp bế tắc, khó khăn, không nên làm gì, nên nghỉ ngơi và tĩnh tâm. Ngày có trực Bế thường không được sử dụng cho các việc nhậm chức, khiếu kiện, đào giếng mà chỉ nên làm các việc như đắp đập đê điều, ngăn nước, xây vá tường vách đã lở"
+    },
+    {
+      "index": 203,
+      "text": "Có nhiều phương pháp để tính Thập nhị trực, phổ biến nhất là dựa vào lịch vạn niên hoặc các công cụ tính toán trực tuyến. Tuy nhiên, bạn cũng có thể tính theo cách truyền thống như sau:"
+    },
+    {
+      "index": 204,
+      "text": "Xác định tháng âm lịch: Mỗi tháng âm lịch sẽ có một trực bắt đầu từ ngày đầu tiên của tháng đó."
+    },
+    {
+      "index": 205,
+      "text": "Tra bảng Thập nhị trực: Dựa vào tháng âm lịch, tra bảng để biết trực của ngày đầu tiên trong tháng."
+    },
+    {
+      "index": 206,
+      "text": "Tính trực cho các ngày tiếp theo: Mỗi ngày tiếp theo, trực sẽ thay đổi theo thứ tự: Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu, Khai, Bế. Cứ tiếp tục như vậy cho đến hết tháng.Ví dụ: Trong tháng Giêng âm lịch, ngày đầu tiên là ngày Dần, có trực Kiến. Do đó, ngày Mão sẽ tương ứng với trực Trừ, còn ngày Thìn thì thuộc về trực Mãn…"
+    },
+    {
+      "index": 207,
+      "text": "Lưu ý:"
+    },
+    {
+      "index": 208,
+      "text": "Thập nhị trực chỉ là một trong những yếu tố để đánh giá ngày tốt xấu. Cần phải kết hợp với các yếu tố khác như ngũ hành, can chi, nhị thập bát tú… để có cái nhìn tổng quát hơn."
+    },
+    {
+      "index": 209,
+      "text": "Việc áp dụng Thập nhị trực cần phải linh hoạt, tùy thuộc vào từng tình huống cụ thể."
+    },
+    {
+      "index": 211,
+      "text": "NHỊ THẬP BÁT TÚ LUẬN GIẢI"
+    },
+    {
+      "index": 212,
+      "text": "I) Khái Niệm về Nhị Thập Bát Tú:"
+    },
+    {
+      "index": 213,
+      "text": "Các nhà Thiên Văn Học chia bầu trời ra 4 hướng: Đông Tây Nam Bắc. Mỗi hướng gồmcó 7 chùm sao . Hay là 4 hướng x 7 chùm sao = 28 chùm sao. Ngày nay chúng ta thườnggọi là Nhị Thập Bát Tú."
+    },
+    {
+      "index": 214,
+      "text": "Bảy chòm sao hợp lại thành một phương trời và được biểu tượng thành một con vật có mầu sắc theo sự phối thuộc của ngũ hành."
+    },
+    {
+      "index": 215,
+      "text": "- Phương Bắc là con rùa đen gọi là Hoa Cái (Đẩu, Ngưu, Nữ, Hư, Nguy, Thất, Bích)."
+    },
+    {
+      "index": 216,
+      "text": "- Phương Tây là con hổ trắng gọi là Bạch Hổ (Khuê, Lâu, Vị, Mão, Tất, Chuỷ, Sâm)."
+    },
+    {
+      "index": 217,
+      "text": "- Phương Nam là con phượng đỏ gọi là Phượng Các (Tỉnh, Quỷ, Liễu, Tinh, Trương,Dực, Chẩn)."
+    },
+    {
+      "index": 218,
+      "text": "- Phương Đông là con rồng xanh, gọi là Thanh Long (Giốc, Cang, Đê, Phòng Tâm, Vĩ, Cơ)."
+    },
+    {
+      "index": 219,
+      "text": "Phương Bắc - Hoa Cái"
+    },
+    {
+      "index": 220,
+      "text": "Đẩu Mộc Giải : Cua"
+    },
+    {
+      "index": 221,
+      "text": "Ngưu Kim Ngưu : Trâu"
+    },
+    {
+      "index": 222,
+      "text": "Nữ Thổ Bức : Dơi"
+    },
+    {
+      "index": 223,
+      "text": "Hư Nhật Thử : Chuột"
+    },
+    {
+      "index": 224,
+      "text": "Nguy Nguyệt Yến : Én"
+    },
+    {
+      "index": 225,
+      "text": "Thất Hoả Trư : Lợn"
+    },
+    {
+      "index": 226,
+      "text": "Bích Thuỷ Du : Dím"
+    },
+    {
+      "index": 229,
+      "text": "Phương Tây - Bạch Hổ"
+    },
+    {
+      "index": 230,
+      "text": "Khuê Mộc Lang : Sói"
+    },
+    {
+      "index": 231,
+      "text": "Lâu Kim Cẩu : Chó"
+    },
+    {
+      "index": 232,
+      "text": "Vị Thổ Trĩ : Trĩ"
+    },
+    {
+      "index": 233,
+      "text": "Mão Nhật Kê : Gà"
+    },
+    {
+      "index": 234,
+      "text": "Tất Nguyệt Ô : Quạ"
+    },
+    {
+      "index": 235,
+      "text": "Chuỷ Hoả Hầu : Khỉ"
+    },
+    {
+      "index": 236,
+      "text": "Sâm Thuỷ Viên : Vượn"
+    },
+    {
+      "index": 239,
+      "text": "Phương Nam - Phượng Các"
+    },
+    {
+      "index": 240,
+      "text": "Tỉnh Mộc Hãn : Cầy"
+    },
+    {
+      "index": 241,
+      "text": "Quỷ Kim Dương : Dê"
+    },
+    {
+      "index": 242,
+      "text": "Liễu Thổ Chương : Hoẵng"
+    },
+    {
+      "index": 243,
+      "text": "Tinh Nhật Mã : Ngựa"
+    },
+    {
+      "index": 244,
+      "text": "Trương Nguyệt Lộc : Nai"
+    },
+    {
+      "index": 245,
+      "text": "Dực Hoả Xà : Rắn"
+    },
+    {
+      "index": 246,
+      "text": "Chẩn Thuỷ Dẫn : Giun"
+    },
+    {
+      "index": 249,
+      "text": "Hướng Đông - Thanh Long"
+    },
+    {
+      "index": 250,
+      "text": "Giốc Mộc Giao : Sấu"
+    },
+    {
+      "index": 251,
+      "text": "Cang Kim Long : Rồng"
+    },
+    {
+      "index": 252,
+      "text": "Đê Thổ Lạc Cu : Ly"
+    },
+    {
+      "index": 253,
+      "text": "Phòng Nhật Thố : Thỏ"
+    },
+    {
+      "index": 254,
+      "text": "Tâm Nguyệt Hồ : Cáo"
+    },
+    {
+      "index": 255,
+      "text": "Vĩ Hoả Hổ : Hổ"
+    },
+    {
+      "index": 256,
+      "text": "Cơ Thuỷ Báo : Báo"
+    },
+    {
+      "index": 259,
+      "text": "Nếu bạn vòng nhị thập bát tú đi từ hướng Bắc => hướng Tây => hướng Nam => hướng Đông => hướng Bắc , thì bạn sẽ thấy được vòng bánh xe luân hồi như sau:"
+    },
+    {
+      "index": 262,
+      "text": "Nhị thập bát Tú (28 sao) luân lưu chủ ngày để đoán cát hung do các nhà chiêm tinh đời Đường đưa ra. Lịch Hội thiên thời Nam Tống đã áp dụng vào Trạch cát theo cách sau:"
+    },
+    {
+      "index": 263,
+      "text": "II) Ý Nghĩa Nhị Thập Bát Tú:"
+    },
+    {
+      "index": 264,
+      "text": "Đông Phương – Thanh Long (Rồng Xanh) (7 sao)"
+    },
+    {
+      "index": 265,
+      "text": "1 - Giác Mộc Giao (Sao Giác): Hành Mộc - Đặng Vũ: Tốt."
+    },
+    {
+      "index": 266,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 267,
+      "text": "(Bình Tú) Tướng tinh con Giao Long. Thuộc chòm sao Xử Nữ (Virgo). Chủ trị ngày thứ 5."
+    },
+    {
+      "index": 268,
+      "text": "- Nên làm: Tạo tác mọi việc đều đặng vinh xương, tấn lợi. Hôn nhân cưới gã sanh con quý. Công danh khoa cử cao thăng, đỗ đạt."
+    },
+    {
+      "index": 269,
+      "text": "- Kỵ làm: Chôn cất hoạn nạn 3 năm. Sửa chữa hay xây đắp mộ phần ắt có người chết. Sanh con nhằm ngày có Sao Giác khó nuôi, nên lấy tên Sao mà đặt tên cho nó mới an toàn. Dùng tên sao của năm hay của tháng cũng được."
+    },
+    {
+      "index": 270,
+      "text": "- Ngoại lệ: Sao Giác trúng ngày Dần là Đăng Viên được ngôi cao cả, mọi sự tốt đẹp. Sao Giác trúng ngày Ngọ là Phục Đoạn Sát: rất Kỵ chôn cất, xuất hành, thừa kế, chia lãnh gia tài, khởi công lò nhuộm lò gốm. Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại."
+    },
+    {
+      "index": 271,
+      "text": "Sao Giác trúng ngày Sóc là Diệt Một Nhật: Đại Kỵ đi thuyền, và cũng chẳng nên làm rượu, lập lò gốm lò nhuộm, vào làm hành chánh, thừa kế."
+    },
+    {
+      "index": 272,
+      "text": "Giác tinh tọa tác chủ vinh xương,"
+    },
+    {
+      "index": 273,
+      "text": "Ngoại tiến điền tài cập nữ lang,"
+    },
+    {
+      "index": 274,
+      "text": "Giá thú hôn nhân sinh quý tử,"
+    },
+    {
+      "index": 275,
+      "text": "Văn nhân cập đệ kiến Quân vương."
+    },
+    {
+      "index": 276,
+      "text": "Duy hữu táng mai bất khả dụng,"
+    },
+    {
+      "index": 277,
+      "text": "Tam niên chi hậu, chủ ôn đậu,"
+    },
+    {
+      "index": 278,
+      "text": "Khởi công tu trúc phần mộ địa,"
+    },
+    {
+      "index": 279,
+      "text": "Đường tiền lập kiến chủ nhân vong."
+    },
+    {
+      "index": 280,
+      "text": "2 - Can Kim Long (Sao Cang): Hành Kim - Ngô Hán: Xấu."
+    },
+    {
+      "index": 281,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 282,
+      "text": "(Hung Tú) Tướng tinh con Rồng. Thuộc chòm sao Xử Nữ (Virgo). Chủ trị ngày thứ 6"
+    },
+    {
+      "index": 283,
+      "text": "- Nên làm: Cắt may áo màn (sẽ có lộc ăn)."
+    },
+    {
+      "index": 284,
+      "text": "- Kiêng cử: Chôn cất bị Trùng tang. Cưới gã e phòng không giá lạnh. Tranh đấu kiện tụng lâm bại. Khởi dựng nhà cửa chết con đầu. 10 hoặc 100 ngày sau thì gặp họa, rồi lần lần tiêu hết ruộng đất, nếu làm quan bị cách chức. Sao Cang thuộc Thất Sát Tinh, sanh con nhằm ngày này ắt khó nuôi, nên lấy tên của Sao mà đặt cho nó thì yên lành"
+    },
+    {
+      "index": 285,
+      "text": "- Ngoại lệ: Sao Cang ở nhằm ngày Rằm là Diệt Một Nhật: Cử làm rượu, lập lò gốm lò nhuộm, vào làm hành chánh, thừa kế sự nghiệp, thứ nhất đi thuyền chẳng khỏi nguy hại (vì Diệt Một có nghĩa là chìm mất)"
+    },
+    {
+      "index": 286,
+      "text": "Sao Cang tại Hợi, Mẹo, Mùi trăm việc đều tốt. Thứ nhất tại Mùi."
+    },
+    {
+      "index": 287,
+      "text": "Can tinh tạo tác Trưởng phòng đường,"
+    },
+    {
+      "index": 288,
+      "text": "Thập nhật chi trung chủ hữu ương,"
+    },
+    {
+      "index": 289,
+      "text": "Điền địa tiêu ma, quan thất chức,"
+    },
+    {
+      "index": 290,
+      "text": "Đầu quân định thị hổ lang thương."
+    },
+    {
+      "index": 291,
+      "text": "Giá thú, hôn nhân dụng thử nhật,"
+    },
+    {
+      "index": 292,
+      "text": "Nhi tôn, Tân phụ chủ không phòng,"
+    },
+    {
+      "index": 293,
+      "text": "Mai táng nhược hoàn phùng thử nhật,"
+    },
+    {
+      "index": 294,
+      "text": "Đương thời tai họa, chủ trùng tang."
+    },
+    {
+      "index": 295,
+      "text": "3 - Đê Thổ Lạc (Sao Đê): Hành Thổ - Giả Phục: Xấu."
+    },
+    {
+      "index": 296,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 297,
+      "text": "(Hung Tú) Tướng tinh con Lạc Đà. Thuộc chòm sao Thiên Bình (Libra). Chủ trị ngày thứ 7."
+    },
+    {
+      "index": 298,
+      "text": "- Nên làm: Sao Đê Đại Hung, không có việc chi hạp với nó"
+    },
+    {
+      "index": 299,
+      "text": "- Kiêng cử: Khởi công xây dựng, chôn cất, cưới gã, xuất hành kỵ nhất là đường thủy, sanh con chẳng phải điềm lành nên làm Âm Đức cho nó. Đó chỉ là các việc Đại Kỵ, các việc khác vẫn kiêng cử."
+    },
+    {
+      "index": 300,
+      "text": "- Ngoại lệ: Tại Thân, Tý, Thìn trăm việc đều tốt, nhưng Thìn là tốt hơn hết vì Sao Đê Đăng Viên tại Thìn."
+    },
+    {
+      "index": 301,
+      "text": "Đê tinh tạo tác chủ tai hung,"
+    },
+    {
+      "index": 302,
+      "text": "Phí tận điền viên, thương khố không,"
+    },
+    {
+      "index": 303,
+      "text": "Mai táng bất khả dụng thử nhật,"
+    },
+    {
+      "index": 304,
+      "text": "Huyền thằng, điếu khả, họa trùng trùng,"
+    },
+    {
+      "index": 305,
+      "text": "Nhược thị hôn nhân ly biệt tán,"
+    },
+    {
+      "index": 306,
+      "text": "Dạ chiêu lãng tử nhập phòng trung."
+    },
+    {
+      "index": 307,
+      "text": "Hành thuyền tắc định tạo hướng một,"
+    },
+    {
+      "index": 308,
+      "text": "Cánh sinh lung ách, tử tôn cùng"
+    },
+    {
+      "index": 309,
+      "text": "4 - Phòng Nhật Thố (Sao Phòng): Hành Nhật (Mặt Trời) - Cảnh Yêm: Tốt."
+    },
+    {
+      "index": 310,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 311,
+      "text": "(Kiết Tú) Tướng tinh con Thỏ. Thuộc chòm sao Bọ Cạp/Thiên Yết (Scorpius). Chủ trị ngày Chủ nhật."
+    },
+    {
+      "index": 312,
+      "text": "- Nên làm: Khởi công tạo tác mọi việc đều tốt, thứ nhất là xây dựng nhà, chôn cất, cưới gã, xuất hành, đi thuyền, mưu sự, chặt cỏ phá đất, cắt áo."
+    },
+    {
+      "index": 313,
+      "text": "- Kiêng cử: Sao Phòng là Đại Kiết Tinh, không kỵ việc chi cả."
+    },
+    {
+      "index": 314,
+      "text": "- Ngoại lệ: Tại Đinh Sửu và Tân Sửu đều tốt, tại Dậu càng tốt hơn, vì Sao Phòng Đăng Viên tại Dậu."
+    },
+    {
+      "index": 315,
+      "text": "Trong 6 ngày Kỷ Tị, Đinh Tị, Kỷ Dậu, Quý Dậu, Đinh Sửu, Tân Sửu thì Sao Phòng vẫn tốt với các việc khác, ngoại trừ chôn cất là rất kỵ. Sao Phòng nhằm ngày Tị là Phục Đoạn Sát: chẳng nên chôn cất, xuất hành, các vụ thừa kế, chia lãnh gia tài, khởi công làm lò nhuộm lò gốm. Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại."
+    },
+    {
+      "index": 316,
+      "text": "Phòng tinh tạo tác điền viên tiến,"
+    },
+    {
+      "index": 317,
+      "text": "Huyết tài ngưu mã biến sơn cương,"
+    },
+    {
+      "index": 318,
+      "text": "Cánh chiêu ngoại xứ điền trang trạch,"
+    },
+    {
+      "index": 319,
+      "text": "Vinh hoa cao quý, phúc thọ khang."
+    },
+    {
+      "index": 320,
+      "text": "Mai táng nhược nhiên phùng thử nhật,"
+    },
+    {
+      "index": 321,
+      "text": "Cao quan tiến chức bái Quân vương."
+    },
+    {
+      "index": 322,
+      "text": "Giá thú: Thường nga quy Nguyệt điện,"
+    },
+    {
+      "index": 323,
+      "text": "Tam niên bào tử chế triều đường."
+    },
+    {
+      "index": 324,
+      "text": "5 - Tâm Nguyệt Hồ (Sao Tâm): Hành Nguyệt (Mặt Trăng) - Khấu Tuân: Xấu."
+    },
+    {
+      "index": 325,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 326,
+      "text": "(hung tú) Tướng tinh con chồn. Thuộc chòm sao Bọ Cạp/Thiên Yết (Scorpius). Chủ trị ngày thứ 2."
+    },
+    {
+      "index": 327,
+      "text": "- Nên làm: Tạo tác việc chi cũng không hạp với Hung tú này."
+    },
+    {
+      "index": 328,
+      "text": "- Kiêng cử: Khởi công tạo tác việc chi cũng không khỏi hại, thứ nhất là xây cất, cưới gã, chôn cất, đóng giường, lót giường, tranh tụng."
+    },
+    {
+      "index": 329,
+      "text": "- Ngoại lệ: Ngày Dần Sao Tâm Đăng Viên, có thể dùng các việc nhỏ"
+    },
+    {
+      "index": 330,
+      "text": "Tâm tinh tạo tác đại vi hung,"
+    },
+    {
+      "index": 331,
+      "text": "Cánh tao hình tụng, ngục tù trung,"
+    },
+    {
+      "index": 332,
+      "text": "Ngỗ nghịch quan phi, điền trạch thoái,"
+    },
+    {
+      "index": 333,
+      "text": "Mai táng tốt bộc tử tương tòng."
+    },
+    {
+      "index": 334,
+      "text": "Hôn nhân nhược thị phùng thử nhật,"
+    },
+    {
+      "index": 335,
+      "text": "Tử tử nhi vong tự mãn hung."
+    },
+    {
+      "index": 336,
+      "text": "Tam niên chi nội liên tạo họa,"
+    },
+    {
+      "index": 337,
+      "text": "Sự sự giáo quân một thủy chung."
+    },
+    {
+      "index": 338,
+      "text": "6 - Vĩ Hỏa Hổ (Sao Vĩ): Hành Hỏa - Sầm Bành: Tốt."
+    },
+    {
+      "index": 339,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 340,
+      "text": "(Kiết Tú) tướng tinh con cọp. Thuộc chòm sao Bọ Cạp/Thiên Yết (Scorpius). Chủ trị ngày thứ 3."
+    },
+    {
+      "index": 341,
+      "text": "- Nên làm: Mọi việc đều tốt, tốt nhất là các vụ khởi tạo, chôn cất, cưới gã, xây cất, trổ cửa, đào ao giếng, khai mương rạch, các vụ thủy lợi, khai trương, chặt cỏ phá đất."
+    },
+    {
+      "index": 342,
+      "text": "- Kiêng cử: Đóng giường, lót giường, đi thuyền."
+    },
+    {
+      "index": 343,
+      "text": "- Ngoại lệ: Tại Hợi, Mẹo, Mùi Kỵ chôn cất. Tại Mùi là vị trí Hãm Địa của Sao Vỹ. Tại Kỷ Mẹo rất Hung, còn các ngày Mẹo khác có thể tạm dùng được."
+    },
+    {
+      "index": 344,
+      "text": "Vĩ tinh tạo tác đắc thiên ân,"
+    },
+    {
+      "index": 345,
+      "text": "Phú quý, vinh hoa, phúc thọ ninh,"
+    },
+    {
+      "index": 346,
+      "text": "Chiêu tài tiến bảo, tiến điền địa,"
+    },
+    {
+      "index": 347,
+      "text": "Hòa hợp hôn nhân, quý tử tôn."
+    },
+    {
+      "index": 348,
+      "text": "Mai táng nhược năng y thử nhật,"
+    },
+    {
+      "index": 349,
+      "text": "Nam thanh, nữ chính, tử tôn hưng."
+    },
+    {
+      "index": 350,
+      "text": "Khai môn, phóng thủy, chiêu điền địa,"
+    },
+    {
+      "index": 351,
+      "text": "Đại đại công hầu, viễn bá danh"
+    },
+    {
+      "index": 352,
+      "text": "7 - Cơ thủy Báo (Sao Cơ): Hành Thủy - Phùng Dị: Tốt."
+    },
+    {
+      "index": 353,
+      "text": "Thuộc Đông Phương – Thanh Long (7 Sao)"
+    },
+    {
+      "index": 354,
+      "text": "(Kiết Tú) Tướng tinh con Beo. Thuộc chòm sao Nhân Mã/Cung Thủ (Sagittarius). Chủ trị ngày thứ 4"
+    },
+    {
+      "index": 355,
+      "text": "- Nên làm: Khởi tạo trăm việc đều tốt, tốt nhất là chôn cất, tu bổ mồ mã, trổ cửa, khai trương, xuất hành, các vụ thủy lợi (như tháo nước, đào kinh, khai thông mương rảnh...)."
+    },
+    {
+      "index": 356,
+      "text": "- Kiêng cử: Đóng giường, lót giường, đi thuyền."
+    },
+    {
+      "index": 357,
+      "text": "- Ngoại lệ: Tại Thân, Tý, Thìn trăm việc kỵ, duy tại Tý có thể tạm dùng. Ngày Thìn Sao Cơ Đăng Viên lẽ ra rất tốt nhưng lại phạm Phục Đoạn. Phạm Phục Đoạn thì kỵ chôn cất, xuất hành, các vụ thừa kế, chia lãnh gia tài, khởi công làm lò nhuộm lò gốm ; Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại."
+    },
+    {
+      "index": 358,
+      "text": "Cơ tinh tạo tác chủ cao cường,"
+    },
+    {
+      "index": 359,
+      "text": "Tuế tuế niên niên đại cát xương,"
+    },
+    {
+      "index": 360,
+      "text": "Mai táng, tu phần đại cát lợi,"
+    },
+    {
+      "index": 361,
+      "text": "Điền tàm, ngưu mã biến sơn cương."
+    },
+    {
+      "index": 362,
+      "text": "Khai môn, phóng thủy chiêu tài cốc,"
+    },
+    {
+      "index": 363,
+      "text": "Khiếp mãn kim ngân, cốc mãn thương."
+    },
+    {
+      "index": 364,
+      "text": "Phúc ấm cao quan gia lộc vị,"
+    },
+    {
+      "index": 365,
+      "text": "Lục thân phong lộc, phúc an khang"
+    },
+    {
+      "index": 366,
+      "text": "Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 367,
+      "text": "8 - Đẩu Mộc Giải (Sao Đẩu): Hành Mộc - Tống Hữu: Tốt."
+    },
+    {
+      "index": 368,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 369,
+      "text": "(Kiết Tú) Tướng tinh con cua. Thuộc chòm sao Nhân Mã (Sagittarius). Chủ trị ngày thứ 5."
+    },
+    {
+      "index": 370,
+      "text": "- Nên làm: Khởi tạo trăm việc đều tốt, tốt nhất là xây đắp hay sửa chữa phần mộ, trổ cửa, tháo nước, các vụ thủy lợi, chặt cỏ phá đất, may cắt áo mão, kinh doanh, giao dịch, mưu cầu công danh."
+    },
+    {
+      "index": 371,
+      "text": "- Kiêng cử: Rất kỵ đi thuyền. Con mới sanh đặt tên nó là Đẩu, Giải, Trại hoặc lấy tên Sao của năm hay tháng hiện tại mà đặt tên cho nó dễ nuôi."
+    },
+    {
+      "index": 372,
+      "text": "- Ngoại lệ: Tại Tị mất sức. Tại Dậu tốt. Ngày Sửu Đăng Viên rất tốt nhưng lại phạm Phục Đoạn. Phạm Phục Đoạn thì kỵ chôn cất, xuất hành, thừa kế, chia lãnh gia tài, khởi công làm lò nhuộm lò gốm ; Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại"
+    },
+    {
+      "index": 373,
+      "text": "Đẩu tinh tạo tác chủ chiêu tài,"
+    },
+    {
+      "index": 374,
+      "text": "Văn vũ quan viên vị đỉnh thai,"
+    },
+    {
+      "index": 375,
+      "text": "Điền trạch tiền tài thiên vạn tiến,"
+    },
+    {
+      "index": 376,
+      "text": "Phần doanh tu trúc, phú quý lai."
+    },
+    {
+      "index": 377,
+      "text": "Khai môn, phóng thủy, chiêu ngưu mã,"
+    },
+    {
+      "index": 378,
+      "text": "Vượng tài nam nữ chủ hòa hài,"
+    },
+    {
+      "index": 379,
+      "text": "Ngộ thử cát tinh lai chiến hộ,"
+    },
+    {
+      "index": 380,
+      "text": "Thời chi phúc khánh, vĩnh vô tai."
+    },
+    {
+      "index": 381,
+      "text": "9 - Ngưu Kim Ngưu (Sao Ngưu): Hành Kim - Sái Tuân: Xấu."
+    },
+    {
+      "index": 382,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 383,
+      "text": "(Hung Tú) Tướng tinh con trâu. Thuộc các chòm sao Nhân Mã và Bạch Dương. Chủ trị ngày thứ 6."
+    },
+    {
+      "index": 384,
+      "text": "- Nên làm: Đi thuyền, cắt may áo mão."
+    },
+    {
+      "index": 385,
+      "text": "- Kiêng cử: Khởi công tạo tác việc chi cũng hung hại. Nhất là xây cất nhà, dựng trại, cưới gã, trổ cửa, làm thủy lợi, nuôi tằm, gieo cấy, khai khẩn, khai trương, xuất hành đường bộ."
+    },
+    {
+      "index": 386,
+      "text": "- Ngoại lệ: Ngày Ngọ Đăng Viên rất tốt. Ngày Tuất yên lành. Ngày Dần là Tuyệt Nhật, chớ động tác việc chi, riêng ngày Nhâm Dần dùng được. Trúng ngày 14 ÂL là Diệt Một Sát, cử: làm rượu, lập lò nhuộm lò gốm, vào làm hành chánh, thừa kế sự nghiệp, kỵ nhất là đi thuyền chẳng khỏi rủi ro.Sao Ngưu là 1 trong Thất sát Tinh, sanh con khó nuôi, nên lấy tên Sao của năm, tháng hayngày mà đặt tên cho trẻ và làm việc Âm Đức ngay trong tháng sanh nó mới mong nuôi khôn lớn được"
+    },
+    {
+      "index": 387,
+      "text": "Ngưu tinh tạo tác chủ tai nguy,"
+    },
+    {
+      "index": 388,
+      "text": "Cửu hoành tam tai bất khả thôi,"
+    },
+    {
+      "index": 389,
+      "text": "Gia trạch bất an, nhân khẩu thoái,"
+    },
+    {
+      "index": 390,
+      "text": "Điền tàm bất lợi, chủ nhân suy."
+    },
+    {
+      "index": 391,
+      "text": "Giá thú, hôn nhân giai tự tổn,"
+    },
+    {
+      "index": 392,
+      "text": "Kim ngân tài cốc tiệm vô chi."
+    },
+    {
+      "index": 393,
+      "text": "Nhược thị khai môn, tính phóng thủy,"
+    },
+    {
+      "index": 394,
+      "text": "Ngưu trư dương mã diệc thương bi"
+    },
+    {
+      "index": 395,
+      "text": "10 - Nữ Thổ Bức (Sao Nữ): Hành Thổ- Cảnh Đan: Xấu."
+    },
+    {
+      "index": 396,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 397,
+      "text": "(Hung Tú) Tướng tinh con dơi. Thuộc chòm sao Bảo Bình (Aquarius). Chủ trị ngày thứ 7."
+    },
+    {
+      "index": 398,
+      "text": "- Nên làm: Kết màn, may áo."
+    },
+    {
+      "index": 399,
+      "text": "- Kiêng cử: Khởi công tạo tác trăm việc đều có hại, hung hại nhất là trổ cửa, khơi đườngtháo nước, chôn cất, đầu đơn kiện cáo."
+    },
+    {
+      "index": 400,
+      "text": "- Ngoại lệ: Tại Hợi Mẹo Mùi đều gọi là đường cùng. Ngày Quý Hợi cùng cực đúng mức vì là ngày chót của 60 Hoa giáp. Ngày Hợi tuy Sao Nữ Đăng Viên song cũng chẳng nên dùng. Ngày Mẹo là Phục Đoạn Sát, rất kỵ chôn cất, xuất hành, thừa kế sự nghiệp, chialãnh gia tài, khởi công làm lò nhuộm lò gốm; Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại"
+    },
+    {
+      "index": 401,
+      "text": "Nữ tinh tạo tác tổn bà nương,"
+    },
+    {
+      "index": 402,
+      "text": "Huynh đệ tương hiềm tựa hổ lang,"
+    },
+    {
+      "index": 403,
+      "text": "Mai táng sinh tai phùng quỷ quái,"
+    },
+    {
+      "index": 404,
+      "text": "Điên tà tật bệnh cánh ôn hoàng."
+    },
+    {
+      "index": 405,
+      "text": "Vi sự đáo quan, tài thất tán,"
+    },
+    {
+      "index": 406,
+      "text": "Tả lị lưu liên bất khả đương."
+    },
+    {
+      "index": 407,
+      "text": "Khai môn, phóng thủy phùng thử nhật,"
+    },
+    {
+      "index": 408,
+      "text": "Toàn gia tán bại, chủ ly hương"
+    },
+    {
+      "index": 409,
+      "text": "11 - Hư Nhật Thử (Sao Hư): Hành Nhật - Cái Duyên: Xấu."
+    },
+    {
+      "index": 410,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 411,
+      "text": "(Hung Tú) Tướng tinh con chuột. Thuộc các chòm sao Bảo Bình và Ngựa Con (Equuleus). Chủ trị ngày chủ nhật."
+    },
+    {
+      "index": 412,
+      "text": "- Nên làm: Hư có nghĩa là hư hoại, không có việc chi hợp với Sao Hư."
+    },
+    {
+      "index": 413,
+      "text": "- Kiêng cử: Khởi công tạo tác trăm việc đều không may, thứ nhất là xây cất nhà cửa, cưới gã, khai trương, trổ cửa, tháo nước, đào kinh rạch."
+    },
+    {
+      "index": 414,
+      "text": "- Ngoại lệ: Gặp Thân, Tý, Thìn đều tốt, tại Thìn Đắc Địa tốt hơn hết. Hạp với 6 ngày Giáp Tý, Canh Tý, Mậu Thân, Canh Thân, Bính Thìn, Mậu Thìn có thể động sự. Trừ ngày Mậu Thìn ra, còn 5 ngày kia kỵ chôn cất. Gặp ngày Tý thì Sao Hư Đăng Viên rất tốt, nhưng lại phạm Phục Đoạn Sát: Kỵ chôn cất, xuất hành, thừa kế, chia lãnh gia tài sự nghiệp, khởi công làm lò nhuộm lò gốm, Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại.Gặp Huyền Nhật là những ngày 7, 8 , 22, 23 Âm Lịch thì Sao Hư phạm Diệt Một: Cử làm rượu, lập lò gốm lò nhuộm, vào làm hành chánh, thừa kế, thứ nhất là đi thuyền ắt chẳng khỏi rủi ro"
+    },
+    {
+      "index": 415,
+      "text": "Hư tinh tạo tác chủ tai ương,"
+    },
+    {
+      "index": 416,
+      "text": "Nam nữ cô miên bất nhất song,"
+    },
+    {
+      "index": 417,
+      "text": "Nội loạn phong thanh vô lễ tiết,"
+    },
+    {
+      "index": 418,
+      "text": "Nhi tôn, tức phụ bạn nhân sàng,"
+    },
+    {
+      "index": 419,
+      "text": "Khai môn, phóng thủy chiêu tai họa,"
+    },
+    {
+      "index": 420,
+      "text": "Hổ giảo, xà thương cập tốt vong."
+    },
+    {
+      "index": 421,
+      "text": "Tam tam ngũ ngũ liên niên bệnh,"
+    },
+    {
+      "index": 422,
+      "text": "Gia phá, nhân vong, bất khả đương."
+    },
+    {
+      "index": 423,
+      "text": "12 - Nguy Nguyệt Yến (Sao Nguy): Hành Nguyệt - Kiên Đàm: Xấu."
+    },
+    {
+      "index": 424,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 425,
+      "text": "(Bình Tú) Tướng tinh con chim én. Thuộc các chòm sao Bảo Bình và Ngựa Con (Equuleus). Chủ trị ngày thứ 2."
+    },
+    {
+      "index": 426,
+      "text": "- Nên làm: Chôn cất rất tốt, lót giường bình yên."
+    },
+    {
+      "index": 427,
+      "text": "- Kiêng Cử: Dựng nhà, trổ cửa, gác đòn đông, tháo nước, đào mương rạch, đi thuyền."
+    },
+    {
+      "index": 428,
+      "text": "- Ngoại lệ: Tại Tị, Dậu, Sửu trăm việc đều tốt, tại Dậu tốt nhất. Ngày Sửu Sao Nguy Đăng Viên: tạo tác sự việc được quý hiển"
+    },
+    {
+      "index": 429,
+      "text": "Nguy tinh bât khả tạo cao đường,"
+    },
+    {
+      "index": 430,
+      "text": "Tự điếu, tao hình kiến huyết quang"
+    },
+    {
+      "index": 431,
+      "text": "Tam tuế hài nhi tao thủy ách,"
+    },
+    {
+      "index": 432,
+      "text": "Hậu sinh xuất ngoại bất hoàn lương."
+    },
+    {
+      "index": 433,
+      "text": "Mai táng nhược hoàn phùng thử nhật,"
+    },
+    {
+      "index": 434,
+      "text": "Chu niên bách nhật ngọa cao sàng,"
+    },
+    {
+      "index": 435,
+      "text": "Khai môn, phóng thủy tạo hình trượng,"
+    },
+    {
+      "index": 436,
+      "text": "Tam niên ngũ tái diệc bi thương"
+    },
+    {
+      "index": 437,
+      "text": "13 - Thất Hỏa Trư (Sao Thất): Hành Hỏa - Cảnh Thuần: Tốt."
+    },
+    {
+      "index": 438,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 439,
+      "text": "(Kiết Tú) Tướng tinh con heo. Thuộc chòm sao Ngựa Bay (Pegasus). Chủ trị ngày thứ 3"
+    },
+    {
+      "index": 440,
+      "text": "- Nên làm: Khởi công trăm việc đều tốt. Tốt nhất là xây cất nhà cửa, cưới gã, chôn cất, trổ cửa, tháo nước, các việc thủy lợi, đi thuyền, chặt cỏ phá đất."
+    },
+    {
+      "index": 441,
+      "text": "- Kiêng cử: Sao thất Đại Kiết không có việc chi phải cử."
+    },
+    {
+      "index": 442,
+      "text": "- Ngoại lệ:Tại Dần, Ngọ, Tuất nói chung đều tốt, ngày Ngọ Đăng viên rất hiển đạt. Ba ngày Bính Dần, Nhâm Dần, Giáp Ngọ rất nên xây dựng và chôn cất, song những ngày Dần khác không tốt. Vì sao Thất gặp ngày Dần là phạm Phục Đoạn Sát (kiêng cữ như trên)"
+    },
+    {
+      "index": 443,
+      "text": "Thất tinh tạo tác tiến điền ngưu,"
+    },
+    {
+      "index": 444,
+      "text": "Nhi tôn đại đại cận quân hầu,"
+    },
+    {
+      "index": 445,
+      "text": "Phú quý vinh hoa thiên thượng chỉ,"
+    },
+    {
+      "index": 446,
+      "text": "Thọ như Bành tổ nhập thiên thu."
+    },
+    {
+      "index": 447,
+      "text": "Khai môn, phóng thủy chiêu tài bạch,"
+    },
+    {
+      "index": 448,
+      "text": "Hòa hợp hôn nhân sinh quý nhi."
+    },
+    {
+      "index": 449,
+      "text": "Mai táng nhược năng y thử nhật"
+    },
+    {
+      "index": 450,
+      "text": "Môn đình hưng vượng, Phúc vô ưu!"
+    },
+    {
+      "index": 451,
+      "text": "14 - Bích Thủy Dư / Du (Sao Bích): Hành Thủy - Tang Cung: Tốt."
+    },
+    {
+      "index": 452,
+      "text": "Thuộc Bắc Phương – Huyền Vũ (7 sao)"
+    },
+    {
+      "index": 453,
+      "text": "(Kiết Tú) Tướng tinh con rái cá. Thuộc các chòm sao Ngựa Bay và Tiên Nữ/Andromeda. Chủ trị ngày thứ 4."
+    },
+    {
+      "index": 454,
+      "text": "- Nên làm: Khởi công tạo tác việc chi cũng tốt. Tốt nhất là xây cất nhà, cưới gã, chôn cất, trổ cửa, dựng cửa, tháo nước, các vụ thuỷ lợi, chặt cỏ phá đất, cắt áo thêu áo, khai trương, xuất hành, làm việc thiện ắt. Thiện quả tới mau hơn."
+    },
+    {
+      "index": 455,
+      "text": "- Kiêng cử: Sao Bích toàn kiết, không có việc chi phải kiêng cử. - Ngoại lệ: Tại Hợi Mẹo Mùi trăm việc kỵ, thứ nhất trong Mùa Đông. Riêng ngày Hợi Sao Bích Đăng Viên nhưng phạm Phục Đọan Sát (Kiêng cữ như trên)"
+    },
+    {
+      "index": 456,
+      "text": "Bích tinh tạo ác tiến trang điền"
+    },
+    {
+      "index": 457,
+      "text": "Ti tâm đại thục phúc thao thiên,"
+    },
+    {
+      "index": 458,
+      "text": "Nô tỳ tự lai, nhân khẩu tiến,"
+    },
+    {
+      "index": 459,
+      "text": "Khai môn, phóng thủy xuất anh hiền,"
+    },
+    {
+      "index": 460,
+      "text": "Mai táng chiêu tài, quan phẩm tiến,"
+    },
+    {
+      "index": 461,
+      "text": "Gia trung chủ sự lạc thao nhiên"
+    },
+    {
+      "index": 462,
+      "text": "Hôn nhân cát lợi sinh quý tử,"
+    },
+    {
+      "index": 463,
+      "text": "Tảo bá thanh danh khán tổ tiên."
+    },
+    {
+      "index": 464,
+      "text": "Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 465,
+      "text": "15 - Khuê Mộc Lang (Sao Khuê): Hành Mộc - Mã Vũ: Xấu."
+    },
+    {
+      "index": 466,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 467,
+      "text": "(Bình Tú) Tướng tinh con chó sói. Thuộc chòm sao Song Ngư (Pisces). Chủ trị ngày thứ 5."
+    },
+    {
+      "index": 468,
+      "text": "- Nên làm: Tạo dựng nhà phòng, nhập học, ra đi cầu công danh, cắt áo"
+    },
+    {
+      "index": 469,
+      "text": "- Kiêng cử: Chôn cất, khai trương, trổ cửa dựng cửa, khai thông đường nước, đào ao móc giếng, thưa kiện, đóng giường lót giường."
+    },
+    {
+      "index": 470,
+      "text": "- Ngoại lệ: Sao Khuê là 1 trong Thất Sát Tinh, nếu đẻ con nhằm ngày này thì nên lấy tên Sao Khuê hay lấy tên Sao của năm tháng mà đặt cho trẻ dễ nuôi. Sao Khuê Hãm Địa tại Thân: Văn Khoa thất bại.Tại Ngọ là chỗ Tuyệt gặp Sanh, mưu sự đắc lợi, thứ nhất gặp Canh Ngọ.Tại Thìn tốt vừa vừa. Ngày Thân Sao Khuê Đăng Viên: Tiến thân danh"
+    },
+    {
+      "index": 471,
+      "text": "Khuê tinh tạo tác đắc trinh tường,"
+    },
+    {
+      "index": 472,
+      "text": "Gia hạ vinh hòa đại cát xương,"
+    },
+    {
+      "index": 473,
+      "text": "Nhược thị táng mai âm tốt tử,"
+    },
+    {
+      "index": 474,
+      "text": "Đương niên định chủ lưỡng tam tang."
+    },
+    {
+      "index": 475,
+      "text": "Khán khán vận kim, hình thương đáo,"
+    },
+    {
+      "index": 476,
+      "text": "Trùng trùng quan sự, chủ ôn hoàng."
+    },
+    {
+      "index": 477,
+      "text": "Khai môn phóng thủy chiêu tai họa,"
+    },
+    {
+      "index": 478,
+      "text": "Tam niên lưỡng thứ tổn nhi lang"
+    },
+    {
+      "index": 479,
+      "text": "16 - Lâu Kim Cẩu (Sao Lâu): Hành Kim - Lưu Long: Tốt."
+    },
+    {
+      "index": 480,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 481,
+      "text": "(Kiết Tú) Tướng tinh con chó. Thuộc chòm sao Bạch Dương (Aries). Chủ trị ngày thứ 6."
+    },
+    {
+      "index": 482,
+      "text": "- Nên làm: Khởi công mọi việc đều tốt. Tốt nhất là dựng cột, cất lầu, làm dàn gác, cưới gã, trổ cửa dựng cửa, tháo nước hay các vụ thủy lợi, cắt áo."
+    },
+    {
+      "index": 483,
+      "text": "- Kiêng cử: Đóng giường , lót giường, đi đường thủy."
+    },
+    {
+      "index": 484,
+      "text": "- Ngoại lệ: Tại Ngày Dậu Đăng Viên: Tạo tác đại lợi.Tại Tị gọi là Nhập Trù rất tốt. Tại Sửu tốt vừa vừa. Gặp ngày cuối tháng thì Sao Lâu phạm Diệt Một: rất kỵ đi thuyền, cữ làm rượu, lập lò gốm lò nhuộm, vào làm hành chánh, thừa kế sự nghiệp"
+    },
+    {
+      "index": 485,
+      "text": "Lâu tinh thụ trụ, khởi môn đình,"
+    },
+    {
+      "index": 486,
+      "text": "Tài vượng, gia hòa, sự sự hưng,"
+    },
+    {
+      "index": 487,
+      "text": "Ngoại cảnh, tiền tài bách nhật tiến,"
+    },
+    {
+      "index": 488,
+      "text": "Nhất gia huynh đệ bá thanh danh."
+    },
+    {
+      "index": 489,
+      "text": "Hôn nhân tiến ích, sinh quý tử,"
+    },
+    {
+      "index": 490,
+      "text": "Ngọc bạch kim lang tương mãn doanh,"
+    },
+    {
+      "index": 491,
+      "text": "Phóng thủy, khai môn giai cát lợi,"
+    },
+    {
+      "index": 492,
+      "text": "Nam vinh, nữ quý, thọ khang ninh"
+    },
+    {
+      "index": 493,
+      "text": "17 - Vị Thổ Trĩ (Sao Vị): Hành Thổ - Ô Thành: Tốt."
+    },
+    {
+      "index": 494,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 495,
+      "text": "(Kiết Tú) Tướng tinh con chim trĩ. Thuộc chòm sao Bạch Dương (Aries). Chủ trị ngày thứ 7"
+    },
+    {
+      "index": 496,
+      "text": "- Nên làm: Khởi công tạo tác việc chi cũng lợi. Tốt nhất là xây cất, cưới gã, chôn cất, chặt cỏ phá đất, gieo trồng, lấy giống."
+    },
+    {
+      "index": 497,
+      "text": "- Kiêng cử: Đi thuyền."
+    },
+    {
+      "index": 498,
+      "text": "- Ngoại lệ: Sao Vị mất chí khí tại Dần, thứ nhất tại Mậu Dần, rất là Hung, chẳng nên cưới gã, xây cất nhà cửa.Tại Tuất Sao Vị Đăng Viên nên mưu cầu công danh, nhưng cũng phạm Phục Đoạn (kiêng cữ như các mục trên)"
+    },
+    {
+      "index": 499,
+      "text": "Vị tinh tạo tác sự như hà,"
+    },
+    {
+      "index": 500,
+      "text": "Phú quý, vinh hoa, hỷ khí đa,"
+    },
+    {
+      "index": 501,
+      "text": "Mai táng tiến lâm quan lộc vị,"
+    },
+    {
+      "index": 502,
+      "text": "Tam tai, cửu họa bất phùng tha."
+    },
+    {
+      "index": 503,
+      "text": "Hôn nhân ngộ thử gia phú quý,"
+    },
+    {
+      "index": 504,
+      "text": "Phu phụ tề mi, vĩnh bảo hòa,"
+    },
+    {
+      "index": 505,
+      "text": "Tòng thử môn đình sinh cát khánh,"
+    },
+    {
+      "index": 506,
+      "text": "Nhi tôn đại đại bảo kim pha"
+    },
+    {
+      "index": 507,
+      "text": "18 - Mão Nhật Kê (Sao Mão): Hành Nhật - Vương Lương: Xấu."
+    },
+    {
+      "index": 508,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 509,
+      "text": "(Hung Tú) Tướng tinh con gà. Thuộc cụm sao Tua Rua (Pleiades) trong chòm sao Kim Ngưu (Taurus). Chủ trị ngày chủ nhật."
+    },
+    {
+      "index": 510,
+      "text": "- Nên làm: Xây dựng, tạo tác"
+    },
+    {
+      "index": 511,
+      "text": "- Kiêng cử: Chôn Cất (ĐẠI KỴ), cưới gã, trổ cửa dựng cửa, khai ngòi phóng thủy, khai trương, xuất hành, đóng giường lót giường. Các việc khác cũng không hay."
+    },
+    {
+      "index": 512,
+      "text": "- Ngoại lệ: Tại Mùi mất chí khí.Tại Ất Mẹo và Đinh Mẹo tốt, Ngày Mẹo Đăng Viên cưới gã tốt, nhưng ngày Quý Mẹo tạo tác mất tiền của. Hạp với 8 ngày: Ất Mẹo, Đinh Mẹo, Tân Mẹo, Ất Mùi, Đinh Mùi, Tân Mùi, Ất Hợi, Tân Hợi."
+    },
+    {
+      "index": 513,
+      "text": "Mão tinh tạo tác tiến điền ngưu,"
+    },
+    {
+      "index": 514,
+      "text": "Mai táng quan tai bất đắc hưu,"
+    },
+    {
+      "index": 515,
+      "text": "Trùng tang nhị nhật, tam nhân tử,"
+    },
+    {
+      "index": 516,
+      "text": "Mại tận điền viên, bất năng lưu."
+    },
+    {
+      "index": 517,
+      "text": "Khai môn, phóng thủy chiêu tai họa,"
+    },
+    {
+      "index": 518,
+      "text": "Tam tuế hài nhi bạch liễu đầu,"
+    },
+    {
+      "index": 519,
+      "text": "Hôn nhân bất khả phùng nhật thử,"
+    },
+    {
+      "index": 520,
+      "text": "Tử biệt sinh ly thật khả sầu."
+    },
+    {
+      "index": 521,
+      "text": "19 - Tất Nguyệt Ô (Sao Tất): Hành Nguyệt - Trần Tuấn: Tốt."
+    },
+    {
+      "index": 522,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 523,
+      "text": "(Kiết Tú) Tướng tinh con quạ. Thuộc chòm sao Kim Ngưu (Taurus). Chủ trị ngày thứ 2."
+    },
+    {
+      "index": 524,
+      "text": "- Nên làm: Khởi công tạo tác việc chi cũng tốt. Tốt nhất là chôn cất, cưới gã, trổ cửa dựng cửa, đào kinh, tháo nước, khai mương, móc giếng, chặt cỏ phá đất. Những việc khác cũng tốt như làm ruộng, nuôi tằm, khai trương, xuất hành, nhập học"
+    },
+    {
+      "index": 525,
+      "text": ".- Kiêng cử: Đi thuyền."
+    },
+    {
+      "index": 526,
+      "text": "- Ngoại lệ: Tại Thân, Tý, Thìn đều tốt. Tại Thân hiệu là Nguyệt Quải Khôn Sơn, trăng treo đầu núi Tây Nam, rất là tốt. Lại thêm Sao tất Đăng Viên ở ngày Thân, cưới gã và chôn cất là 2 điều ĐẠI KIẾT."
+    },
+    {
+      "index": 527,
+      "text": "Tất tinh tạo tác chủ quang tiền,"
+    },
+    {
+      "index": 528,
+      "text": "Mãi dắc điền viên hữu lật tiền"
+    },
+    {
+      "index": 529,
+      "text": "Mai táng thử nhâtj thiêm quan chức,"
+    },
+    {
+      "index": 530,
+      "text": "Điền tàm đại thực lai phong niên"
+    },
+    {
+      "index": 531,
+      "text": "Khai môn phóng thủy đa cát lật,"
+    },
+    {
+      "index": 532,
+      "text": "Hợp gia nhân khẩu đắc an nhiên,"
+    },
+    {
+      "index": 533,
+      "text": "Hôn nhân nhược năng phùng thử nhật,"
+    },
+    {
+      "index": 534,
+      "text": "Sinh đắc hài nhi phúc thọ toàn"
+    },
+    {
+      "index": 535,
+      "text": "20 – Chủy Hỏa Hầu (Sao Chủy): Hành Hỏa - Phó Tuấn: Xấu"
+    },
+    {
+      "index": 536,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 537,
+      "text": "(Hung Tú) Tướng tinh con khỉ. Thuộc chòm sao Thợ Săn/Lạp Hộ (Orion). Chủ trị ngày thứ 3."
+    },
+    {
+      "index": 538,
+      "text": "- Nên làm: Không có sự việc chi hợp với Sao Chủy."
+    },
+    {
+      "index": 539,
+      "text": "- Kiêng cử: Khởi công tạo tác việc chi cũng không tốt. KỴ NHẤT là chôn cất và các vụ thuộc về chết chôn như sửa đắp mồ mả, làm sanh phần (làm mồ mã để sẵn), đóng thọ đường (đóng hòm để sẵn)"
+    },
+    {
+      "index": 540,
+      "text": "- Ngoại lệ: Tại tị bị đoạt khí, Hung càng thêm hung. Tại dậu rất tốt, vì Sao Chủy Đăng Viên ở Dậu, khởi động thăng tiến. Nhưng cũng phạm Phục Đoạn Sát. Tại Sửu là Đắc Địa, ắt nên. Rất hợp với ngày Đinh sửu và Tân Sửu, tạo tác Đại Lợi, chôn cất Phú Quý song toàn."
+    },
+    {
+      "index": 541,
+      "text": "Truỷ tinh tạo tác hữu đồ hình,"
+    },
+    {
+      "index": 542,
+      "text": "Tam niên tất đinh chủ linh đinh,"
+    },
+    {
+      "index": 543,
+      "text": "Mai táng tốt tử đa do thử,"
+    },
+    {
+      "index": 544,
+      "text": "Thủ định Dần niên tiện sát nhân."
+    },
+    {
+      "index": 545,
+      "text": "Tam tang bất chỉ giai do thử,"
+    },
+    {
+      "index": 546,
+      "text": "Nhất nhân dược độc nhị nhân thân."
+    },
+    {
+      "index": 547,
+      "text": "Gia môn điền địa giai thoán bại,"
+    },
+    {
+      "index": 548,
+      "text": "Thương khố kim tiền hóa tác cần."
+    },
+    {
+      "index": 549,
+      "text": "21 - Sâm Thủy Viên (Sao Sâm): Hành Thủy - Đỗ Mậu: Tốt"
+    },
+    {
+      "index": 550,
+      "text": "Thuộc Tây Phương – Bạch Hổ (7 sao)"
+    },
+    {
+      "index": 551,
+      "text": "(Bình Tú) Tướng tinh con vượn. Thuộc chòm sao Thợ Săn/Lạp Hộ (Orion). Chủ trị ngày thứ 4."
+    },
+    {
+      "index": 552,
+      "text": "- Nên làm: Khởi công tạo tác nhiều việc tốt như: xây cất nhà, dựng cửa trổ cửa, nhập học, đi thuyền, làm thủy lợi, tháo nước đào mương."
+    },
+    {
+      "index": 553,
+      "text": "- Kiêng cử: Cưới gã, chôn cất, đóng giường lót giường, kết bạn."
+    },
+    {
+      "index": 554,
+      "text": "- Ngoại lệ: Ngày Tuất Sao sâm Đăng Viên, nên phó nhậm, cầu công danh hiển hách."
+    },
+    {
+      "index": 555,
+      "text": "Sâm tinh tạo tác vượng nhân gia,"
+    },
+    {
+      "index": 556,
+      "text": "Văn tinh triều diệu, đại quang hoa,"
+    },
+    {
+      "index": 557,
+      "text": "Chỉ nhân tạo tác điền tài vượng,"
+    },
+    {
+      "index": 558,
+      "text": "Mai táng chiêu tật, táng hoàng sa."
+    },
+    {
+      "index": 559,
+      "text": "Khai môn, phóng thủy gia quan chức,"
+    },
+    {
+      "index": 560,
+      "text": "Phòng phòng tôn tử kiến điền gia,"
+    },
+    {
+      "index": 561,
+      "text": "Hôn nhân hứa định tao hình khắc,"
+    },
+    {
+      "index": 562,
+      "text": "Nam nữ chiêu khai mộ lạc hoa."
+    },
+    {
+      "index": 563,
+      "text": "Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 564,
+      "text": "22 - Tỉnh Mộc Hãn (Sao Tỉnh): Hành Mộc - Diêu Kỳ: Tốt."
+    },
+    {
+      "index": 565,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 566,
+      "text": "(Bình Tú) Tướng tinh con dê trừu. Thuộc chòm sao Song Tử (Gemini). Chủ trị ngày thứ 5."
+    },
+    {
+      "index": 567,
+      "text": "- Nên làm: Tạo tác nhiều việc tốt như xây cất, trổ cửa dựng cửa, mở thông đường nước, đào mương móc giếng, nhậm chức, nhập học, đi thuyền."
+    },
+    {
+      "index": 568,
+      "text": "- Kiêng cử: Chôn cất, tu bổ phần mộ, làm sanh phần, đóng thọ đường."
+    },
+    {
+      "index": 569,
+      "text": "- Ngoại lệ: Tại Hợi, Mẹo, Mùi trăm việc tốt. Tại Mùi là Nhập Miếu, khởi động vinh quang."
+    },
+    {
+      "index": 570,
+      "text": "Tỉnh tinh tạo tác vượng tàm điền,"
+    },
+    {
+      "index": 571,
+      "text": "Kim bảng đề danh đệ nhất tiên,"
+    },
+    {
+      "index": 572,
+      "text": "Mai táng, tu phòng kinh tốt tử,"
+    },
+    {
+      "index": 573,
+      "text": "Hốt phong tật nhập hoàng điên tuyền"
+    },
+    {
+      "index": 574,
+      "text": "Khai môn, phóng thủy chiêu tài bạch,"
+    },
+    {
+      "index": 575,
+      "text": "Ngưu mã trư dương vượng mạc cát,"
+    },
+    {
+      "index": 576,
+      "text": "Quả phụ điền đường lai nhập trạch,"
+    },
+    {
+      "index": 577,
+      "text": "Nhi tôn hưng vượng hữu dư tiền."
+    },
+    {
+      "index": 578,
+      "text": "23 - Quỷ Kim Dương (Sao Quỷ): Hành Kim - Vương Phách: Xấu."
+    },
+    {
+      "index": 579,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 580,
+      "text": "(Hung Tú) Tướng tinh con dê. Thuộc chòm sao Cự Giải/Bắc Giải (Cancer). Chủ trị ngày thứ 6"
+    },
+    {
+      "index": 581,
+      "text": "- Nên làm: Chôn cất, chặt cỏ phá đất, cắt áo."
+    },
+    {
+      "index": 582,
+      "text": "- Kiêng cử: Khởi tạo việc chi cũng hại. Hại nhất là xây cất nhà, cưới gã, trổ cửa dựng cửa, tháo nước, đào ao giếng, động đất, xây tường, dựng cột."
+    },
+    {
+      "index": 583,
+      "text": "- Ngoại lệ: Ngày Tý Đăng Viên thừa kế tước phong tốt, phó nhiệm may mắn. Ngày Thân là Phục Đoạn Sát kỵ chôn cất, xuất hành, thừa kế, chia lãnh gia tài, khởi công lập lò gốm lò nhuộm; Nhưng nên dứt vú trẻ em, xây tường, lấp hang lỗ, làm cầu tiêu, kết dứt điều hung hại. Nhằm ngày 16 Âm Lịch là ngày Diệt Một kỵ làm rượu, lập lò gốm lò nhuộm, vào làm hành chánh, kỵ nhất đi thuyền."
+    },
+    {
+      "index": 584,
+      "text": "Quỷ tinh khởi tạo tất nhân vong,"
+    },
+    {
+      "index": 585,
+      "text": "Đường tiền bất kiến chủ nhân lang,"
+    },
+    {
+      "index": 586,
+      "text": "Mai táng thử nhật, quan lộc chí,"
+    },
+    {
+      "index": 587,
+      "text": "Nhi tôn đại đại cận quân vương."
+    },
+    {
+      "index": 588,
+      "text": "Khai môn phóng thủy tu thương tử,"
+    },
+    {
+      "index": 589,
+      "text": "Hôn nhân phu thê bất cửu trường."
+    },
+    {
+      "index": 590,
+      "text": "Tu thổ trúc tường thương sản nữ,"
+    },
+    {
+      "index": 591,
+      "text": "Thủ phù song nữ lệ uông uông."
+    },
+    {
+      "index": 592,
+      "text": "24 - Liễu Thổ Chương (Sao Liễu): Hành Thổ - Nhậm Quang: Xấu."
+    },
+    {
+      "index": 593,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 594,
+      "text": "(Hung tú) Tướng tinh con gấu ngựa. Thuộc chòm sao Rắn Biển (Hydra). Chủ trị ngày thứ 7."
+    },
+    {
+      "index": 595,
+      "text": "- Nên làm: Không có việc chi hạp với Sao Liễu."
+    },
+    {
+      "index": 596,
+      "text": "- Kiêng cử: Khởi công tạo tác việc chi cũng hung hại. Hung hại nhất là chôn cất, xây đắp, trổ cửa dựng cửa, tháo nước, đào ao lũy, làm thủy lợi."
+    },
+    {
+      "index": 597,
+      "text": "- Ngoại lệ: Tại Ngọ trăm việc tốt. Tại Tị Đăng Viên: thừa kế và lên quan lãnh chức là 2 điều tốt nhất. Tại Dần, Tuất rất kỵ xây cất và chôn cất: Rất suy vi."
+    },
+    {
+      "index": 598,
+      "text": "Liễu tinh tạo tác chủ tao quan,"
+    },
+    {
+      "index": 599,
+      "text": "Trú dạ thâu nhàn bất tạm an,"
+    },
+    {
+      "index": 600,
+      "text": "Mai táng ôn hoàng đa bệnh tử,"
+    },
+    {
+      "index": 601,
+      "text": "Điền viên thoái tận, thủ cô hàn,"
+    },
+    {
+      "index": 602,
+      "text": "Khai môn phóng thủy chiêu lung hạt,"
+    },
+    {
+      "index": 603,
+      "text": "Yêu đà bối khúc tự cung loan"
+    },
+    {
+      "index": 604,
+      "text": "Cánh hữu bổng hình nghi cẩn thận,"
+    },
+    {
+      "index": 605,
+      "text": "Phụ nhân tùy khách tẩu bất hoàn"
+    },
+    {
+      "index": 606,
+      "text": "25 - Tinh Nhật Mã (Sao Tinh): Hành Nhật - Lý Trung: Xấu."
+    },
+    {
+      "index": 607,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 608,
+      "text": "(Bình Tú) Tướng tinh con ngựa. Thuộc chòm sao Rắn Biển (Hydra). Chủ trị ngày chủ nhật"
+    },
+    {
+      "index": 609,
+      "text": "- Nên làm: Xây dựng phòng mới."
+    },
+    {
+      "index": 610,
+      "text": "- Kiêng cử: Chôn cất, cưới gã, mở thông đường nước."
+    },
+    {
+      "index": 611,
+      "text": "- Ngoại lệ: Sao Tinh là 1 trong Thất Sát Tinh, nếu sanh con nhằm ngày này nên lấy tên Sao đặt tên cho trẻ để dễ nuôi, có thể lấy tên sao của năm, hay sao của tháng cũng được. Tại Dần Ngọ Tuất đều tốt, tại Ngọ là Nhập Miếu, tạo tác được tôn trọng. Tại Thân là Đăng Giá( lên xe ): xây cất tốt mà chôn cất nguy. Hạp với 7 ngày: Giáp Dần, Nhâm Dần, Giáp Ngọ, Bính Ngọ, Mậu Ngọ, Bính Tuất, CanhTuất."
+    },
+    {
+      "index": 612,
+      "text": "Tinh tú nhật hảo tạo tân phòng,"
+    },
+    {
+      "index": 613,
+      "text": "Tiến chức gia quan cận Đế vương,"
+    },
+    {
+      "index": 614,
+      "text": "Bất khả mai táng tính phóng thủy,"
+    },
+    {
+      "index": 615,
+      "text": "Hung tinh lâm vị nữ nhân vong."
+    },
+    {
+      "index": 616,
+      "text": "Sinh ly, tử biệt vô tâm luyến,"
+    },
+    {
+      "index": 617,
+      "text": "Tự yếu quy hưu biệt giá lang."
+    },
+    {
+      "index": 618,
+      "text": "Khổng tử cửu khúc châu nan độ,"
+    },
+    {
+      "index": 619,
+      "text": "Phóng thủy, khai câu, thiên mệnh thương"
+    },
+    {
+      "index": 620,
+      "text": "26 - Trương Nguyệt Lộc (Sao Trương): Hành Nguyệt - Vạn Tu: Tốt."
+    },
+    {
+      "index": 621,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 622,
+      "text": "(Kiết Tú) Tướng tinh con nai. Thuộc chòm sao Rắn Biển (Hydra). Chủ trị ngày thứ 2."
+    },
+    {
+      "index": 623,
+      "text": "- Nên làm: Khởi công tạo tác trăm việc tốt, tốt nhất là xây cất nhà, che mái dựng hiên, trổ cửa dựng cửa, cưới gã, chôn cất, làm ruộng, nuôi tằm, đặt táng kê gác, chặt cỏ phá đất, cắtáo, làm thuỷ lợi."
+    },
+    {
+      "index": 624,
+      "text": "- Kiêng cử: Sửa hoặc làm thuyền chèo, đẩy thuyền mới xuống nước."
+    },
+    {
+      "index": 625,
+      "text": "- Ngoại lệ: Tại Hợi, Mẹo, Mùi đều tốt. Tại Mùi Đăng viên rất tốt nhưng phạm Phục Đoạn."
+    },
+    {
+      "index": 626,
+      "text": "Trương tinh nhật hảo tạo long hiên,"
+    },
+    {
+      "index": 627,
+      "text": "Niên niên tiện kiến tiến trang điền,"
+    },
+    {
+      "index": 628,
+      "text": "Mai táng bất cửu thăng quan chức,"
+    },
+    {
+      "index": 629,
+      "text": "Đại đại vi quan cận Đế tiền,"
+    },
+    {
+      "index": 630,
+      "text": "Khai môn phóng thủy chiêu tài bạch,"
+    },
+    {
+      "index": 631,
+      "text": "Hôn nhân hòa hợp, phúc miên miên."
+    },
+    {
+      "index": 632,
+      "text": "Điền tàm đại lợi, thương khố mãn,"
+    },
+    {
+      "index": 633,
+      "text": "Bách ban lợi ý, tự an nhiên"
+    },
+    {
+      "index": 634,
+      "text": "27 - Dực Hỏa Xà (Sao Dực): Hành Hỏa - Bi Đồng: Xấu."
+    },
+    {
+      "index": 635,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 636,
+      "text": "(Hung Tú) Tướng tinh con rắn. Thuộc các chòm sao Cúp/Cái Chén (Crater) và Rắn Biển (Hydra). Chủ trị ngày thứ 3."
+    },
+    {
+      "index": 637,
+      "text": "- Nên làm: Cắt áo sẽ đước tiền tài."
+    },
+    {
+      "index": 638,
+      "text": "- Kiêng cử: Chôn cất, cưới gã, xây cất nhà, đặt táng kê gác, gác đòn dông, trổ cửa gắn cửa, các vụ thủy lợi."
+    },
+    {
+      "index": 639,
+      "text": "- Ngoại lệ: Tại Thân, Tý, Thìn mọi việc tốt. Tại Thìn Vượng Địa tốt hơn hết. Tại Tý Đăng Viên nên thừa kế sự nghiệp, lên quan lãnh chức."
+    },
+    {
+      "index": 640,
+      "text": "Dực tinh bất lợi giá cao đường,"
+    },
+    {
+      "index": 641,
+      "text": "Tam niên nhị tái kiến ôn hoàng,"
+    },
+    {
+      "index": 642,
+      "text": "Mai táng nhược hoàn phùng thử nhật,"
+    },
+    {
+      "index": 643,
+      "text": "Tử tôn bất định tẩu tha hương."
+    },
+    {
+      "index": 644,
+      "text": "Hôn nhân thử nhật nghi bất lợi,"
+    },
+    {
+      "index": 645,
+      "text": "Quy gia định thị bất tương đương."
+    },
+    {
+      "index": 646,
+      "text": "Khai môn phóng thủy gia tu phá,"
+    },
+    {
+      "index": 647,
+      "text": "Thiếu nữ tham hoa luyến ngoại lang."
+    },
+    {
+      "index": 648,
+      "text": "28 - Chẩn Thủy Dẫn (Sao Chẩn): Hành Thủy - Lưu Trực: Tốt."
+    },
+    {
+      "index": 649,
+      "text": "Thuộc Phương Nam – Chu Tước (Chim sẻ đỏ)"
+    },
+    {
+      "index": 650,
+      "text": "(Kiết Tú) tướng tinh con giun. Thuộc chòm sao Quạ (Corvus). Chủ trị ngày thứ 4."
+    },
+    {
+      "index": 651,
+      "text": "- Nên làm: Khởi công tạo tác mọi việc tốt lành, tốt nhất là xây cất lầu gác, chôn cất, cưới gã. Các việc khác cũng tốt như dựng phòng, cất trại, xuất hành, chặt cỏ phá đất."
+    },
+    {
+      "index": 652,
+      "text": "- Kiêng cử: Đi thuyền."
+    },
+    {
+      "index": 653,
+      "text": "- Ngoại lệ: Tại Tị Dậu Sửu đều tốt. Tại Sửu Vượng Địa, tạo tác thịnh vượng. Tại Tị Đăng Viên là ngôi tôn đại, mưu động ắt thành danh."
+    },
+    {
+      "index": 654,
+      "text": "Chẩn tinh lâm thủy tạo long cung,"
+    },
+    {
+      "index": 655,
+      "text": "Đại đại vi quan thụ sắc phong,"
+    },
+    {
+      "index": 656,
+      "text": "Phú quý vinh hoa tăng phúc thọ,"
+    },
+    {
+      "index": 657,
+      "text": "Khố mãn thương doanh tự xương long."
+    },
+    {
+      "index": 658,
+      "text": "Mai táng văn tinh lai chiếu trợ,"
+    },
+    {
+      "index": 659,
+      "text": "Trạch xá an ninh, bất kiến hung."
+    },
+    {
+      "index": 660,
+      "text": "Cánh hữu vi quan, tiên đế sủng,"
+    },
+    {
+      "index": 661,
+      "text": "Hôn nhân long tử xuất long cung."
+    },
+    {
+      "index": 662,
+      "text": "III) Cách An Sao Nhị Thập Bát Tú:"
+    },
+    {
+      "index": 663,
+      "text": "Nhị Thập Bát Tú (28 chòm sao) được tính lặp đi lặp lại theo một chu kỳ liên tục gồm 28 ngày, không bị gián đoạn hay thay đổi bởi năm nhuận hay tháng thiếu. Nghĩa là hệ thống sao này vận hành giống như tuần lễ 7 ngày (28 = 4 x 7), nên mỗi thứ trong tuần sẽ luôn tương ứng với 4 sao cố định."
+    },
+    {
+      "index": 664,
+      "text": "Dưới đây là các nguyên tắc và cách tính Nhị Thập Bát Tú cho một ngày bất kỳ:"
+    },
+    {
+      "index": 665,
+      "text": "1. Mẹo tính nhanh dựa vào Thứ trong tuần"
+    },
+    {
+      "index": 666,
+      "text": "Vì chu kỳ 28 ngày chia hết cho 7, các sao được gắn cố định với các ngày trong tuần. Nếu bạn biết hôm đó là thứ mấy, bạn đã thu hẹp được phạm vi chỉ còn 1 trong 4 sao:"
+    },
+    {
+      "index": 667,
+      "text": "2. Bảng 28 sao theo thứ tự"
+    },
+    {
+      "index": 668,
+      "text": "Để tính toán chính xác sao nào quản ngày, bạn cần biết thứ tự của 28 sao theo vòng quay từ 1 đến 28. Các sao này được chia thành 4 phương (Tứ Tượng):"
+    },
+    {
+      "index": 669,
+      "text": "Phương Đông (Thanh Long): 1. Giác - 2. Cang - 3. Đê - 4. Phòng - 5. Tâm - 6. Vĩ - 7. Cơ"
+    },
+    {
+      "index": 670,
+      "text": "Phương Bắc (Huyền Vũ): 8. Đẩu - 9. Ngưu - 10. Nữ - 11. Hư - 12. Nguy - 13. Thất - 14. Bích"
+    },
+    {
+      "index": 671,
+      "text": "Phương Tây (Bạch Hổ): 15. Khuê - 16. Lâu - 17. Vị - 18. Mão - 19. Tất - 20. Chủy - 21. Sâm"
+    },
+    {
+      "index": 672,
+      "text": "Phương Nam (Chu Tước): 22. Tỉnh - 23. Quỷ - 24. Liễu - 25. Tinh - 26. Trương - 27. Dực - 28. Chẩn"
+    },
+    {
+      "index": 673,
+      "text": "3. Cách tính thủ công (Công thức tham chiếu)"
+    },
+    {
+      "index": 674,
+      "text": "Vì chu kỳ là 28 ngày chạy liên tục, bạn chỉ cần lấy một ngày làm mốc rồi tính khoảng cách số ngày chênh lệch, sau đó chia lấy dư cho 28."
+    },
+    {
+      "index": 675,
+      "text": "Mốc tham chiếu chuẩn: Ngày 1/1/1995 là Chủ Nhật, tương ứng với sao Hư (số thứ tự 11)."
+    },
+    {
+      "index": 676,
+      "text": "Các bước tính cho 1 ngày bất kỳ:"
+    },
+    {
+      "index": 677,
+      "text": "Đếm tổng số ngày khoảng cách từ 1/1/1995 đến ngày bạn cần tính."
+    },
+    {
+      "index": 678,
+      "text": "Lấy tổng số ngày đó chia cho 28 và lấy số dư."
+    },
+    {
+      "index": 679,
+      "text": "Cộng số dư vừa tìm được vào 11 (số mốc của sao Hư)."
+    },
+    {
+      "index": 680,
+      "text": "Nếu kết quả ≤ 28: Đó chính là số thứ tự của sao."
+    },
+    {
+      "index": 681,
+      "text": "Nếu kết quả > 28: Lấy kết quả đó trừ đi 28 sẽ ra số thứ tự của sao."
+    },
+    {
+      "index": 682,
+      "text": "Ví dụ 1: Tính sao Nhị thập bát tú cho ngày 22/08/2026."
+    },
+    {
+      "index": 683,
+      "text": "Khoảng cách từ 1995 đến hết 2025 là 31 năm (trong đó có 8 năm nhuận). Vậy số ngày là: 31 x 365 + 8 = 11.323 ngày."
+    },
+    {
+      "index": 684,
+      "text": "Số ngày cộng dồn từ 1/1/2026 đến 22/08/2026 là: 234 ngày."
+    },
+    {
+      "index": 685,
+      "text": "Tổng khoảng cách ngày từ mốc: 11.323 + 234 - 1 = 11.556 ngày."
+    },
+    {
+      "index": 686,
+      "text": "Chia lấy dư cho 28: 11.556 / 28 = 412 (dư 20)."
+    },
+    {
+      "index": 687,
+      "text": "Lấy mốc cộng số dư: 11 + 20 = 31."
+    },
+    {
+      "index": 688,
+      "text": "Vì 31 lớn hơn 28, ta lấy 31 - 28 = 3."
+    },
+    {
+      "index": 689,
+      "text": "Kết quả: Số 3 tra theo bảng ở mục 2 là sao Đê. (Sao Đê là một sao thuộc Thứ Bảy, hoàn toàn khớp với thực tế ngày 22/08/2026 rơi vào Thứ Bảy)."
+    },
+    {
+      "index": 690,
+      "text": "Ví Dụ 2:"
+    },
+    {
+      "index": 691,
+      "text": "Năm dương lịch có 365 ngày, tức 13 chu kì của Nhị Thập Bát Tú (38 x 13=364 ) cộng thêm 1 ngày, nếu năm nhuận thì cộng thêm 2 ngày, ngày 1/1/1995 là ngày chủ nhật thuộc sao Hư (số 11) thì ngày 1/1/1996 sẽ là ngày thứ 2 thuộc sao Nguy (cộng thêm 1 ngày), và ngày 1/1/1997 sẽ là thứ 4 (cộng thêm 2 ngày do 1996 là năm nhuận)."
+    },
+    {
+      "index": 692,
+      "text": "Một ví dụ khác để các bạn dễ hiểu: mình sinh ngày 23/2/1995 là ngày thứ Bảy thuộc sao Liễu ( số 24 ), mình muốn tính xem ngày sinh của bà chị ruột mình ngày 10/10/1989 là thứ mấy, thì sẽ phải làm theo 2 bước :"
+    },
+    {
+      "index": 693,
+      "text": "Bước 1 : từ năm 1989 đến 1995 là 6 năm,có năm 1992 là năm nhuận, vậy hệ sao đã lùi xuống 6 + 1 = 7 sao, tức là ngày 23/2/1995 là thứ 7 thuộc sao Liễu ( số 24), thì ngày 23/2/1989 phải ngược lại 7 sao, tức số 17 sao Vị, cũng là thứ 7.\nBước 2 : từ 23/2 đến 10/10 có 7 chu kì 2 ngày. Ngày 23/2/1989 là sao Vị (số 17) thì ngày 10/10/1989 là ngày sao Tất (số 19) là thứ 2 (từ sao Vị cộng thêm 2 ngày)\nNhư vậy chỉ cần biết 1 mốc thời gian chính xác,ta có thể tính ra bất cứ ngày nào trong quá khứ và tương lai theo cách tính trên,trong trường hợp bạn không có lịch của các năm khác, cũng không phức tạp lắm"
+    },
+    {
+      "index": 694,
+      "text": "Ví Dụ 3:"
+    },
+    {
+      "index": 695,
+      "text": "Người ta thường sử dụng các thứ trong tuần để định ước các vị trí của từng chòm sao. Một tuần có 7 ngày thì mỗi sao sẽ quản lý một ngày. Các sao Phòng, Hư, Mão, Tinh luôn xuất hiện vào những ngày chủ nhật."
+    },
+    {
+      "index": 696,
+      "text": "Nếu năm dương lịch có 365 ngày, chia ra 13 chu kỳ của nhị thập bát tú sẽ có dư một ngày được tính như sau:"
+    },
+    {
+      "index": 697,
+      "text": "28 x 13 = 364 ngày + 1 = 365 ngày."
+    },
+    {
+      "index": 698,
+      "text": "Trong trường hợp năm nhuận, các bạn sẽ cộng thêm 2 ngày vì tháng 2 có 29 ngày như sau:"
+    },
+    {
+      "index": 699,
+      "text": "28 x 13 = 364 ngày + 2 = 366 ngày."
+    },
+    {
+      "index": 700,
+      "text": "- Ngày 1/1/1995 là ngày chủ nhật thuộc sao Hư (số 11) ta dễ dàng tính ra ngày 1/1/1996 là ngày thứ 2 thuộc sao Nguy (số 12). Nhưng đến 1/1/1997 phải tuột xuống 2 sao tức là ngày thứ 4 sao Bích (số 14) vì năm 1996 có thêm ngày 29/2). Chỉ cần biết một mốc chính xác, ta có thể tìm ra bất cứ ngày nào trong quá khứ và tương lai theo cách tính trên. Thí dụ ngày 8/3/1997 là ngày sao gì? Khi đã tính được ngày 1/1/1997 là ngày sao Bích ngày thứ 4, 29/1 (28 ngày sau), 26/2/1997 (56 ngày sau) cũng là sao Bích số 14. Vậy 10 ngày sau 8/3/1997 thứ 7 là sao số 24, sao Liễu."
+    },
+    {
+      "index": 701,
+      "text": "Cách tính nhị thập bát tú theo thứ tự các sao như sau:"
+    },
+    {
+      "index": 702,
+      "text": "Thứ 5: Giác"
+    },
+    {
+      "index": 703,
+      "text": "Thứ 7: Đê"
+    },
+    {
+      "index": 704,
+      "text": "Chủ Nhật: Phòng"
+    },
+    {
+      "index": 705,
+      "text": "Thứ 2: Tâm"
+    },
+    {
+      "index": 706,
+      "text": "Thứ 3: Vĩ"
+    },
+    {
+      "index": 707,
+      "text": "Thứ 4: Cơ"
+    },
+    {
+      "index": 708,
+      "text": "Thứ 5: Đẩu"
+    },
+    {
+      "index": 709,
+      "text": "Thứ 6: Ngưu"
+    },
+    {
+      "index": 710,
+      "text": "Thứ 7: Nữ"
+    },
+    {
+      "index": 711,
+      "text": "Chủ nhật: Hư"
+    },
+    {
+      "index": 712,
+      "text": "Thứ 2: Nguy"
+    },
+    {
+      "index": 713,
+      "text": "Thứ 3: Thất"
+    },
+    {
+      "index": 714,
+      "text": "Thứ 4: Bích"
+    },
+    {
+      "index": 715,
+      "text": "Thứ 5: Khuê"
+    },
+    {
+      "index": 716,
+      "text": "Thứ 6: Lâu"
+    },
+    {
+      "index": 717,
+      "text": "Thứ 7: Vị"
+    },
+    {
+      "index": 718,
+      "text": "CN: Mão"
+    },
+    {
+      "index": 719,
+      "text": "Thứ 2: Tất"
+    },
+    {
+      "index": 720,
+      "text": "Thứ 3: Chủy"
+    },
+    {
+      "index": 721,
+      "text": "Thứ 4: Sâm"
+    },
+    {
+      "index": 722,
+      "text": "Thứ 5: Tỉnh"
+    },
+    {
+      "index": 723,
+      "text": "Thứ 6: Quỷ"
+    },
+    {
+      "index": 724,
+      "text": "Thứ 7: Liễu"
+    },
+    {
+      "index": 725,
+      "text": "CN: Tinh"
+    },
+    {
+      "index": 726,
+      "text": "Thứ 2: Trương"
+    },
+    {
+      "index": 727,
+      "text": "Thứ 3: Dực"
+    },
+    {
+      "index": 728,
+      "text": "Thứ 4: Chẩn"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "status": "success",
+  "data": {
+    "solar_date": "27 tháng 7 năm 2028",
+    "lunar_date": "6/6 t",
+    "weekday": "Thứ năm",
+    "lunar_day": 6,
+    "lunar_month": 6,
+    "lunar_year": 2028,
+    "lunar_month_is_leap": false,
+    "year_stem_branch": "Mậu Thân",
+    "month_stem_branch": "Kỷ Mùi",
+    "day_stem_branch": "Quý Sửu",
+    "sao_28": "Sao +Đẩu trực -Phá",
+    "tiet_khi": "Tiểu Thử: 20:22 06/07 - Đại Thử: 13:46 22/07",
+    "sao_tot": [
+      "Tướng Nhật"
+    ],
+    "sao_xau": [
+      "Giác Tỵ",
+      "Nguyệt Phá",
+      "Lục Bất Thành",
+      "Chu Tước Hắc Đạo",
+      "Bàng Chính Phát",
+      "Long Hổ"
+    ],
+    "dong_1_gio_xuat_hanh": [
+      {
+        "chi": "Tý",
+        "time": "23h - 01h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Sửu",
+        "time": "01h - 03h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Dần",
+        "time": "03h - 05h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Mão",
+        "time": "05h - 07h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Thìn",
+        "time": "07h - 09h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Tỵ",
+        "time": "09h - 11h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Ngọ",
+        "time": "11h - 13h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Mùi",
+        "time": "13h - 15h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Thân",
+        "time": "15h - 17h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Dậu",
+        "time": "17h - 19h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Tuất",
+        "time": "19h - 21h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Hợi",
+        "time": "21h - 23h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      }
+    ],
+    "dong_2_gio_hoang_hac_dao": {
+      "hoang_dao": [
+        "Giờ Dần (03h - 05h)",
+        "Giờ Mão (05h - 07h)",
+        "Giờ Tỵ (09h - 11h)",
+        "Giờ Thân (15h - 17h)",
+        "Giờ Dậu (17h - 19h)",
+        "Giờ Hợi (21h - 23h)"
+      ],
+      "hac_dao": [
+        "Giờ Tý (23h - 01h)",
+        "Giờ Sửu (01h - 03h)",
+        "Giờ Thìn (07h - 09h)",
+        "Giờ Ngọ (11h - 13h)",
+        "Giờ Mùi (13h - 15h)",
+        "Giờ Tuất (19h - 21h)"
+      ]
+    },
+    "dong_3_truc": "Trực Phá",
+    "dong_4_ngay_ky": "Ngày 27-07-2028 là ngày Cát lành.",
+    "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Mậu Thân Đại Trạch Thổ\nNgày: Quý Sửu; tức Can Chi tương đồng (Mộc), là ngày cát.\nNạp âm: Tang Đố Mộc kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Mộc khắc hành Hỏa.\nNgày Sửu lục hợp Tý, tam hợp Tỵ và Dậu thành Kim cục. Xung Mùi, hình Tuất, hại Ngọ, phá Thìn, tuyệt Dần."
+  }
+}

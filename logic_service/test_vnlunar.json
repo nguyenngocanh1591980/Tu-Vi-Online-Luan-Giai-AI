@@ -1,0 +1,188 @@
+{
+  "solar": {
+    "day": 2026,
+    "month": 9,
+    "year": 3,
+    "day_of_week": "Thứ tư"
+  },
+  "lunar": {
+    "day": 6,
+    "month": 65,
+    "year": 4,
+    "leap": 0,
+    "month_name": "Tháng 65"
+  },
+  "can_chi": {
+    "day": "Đinh Sửu",
+    "month": "Canh Ngọ",
+    "year": "Giáp Tý",
+    "hour": "Canh Tý"
+  },
+  "year_element": {
+    "can": "Giáp",
+    "chi": "Tý",
+    "animal": "Chuột",
+    "can_chi": "Giáp Tý",
+    "name": "Mộc",
+    "element": "Mộc",
+    "can_element": "Mộc",
+    "chi_element": "Thủy"
+  },
+  "elements": {
+    "day": {
+      "can": "Hỏa",
+      "chi": "Thổ"
+    },
+    "year": {
+      "can": "Giáp",
+      "chi": "Tý",
+      "animal": "Chuột",
+      "can_chi": "Giáp Tý",
+      "name": "Mộc",
+      "element": "Mộc",
+      "can_element": "Mộc",
+      "chi_element": "Thủy"
+    }
+  },
+  "12_stars": {
+    "name": "Thu",
+    "status": "good",
+    "color": "green",
+    "description": "Tốt cho thu hoạch, kết quả, cầu tài"
+  },
+  "12_constructions": {
+    "name": "Trực trừ",
+    "good_for": [
+      "Giải trừ",
+      "tắm gội",
+      "chỉnh dung",
+      "cạo đầu",
+      "chỉnh tay chân móng",
+      "cầu y trị bệnh",
+      "quét dọn nhà cửa"
+    ],
+    "bad_for": [
+      "Mọi việc khác"
+    ]
+  },
+  "12_gods": {
+    "name": "Huyền Vũ",
+    "type": "inauspicious",
+    "status": "bad",
+    "description": "Sao xấu - Hắc Đạo"
+  },
+  "28_mansions": {
+    "name": "Chẩn",
+    "animal": "Giun",
+    "element": "Thủy",
+    "good": true,
+    "description": "Tốt"
+  },
+  "nayin": {
+    "name": "Lộ Bàng Thổ",
+    "element": "Thổ",
+    "can": "Đinh",
+    "chi": "Sửu"
+  },
+  "day_type": {
+    "type": "Hoàng Đạo",
+    "star": "Thu",
+    "good": true,
+    "bad": false,
+    "desc": "Ngày Hoàng Đạo - Tốt, thuận lợi"
+  },
+  "conflicting_ages": {
+    "day_chi": "Sửu",
+    "day_animal": "Trâu",
+    "conflict_chi": "Mùi",
+    "conflict_animal": "Dê",
+    "description": "Ngày Sửu (Trâu) xung với tuổi Mùi (Dê)",
+    "conflicting_ages": [
+      {
+        "year": -1,
+        "can_chi": "Kỷ Mùi",
+        "age": 4,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -13,
+        "can_chi": "Đinh Mùi",
+        "age": 16,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -25,
+        "can_chi": "Ất Mùi",
+        "age": 28,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -37,
+        "can_chi": "Quý Mùi",
+        "age": 40,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -49,
+        "can_chi": "Tân Mùi",
+        "age": 52,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -61,
+        "can_chi": "Kỷ Mùi",
+        "age": 64,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -73,
+        "can_chi": "Đinh Mùi",
+        "age": 76,
+        "chi": "Mùi",
+        "animal": "Dê"
+      },
+      {
+        "year": -85,
+        "can_chi": "Ất Mùi",
+        "age": 88,
+        "chi": "Mùi",
+        "animal": "Dê"
+      }
+    ],
+    "note": "Người tuổi xung nên tránh làm việc quan trọng trong ngày này"
+  },
+  "directions": {
+    "day_chi": "Sửu",
+    "good": [
+      "Đông",
+      "Nam",
+      "Tây"
+    ],
+    "bad": [
+      "Bắc",
+      "Đông Bắc",
+      "Tây Bắc",
+      "Đông Nam",
+      "Tây Nam"
+    ],
+    "description": "Ngày Sửu: Hướng tốt để xuất hành",
+    "good_text": "Đông, Nam, Tây",
+    "bad_text": "Bắc, Đông Bắc, Tây Bắc, Đông Nam, Tây Nam"
+  },
+  "god_directions": {
+    "day_can": "Đinh",
+    "joy_god": "Nam",
+    "wealth_god": "Nam",
+    "fortune_god": "Đông",
+    "description": "Ngày Đinh: Hướng các thần tài lộc"
+  },
+  "auspicious_hours": "Dần (3-5h), Mão (5-7h), Tỵ (9-11h), Thân (15-17h), Tuất (19-21h), Hợi (21-23h)",
+  "day_of_week": "Thứ tư",
+  "jd": 1724424
+}

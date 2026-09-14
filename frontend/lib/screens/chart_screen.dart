@@ -26,6 +26,10 @@ class ChartScreen extends StatefulWidget {
   final int month;
   final int year;
   final int viewYear;
+  final String kieuAnSao;
+  final double? lat;
+  final double? lon;
+  final ChartData? preloadedData;
 
   const ChartScreen({
     Key? key,
@@ -39,6 +43,10 @@ class ChartScreen extends StatefulWidget {
     required this.month,
     required this.year,
     required this.viewYear,
+    this.kieuAnSao = 'An Thông Thường',
+    this.lat,
+    this.lon,
+    this.preloadedData,
   }) : super(key: key);
 
   @override
@@ -46,7 +54,7 @@ class ChartScreen extends StatefulWidget {
 }
 
 class _ChartScreenState extends State<ChartScreen> {
-  late ChartData mockData;
+  ChartData? mockData;
   late bool isFullMode;
   String _userRole = 'User';
   final GlobalKey _chartKey = GlobalKey();
@@ -56,7 +64,6 @@ class _ChartScreenState extends State<ChartScreen> {
     super.initState();
     isFullMode = false; // Default to false
     _loadRole();
-    _generateChartData();
     _updateOrientation(isFullMode);
   }
 
@@ -70,8 +77,8 @@ class _ChartScreenState extends State<ChartScreen> {
         isFullMode = false;
       }
       _updateOrientation(isFullMode);
-      _generateChartData();
     });
+    await _generateChartData();
   }
 
   void _updateOrientation(bool fullMode) {
@@ -83,9 +90,6 @@ class _ChartScreenState extends State<ChartScreen> {
     } else {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
       ]);
     }
   }
@@ -101,8 +105,17 @@ class _ChartScreenState extends State<ChartScreen> {
     super.dispose();
   }
 
-  void _generateChartData() {
-    mockData = ChartGenerator.generate(
+  Future<void> _generateChartData() async {
+    if (widget.preloadedData != null) {
+      if (mounted) {
+        setState(() {
+          mockData = widget.preloadedData;
+        });
+      }
+      return;
+    }
+
+    final data = await ChartGenerator.generateAsync(
       isFullMode: isFullMode,
       name: widget.name,
       gender: widget.gender,
@@ -113,7 +126,15 @@ class _ChartScreenState extends State<ChartScreen> {
       month: widget.month,
       year: widget.year,
       viewYear: widget.viewYear,
+      kieuAnSao: widget.kieuAnSao,
+      lat: widget.lat,
+      lon: widget.lon,
     );
+    if (mounted) {
+      setState(() {
+        mockData = data;
+      });
+    }
   }
 
   Future<void> _printChart() async {
@@ -127,7 +148,7 @@ class _ChartScreenState extends State<ChartScreen> {
       await Future.delayed(const Duration(milliseconds: 100));
 
       final isAdmin = _userRole == 'Admin' || _userRole == 'Expert';
-      await PdfGenerator.printChart(mockData, isAdmin: isAdmin);
+      await PdfGenerator.printChart(mockData!, isAdmin: isAdmin);
 
     } catch (e) {
       if (mounted) {
@@ -140,6 +161,12 @@ class _ChartScreenState extends State<ChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (mockData == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Đang lập lá số...'), backgroundColor: Colors.red.shade900, foregroundColor: Colors.white),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tử Vi AI - Chuyên Gia Luận Giải'),
@@ -198,7 +225,7 @@ class _ChartScreenState extends State<ChartScreen> {
                   const SizedBox(height: 16),
                 RepaintBoundary(
                   key: _chartKey,
-                  child: TuViChart(data: mockData, isFullMode: isFullMode),
+                  child: TuViChart(data: mockData!, isFullMode: isFullMode),
                 ),
               ],
             ),

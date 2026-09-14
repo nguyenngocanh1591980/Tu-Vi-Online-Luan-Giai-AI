@@ -1,10 +1,12 @@
 import '../models/chart_model.dart';
+import 'package:http/http.dart' as http;
 import 'package:vnlunar/vnlunar.dart';
+import 'dart:convert';
 import 'lunar_utils.dart';
 import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 
 class ChartGenerator {
-  static ChartData generate({
+  static Future<ChartData> generateAsync({
     required bool isFullMode,
     required String name,
     required String gender,
@@ -15,7 +17,15 @@ class ChartGenerator {
     required int month,
     required int year,
     required int viewYear,
-  }) {
+    String? kieuAnSao = 'An Thông Thường',
+    String? kieuSinh = 'Sinh Bình Thường',
+    String? address,
+    String? currentAddress,
+    String? phone,
+    String? description,
+    double? lat,
+    double? lon,
+  }) async {
     final isSolar = calendarType == 'Dương lịch';
     int lunarDay = day;
     int lunarMonth = month;
@@ -26,23 +36,73 @@ class ChartGenerator {
     int solarYearVal = year;
 
     int lunarLeap = 0;
+    
+    String yearStemBranch = '';
+    String monthStemBranch = '';
+    String dayStemBranch = '';
+    String timeStemBranch = '';
+    String originalTimeStr = '';
+    int originalHour = hour;
+    int originalMinute = minute;
+
     if (isSolar) {
-      final lunarDate = convertSolar2Lunar(day, month, year, 7);
-      lunarDay = lunarDate[0];
-      lunarMonth = lunarDate[1];
-      lunarYearVal = lunarDate[2];
-      lunarLeap = lunarDate[3];
+      // Gọi API Backend Nguồn Chân Lý để lấy Lịch Âm & Can Chi
+      try {
+        final response = await http.post(
+          Uri.parse('http://localhost:5000/api/TuVi/calculate-astrology-core'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            "name": name,
+            "birthDate": "$year-$month-$day",
+            "birthTime": "$hour:$minute",
+            "gender": gender == 'Nam' ? 1 : 0,
+            "kieu_an_sao": kieuAnSao ?? "An Thông Thường",
+            "KieuAnSao": kieuAnSao ?? "An Thông Thường",
+            "lat": lat,
+            "Lat": lat,
+            "lon": lon,
+            "Lon": lon
+          }),
+        );
+        
+        if (response.statusCode == 200) {
+          final resJson = jsonDecode(response.body);
+          final data = resJson['data'];
+          lunarDay = data['lunar_day'];
+          lunarMonth = data['lunar_month'];
+          lunarYearVal = data['lunar_year'];
+          yearStemBranch = data['year_stem_branch'];
+          monthStemBranch = data['month_stem_branch'];
+          dayStemBranch = data['day_stem_branch'];
+          timeStemBranch = data['time_stem_branch'];
+          if (data['time'] != null) {
+            final timeParts = data['time'].split(':');
+            if (timeParts.length == 2) {
+              hour = int.parse(timeParts[0]);
+              minute = int.parse(timeParts[1]);
+              if (hour != originalHour || minute != originalMinute) {
+                originalTimeStr = "${originalHour.toString().padLeft(2, '0')}:${originalMinute.toString().padLeft(2, '0')}";
+              }
+            }
+          }
+        } else {
+          throw Exception("API Error: ${response.statusCode}");
+        }
+      } catch (e) {
+        throw Exception("Không thể kết nối đến Backend AI Engine. Lỗi: $e");
+      }
     } else {
+      // Hiện tại luồng Âm Lịch chưa được cập nhật API, dùng fallback cũ nếu nhập Âm Lịch
+      // (Có thể mở rộng sau)
       final solarDate = convertLunar2Solar(day, month, year, false, 7);
       solarDay = int.parse(solarDate[0].toString());
       solarMonth = int.parse(solarDate[1].toString());
       solarYearVal = int.parse(solarDate[2].toString());
+      yearStemBranch = LunarUtils.getYearCanChi(lunarYearVal);
+      monthStemBranch = LunarUtils.getMonthCanChi(lunarYearVal, lunarMonth);
+      dayStemBranch = LunarUtils.getDayCanChi(solarDay, solarMonth, solarYearVal, hour);
+      timeStemBranch = LunarUtils.getHourCanChi(solarDay, solarMonth, solarYearVal, hour);
     }
-
-    final yearStemBranch = LunarUtils.getYearCanChi(lunarYearVal);
-    final monthStemBranch = LunarUtils.getMonthCanChi(lunarYearVal, lunarMonth);
-    final dayStemBranch = LunarUtils.getDayCanChi(solarDay, solarMonth, solarYearVal, hour);
-    final timeStemBranch = LunarUtils.getHourCanChi(solarDay, solarMonth, solarYearVal, hour);
 
     String calcElement = LunarUtils.getElement(lunarYearVal);
     String calcDestiny = LunarUtils.getDestiny(lunarYearVal, lunarMonth, hour);
@@ -96,6 +156,7 @@ class ChartGenerator {
       monthStemBranch: monthStemBranch,
       dayStemBranch: dayStemBranch,
       timeStemBranch: timeStemBranch,
+      originalTimeStr: originalTimeStr,
       lunarYear: lunarYearVal,
       gender: LunarUtils.getYinYangGender(lunarYearVal, gender),
       yinYang: LunarUtils.getYinYangMatch(lunarYearVal, lunarMonth, hour),
@@ -118,6 +179,14 @@ class ChartGenerator {
       luuNienCung: '',
       tuoiAmNam: lunarAge,
       tuoiDaiVan: tdv,
+      kieuAnSao: kieuAnSao ?? 'An Thông Thường',
+      kieuSinh: kieuSinh ?? 'Sinh Bình Thường',
+      address: address ?? '',
+      currentAddress: currentAddress ?? '',
+      phone: phone ?? '',
+      description: description ?? '',
+      lat: lat,
+      lon: lon,
     );
 
     final palaces = TuViEngine.generateChart(nativeInfoTemp, solarDay, solarMonth, solarYearVal, hour, lunarDay, lunarMonth);
@@ -208,6 +277,7 @@ class ChartGenerator {
       monthStemBranch: nativeInfoTemp.monthStemBranch,
       dayStemBranch: nativeInfoTemp.dayStemBranch,
       timeStemBranch: nativeInfoTemp.timeStemBranch,
+      originalTimeStr: nativeInfoTemp.originalTimeStr,
       lunarYear: nativeInfoTemp.lunarYear,
       gender: nativeInfoTemp.gender,
       yinYang: nativeInfoTemp.yinYang,
@@ -231,6 +301,14 @@ class ChartGenerator {
       luuNienCung: lnc,
       tuoiAmNam: nativeInfoTemp.tuoiAmNam,
       tuoiDaiVan: nativeInfoTemp.tuoiDaiVan,
+      kieuAnSao: kieuAnSao ?? 'An Thông Thường',
+      kieuSinh: kieuSinh ?? 'Sinh Bình Thường',
+      address: address ?? '',
+      currentAddress: currentAddress ?? '',
+      phone: phone ?? '',
+      description: description ?? '',
+      lat: lat,
+      lon: lon,
     );
 
     return ChartData(native: nativeInfoFinal, palaces: palaces);

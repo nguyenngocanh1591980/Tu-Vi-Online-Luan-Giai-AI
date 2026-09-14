@@ -41,66 +41,115 @@ class PdfGenerator {
       return data.palaces.firstWhere((p) => p.index == index, orElse: () => data.palaces[0]);
     }
 
-    return pw.Container(
-      decoration: pw.BoxDecoration(border: pw.Border.all(width: 1)),
-      child: pw.Column(
-        children: [
-          pw.Expanded(
-            child: pw.Row(
-              children: [
-                _buildCell(getPalace(5), font, fontBold, isAdmin),
-                _buildCell(getPalace(6), font, fontBold, isAdmin),
-                _buildCell(getPalace(7), font, fontBold, isAdmin),
-                _buildCell(getPalace(8), font, fontBold, isAdmin),
-              ]
-            )
-          ),
-          pw.Expanded(
-            flex: 2,
-            child: pw.Row(
-              children: [
-                pw.Expanded(
-                  child: pw.Column(
-                    children: [
-                      _buildCell(getPalace(4), font, fontBold, isAdmin),
-                      _buildCell(getPalace(3), font, fontBold, isAdmin),
-                    ]
-                  )
-                ),
-                pw.Expanded(
-                  flex: 2,
-                  child: _buildCenter(data.native, font, fontBold)
-                ),
-                pw.Expanded(
-                  child: pw.Column(
-                    children: [
-                      _buildCell(getPalace(9), font, fontBold, isAdmin),
-                      _buildCell(getPalace(10), font, fontBold, isAdmin),
-                    ]
-                  )
-                ),
-              ]
-            )
-          ),
-          pw.Expanded(
-            child: pw.Row(
-              children: [
-                _buildCell(getPalace(2), font, fontBold, isAdmin),
-                _buildCell(getPalace(1), font, fontBold, isAdmin),
-                _buildCell(getPalace(0), font, fontBold, isAdmin),
-                _buildCell(getPalace(11), font, fontBold, isAdmin),
-              ]
-            )
-          ),
-        ]
-      )
+    return pw.Stack(
+      children: [
+        pw.Container(
+          decoration: pw.BoxDecoration(border: pw.Border.all(width: 1)),
+          child: pw.Column(
+            children: [
+              pw.Expanded(
+                child: pw.Row(
+                  children: [
+                    _buildCell(getPalace(5), font, fontBold, isAdmin),
+                    _buildCell(getPalace(6), font, fontBold, isAdmin),
+                    _buildCell(getPalace(7), font, fontBold, isAdmin),
+                    _buildCell(getPalace(8), font, fontBold, isAdmin),
+                  ]
+                )
+              ),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Row(
+                  children: [
+                    pw.Expanded(
+                      child: pw.Column(
+                        children: [
+                          _buildCell(getPalace(4), font, fontBold, isAdmin),
+                          _buildCell(getPalace(3), font, fontBold, isAdmin),
+                        ]
+                      )
+                    ),
+                    pw.Expanded(
+                      flex: 2,
+                      child: _buildCenter(data.native, font, fontBold)
+                    ),
+                    pw.Expanded(
+                      child: pw.Column(
+                        children: [
+                          _buildCell(getPalace(9), font, fontBold, isAdmin),
+                          _buildCell(getPalace(10), font, fontBold, isAdmin),
+                        ]
+                      )
+                    ),
+                  ]
+                )
+              ),
+              pw.Expanded(
+                child: pw.Row(
+                  children: [
+                    _buildCell(getPalace(2), font, fontBold, isAdmin),
+                    _buildCell(getPalace(1), font, fontBold, isAdmin),
+                    _buildCell(getPalace(0), font, fontBold, isAdmin),
+                    _buildCell(getPalace(11), font, fontBold, isAdmin),
+                  ]
+                )
+              ),
+            ]
+          )
+        ),
+        // Global Tuần/Triệt boxes across boundaries
+        if (getPalace(0).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(0).tuanTriet, fontBold, 0.0, 0.5),
+        if (getPalace(2).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(2).tuanTriet, fontBold, -0.75, 0.5),
+        if (getPalace(4).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(4).tuanTriet, fontBold, -0.75, -0.5),
+        if (getPalace(6).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(6).tuanTriet, fontBold, 0.0, -0.5),
+        if (getPalace(8).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(8).tuanTriet, fontBold, 0.75, -0.5),
+        if (getPalace(10).tuanTriet.isNotEmpty) _buildPdfTuanTrietBox(getPalace(10).tuanTriet, fontBold, 0.75, 0.5),
+      ],
+    );
+  }
+
+  static pw.Widget _buildPdfTuanTrietBox(String text, pw.Font fontBold, double alignX, double alignY) {
+    return pw.Align(
+      alignment: pw.Alignment(alignX, alignY),
+      child: pw.Container(
+        color: PdfColors.black,
+        padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: pw.Text(
+          text,
+          style: pw.TextStyle(font: fontBold, fontSize: 10, color: PdfColors.white),
+        ),
+      ),
     );
   }
 
   static pw.Widget _buildCell(Palace palace, pw.Font font, pw.Font fontBold, bool isAdmin) {
     final majorStars = palace.stars.where((s) => s.isMajor).toList();
-    final minorStars = palace.stars.where((s) => !s.isMajor).toList();
     
+    final List<String> allowedLuuStars = [
+      'L.LỘC TỒN', 'L.KÌNH DƯƠNG', 'L.ĐÀ LA',
+      'L.THIÊN MÃ', 'L.THIÊN KHỐC', 'L.THIÊN HƯ',
+      'L.THÁI TUẾ', 'L.THIẾU DƯƠNG', 'L.TANG MÔN', 'L.THIẾU ÂM', 
+      'L.QUAN PHÙ', 'L.TỬ PHÙ', 'L.TUẾ PHÁ', 'L.LONG ĐỨC', 
+      'L.BẠCH HỔ', 'L.PHÚC ĐỨC', 'L.ĐIẾU KHÁCH', 'L.TRỰC PHÙ',
+      'L.HOA LỘC', 'L.HOA QUYỀN', 'L.HOA KHOA', 'L.HOA KỊ', 'L.HOA KỴ',
+      'L.HÓA LỘC', 'L.HÓA QUYỀN', 'L.HÓA KHOA', 'L.HÓA KỊ', 'L.HÓA KỊ'
+    ];
+
+    final minorStars = palace.stars.where((s) {
+      if (s.isMajor) return false;
+      // Không bao giờ in sao Lưu Đại Hạn (L.ĐV) ra PDF theo yêu cầu
+      if (s.name.startsWith('L.ĐV')) return false;
+      
+      // Filter sao Lưu (L.) based on admin status
+      if (s.name.startsWith('L.')) {
+        if (!isAdmin) {
+          String upper = s.name.toUpperCase().split('[')[0].trim();
+          return allowedLuuStars.contains(upper);
+        }
+      }
+      return true;
+    }).toList();
+
     // Split minor stars into left and right columns
     final leftStars = minorStars.where((s) => s.isLeft).toList();
     final rightStars = minorStars.where((s) => !s.isLeft).toList();
@@ -139,7 +188,7 @@ class PdfGenerator {
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
                 pw.Text(palace.stem + ' ' + palace.branch, style: pw.TextStyle(font: font, fontSize: 7)),
-                pw.Text(palace.tuanTriet, style: pw.TextStyle(font: fontBold, fontSize: 8)),
+                // removed tuanTriet from here
               ]
             )
           ]

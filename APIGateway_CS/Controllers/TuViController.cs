@@ -66,4 +66,89 @@ public class TuViController : ControllerBase
             }
         }
     }
+
+    public class CalculateCoreRequest
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+        [System.Text.Json.Serialization.JsonPropertyName("birthDate")]
+        public string BirthDate { get; set; } = "";
+        [System.Text.Json.Serialization.JsonPropertyName("birthTime")]
+        public string BirthTime { get; set; } = "";
+        [System.Text.Json.Serialization.JsonPropertyName("gender")]
+        public int Gender { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("kieu_an_sao")]
+        public string KieuAnSao { get; set; } = "An Thông Thường";
+        [System.Text.Json.Serialization.JsonPropertyName("lat")]
+        public double? Lat { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("lon")]
+        public double? Lon { get; set; }
+    }
+
+    [HttpPost("calculate-astrology-core")]
+    public async Task<IActionResult> CalculateAstrologyCore([FromBody] CalculateCoreRequest request)
+    {
+        var client = _httpClientFactory.CreateClient("AIEngine");
+        
+        var payload = new 
+        { 
+            name = request.Name, 
+            birth_date = request.BirthDate, 
+            birth_time = request.BirthTime, 
+            gender = request.Gender,
+            kieu_an_sao = request.KieuAnSao,
+            lat = request.Lat,
+            lon = request.Lon
+        };
+        
+        var requestMsg = new HttpRequestMessage(HttpMethod.Post, "/api/calculate-astrology-core")
+        {
+            Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json")
+        };
+
+        using var response = await client.SendAsync(requestMsg);
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        
+        if (response.IsSuccessStatusCode)
+        {
+            return Content(jsonResponse, "application/json");
+        }
+        else
+        {
+            return StatusCode((int)response.StatusCode, jsonResponse);
+        }
+    }
+
+    public class CalculateAlmanacRequest
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("date")]
+        public string Date { get; set; } = "";
+        [System.Text.Json.Serialization.JsonPropertyName("time")]
+        public string Time { get; set; } = "00:00";
+    }
+
+    [HttpPost("calculate-almanac")]
+    public async Task<IActionResult> CalculateAlmanac([FromBody] CalculateAlmanacRequest request)
+    {
+        var client = _httpClientFactory.CreateClient("AIEngine");
+        
+        var payload = new { date = request.Date, time = request.Time };
+        var requestMsg = new HttpRequestMessage(HttpMethod.Post, "/api/calculate-almanac")
+        {
+            Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json")
+        };
+
+        using var response = await client.SendAsync(requestMsg);
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        
+        if (response.IsSuccessStatusCode)
+        {
+            return Content(jsonResponse, "application/json");
+        }
+        else
+        {
+            return StatusCode((int)response.StatusCode, jsonResponse);
+        }
+    }
 }
+

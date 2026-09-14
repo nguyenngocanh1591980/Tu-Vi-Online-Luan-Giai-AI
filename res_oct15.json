@@ -1,0 +1,137 @@
+{
+  "status": "success",
+  "data": {
+    "solar_date": "15 tháng 10 năm 2026",
+    "lunar_date": "6/9 đ",
+    "weekday": "Thứ năm",
+    "lunar_day": 6,
+    "lunar_month": 9,
+    "lunar_year": 2026,
+    "lunar_month_is_leap": false,
+    "year_stem_branch": "Bính Ngọ",
+    "month_stem_branch": "Mậu Tuất",
+    "day_stem_branch": "Nhâm Tuất",
+    "sao_28": "Sao +Giác trực +Kiến",
+    "tiet_khi": "Sương Giáng: 16:37 23/10 - Lập Đông: 16:52 07/11",
+    "sao_tot": [
+      "Nguyệt Không",
+      "Mẫu Thương",
+      "Tứ Tướng",
+      "Thủ Nhật",
+      "Thiên Mã"
+    ],
+    "sao_xau": [
+      "Nguyệt Kiến",
+      "Tiểu Thời",
+      "Thổ Ôn",
+      "Bạch Hổ"
+    ],
+    "dong_1_gio_xuat_hanh": [
+      {
+        "chi": "Tý",
+        "time": "23h - 01h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Sửu",
+        "time": "01h - 03h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Dần",
+        "time": "03h - 05h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Mão",
+        "time": "05h - 07h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Thìn",
+        "time": "07h - 09h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Tỵ",
+        "time": "09h - 11h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Ngọ",
+        "time": "11h - 13h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Mùi",
+        "time": "13h - 15h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Thân",
+        "time": "15h - 17h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Dậu",
+        "time": "17h - 19h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Tuất",
+        "time": "19h - 21h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Hợi",
+        "time": "21h - 23h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      }
+    ],
+    "dong_2_gio_hoang_hac_dao": {
+      "hoang_dao": [
+        "Giờ Dần (03h - 05h)",
+        "Giờ Thìn (07h - 09h)",
+        "Giờ Tỵ (09h - 11h)",
+        "Giờ Thân (15h - 17h)",
+        "Giờ Dậu (17h - 19h)",
+        "Giờ Hợi (21h - 23h)"
+      ],
+      "hac_dao": [
+        "Giờ Tý (23h - 01h)",
+        "Giờ Sửu (01h - 03h)",
+        "Giờ Mão (05h - 07h)",
+        "Giờ Ngọ (11h - 13h)",
+        "Giờ Mùi (13h - 15h)",
+        "Giờ Tuất (19h - 21h)"
+      ]
+    },
+    "dong_3_truc": "Trực Kiến",
+    "dong_4_ngay_ky": "Ngày 15-10-2026 là ngày Cát lành.",
+    "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Bính Ngọ Thiên Hà Thủy\nNgày: Nhâm Tuất; tức Can Chi tương đồng (Thủy), là ngày cát.\nNạp âm: Đại Hải Thủy kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Thủy khắc hành Hỏa.\nNgày Tuất lục hợp Mão, tam hợp Dần và Ngọ thành Hỏa cục. Xung Thìn, hình Sửu, hại Dậu, phá Mùi, tuyệt Hợi."
+  }
+}

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../services/auth_service.dart';
-import 'horoscope_info_screen.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
 import 'terms_screen.dart';
 import 'waiting_verification_screen.dart';
+import 'resend_activation_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'zalo_oauth_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool initialIsLogin;
@@ -29,14 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
   late bool _isLogin;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _rememberMe = false;
+  bool _hideOnlineStatus = false;
   int _passwordStrength = 0;
   bool _hasMinLength = false;
   bool _hasUpper = false;
   bool _hasLower = false;
   bool _hasNumber = false;
   bool _hasSpecial = false;
-  bool _rememberMe = false;
-  bool _hideOnlineStatus = false;
   int _loginFails = 0;
 
   @override
@@ -115,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       if (_isLogin) {
-        final errorMsg = await _authService.login(username, password);
+        final errorMsg = await _authService.login(username, password, rememberMe: _rememberMe, hideOnlineStatus: _hideOnlineStatus);
         if (errorMsg == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -261,30 +270,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 18, color: Colors.white70),
                     ),
                     SizedBox(height: 32),
-                    TextField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: 'Tên đăng nhập',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Mật khẩu',
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off, color: Colors.yellow),
-                          onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    AutofillGroup(
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _usernameController,
+                            autofillHints: const [AutofillHints.username],
+                            decoration: InputDecoration(
+                              labelText: 'Tên đăng nhập',
+                              prefixIcon: Icon(Icons.person),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: _obscurePassword,
+                            autofillHints: const [AutofillHints.password],
+                            decoration: InputDecoration(
+                              labelText: 'Mật khẩu',
+                              prefixIcon: Icon(Icons.lock),
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off, color: Colors.yellow),
+                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     if (!_isLogin) ...[
@@ -438,7 +455,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text('Quên tên đăng nhập / Mật khẩu?', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ResendActivationScreen()),
+                          );
+                        },
                         child: const Text('Gửi lại email kích hoạt tài khoản', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                       const SizedBox(height: 16),
@@ -478,37 +500,67 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE0E0E0),
-                              foregroundColor: Colors.black,
-                              side: const BorderSide(color: Colors.grey),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          // ── Facebook Button ──
+                          _SocialLoginButton(
+                            onPressed: () => _handleFacebookLogin(),
+                            backgroundColor: const Color(0xFF1877F2),
+                            label: 'Facebook',
+                            labelColor: Colors.white,
+                            icon: Container(
+                              width: 22,
+                              height: 22,
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'f',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'serif',
+                                  height: 1.1,
+                                ),
+                              ),
                             ),
-                            child: const Text('Facebook'),
                           ),
                           const SizedBox(width: 12),
-                          OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE0E0E0),
-                              foregroundColor: Colors.black,
-                              side: const BorderSide(color: Colors.grey),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          // ── Google Button ──
+                          _SocialLoginButton(
+                            onPressed: () => _handleGoogleLogin(),
+                            backgroundColor: Colors.white,
+                            borderColor: const Color(0xFFDDDDDD),
+                            label: 'Google',
+                            labelColor: const Color(0xFF3C4043),
+                            icon: SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CustomPaint(painter: _GoogleGPainter()),
                             ),
-                            child: const Text('Google'),
                           ),
                           const SizedBox(width: 12),
-                          OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE0E0E0),
-                              foregroundColor: Colors.black,
-                              side: const BorderSide(color: Colors.grey),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          // ── Zalo Button ──
+                          _SocialLoginButton(
+                            onPressed: () => _handleZaloLogin(),
+                            backgroundColor: const Color(0xFF0068FF),
+                            label: 'Zalo',
+                            labelColor: Colors.white,
+                            icon: Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.18),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'Z',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.1,
+                                ),
+                              ),
                             ),
-                            child: const Text('Zalo'),
                           ),
                         ],
                       ),
@@ -558,5 +610,296 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Future<void> _handleGoogleLogin() async {
+    try {
+      final clientId = kIsWeb
+          ? (dotenv.env['GOOGLE_CLIENT_ID_WEB'] ?? '')
+          : null;
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId: (clientId != null && clientId.isNotEmpty) ? clientId : null,
+        scopes: ['email', 'profile', 'openid'],
+      );
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken != null) {
+        final error = await _authService.socialLogin('google', idToken);
+        if (!mounted) return;
+        if (error == null) {
+          context.go('/');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        }
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Không lấy được token từ Google. Vui lòng thử lại.')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi Google Login: $e')));
+    }
+  }
+
+
+
+  Future<void> _handleFacebookLogin() async {
+    if (kIsWeb) {
+      // Web: mở OAuth URL → Facebook redirect về app với #access_token= trong URL
+      // PORT CỐ ĐỊNH 40000 - phải khớp với Facebook Developer Console
+      final appId = dotenv.env['FACEBOOK_APP_ID'] ?? '28229953419934768';
+      const redirectUri = 'http://localhost:40000';
+      final fbUrl = Uri.parse(
+        'https://www.facebook.com/v18.0/dialog/oauth'
+        '?client_id=$appId'
+        '&redirect_uri=${Uri.encodeComponent(redirectUri)}'
+        '&scope=email,public_profile'
+        '&response_type=token'
+        '&display=popup',
+      );
+      if (await canLaunchUrl(fbUrl)) {
+        await launchUrl(fbUrl, mode: LaunchMode.externalApplication);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đang mở đăng nhập Facebook...'),
+            backgroundColor: Colors.blue,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Không thể mở trang đăng nhập Facebook')),
+        );
+      }
+      return;
+    }
+    // Mobile: dùng flutter_facebook_auth SDK
+    try {
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
+      if (!mounted) return;
+      if (result.status == LoginStatus.success) {
+        final error = await _authService.socialLogin('facebook', result.accessToken!.tokenString);
+        if (!mounted) return;
+        if (error == null) {
+          context.go('/');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        }
+      } else if (result.status == LoginStatus.cancelled) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đăng nhập Facebook đã bị hủy.')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Facebook Login thất bại: ${result.message}')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi Facebook Login: $e')));
+    }
+  }
+
+
+
+
+  Future<void> _handleZaloLogin() async {
+    if (kIsWeb) {
+      final appId = dotenv.env['ZALO_APP_ID'] ?? '';
+      final redirectUri = dotenv.env['ZALO_REDIRECT_URI'] ?? 'http://localhost:40000';
+      final authUrl = dotenv.env['ZALO_AUTH_URL'] ?? 'https://oauth.zaloapp.com/v4/permission';
+      if (appId.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Zalo Login chưa được cấu hình. Vui lòng liên hệ quản trị viên.'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
+      // Zalo OAuth 2.0 - mở trang xác thực trên tab mới
+      // redirect_uri PHẢI khớp với Official Callback URL đã khai báo trên Zalo Developer:
+      // http://localhost:40000/zalo-callback
+      final zaloAuthUrl = '$authUrl'
+          '?app_id=$appId'
+          '&redirect_uri=${Uri.encodeComponent(redirectUri)}'
+          '&state=zalo_login'
+          '&code_challenge=YzRhMmI3NmI5MjBlMDA2NmY0NTEzNjE3NTRiMGFmMzU';
+      final uri = Uri.parse(zaloAuthUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đang chuyển đến trang đăng nhập Zalo...'),
+            backgroundColor: Colors.blue,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Không thể mở trang đăng nhập Zalo')),
+        );
+      }
+      return;
+    }
+    // Mobile: dùng WebView OAuth screen
+    final token = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ZaloOAuthScreen()),
+    );
+    if (token != null && token is String) {
+      final error = await _authService.socialLogin('zalo', token);
+      if (!mounted) return;
+      if (error == null) {
+        context.go('/');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      }
+    }
+  }
+
 }
 
+// ─────────────────────────────────────────────
+// Widget nút đăng nhập mạng xã hội có icon + label
+// ─────────────────────────────────────────────
+class _SocialLoginButton extends StatefulWidget {
+  final VoidCallback onPressed;
+  final Color backgroundColor;
+  final Color? borderColor;
+  final Widget icon;
+  final String label;
+  final Color labelColor;
+
+  const _SocialLoginButton({
+    required this.onPressed,
+    required this.backgroundColor,
+    this.borderColor,
+    required this.icon,
+    required this.label,
+    required this.labelColor,
+  });
+
+  @override
+  State<_SocialLoginButton> createState() => _SocialLoginButtonState();
+}
+
+class _SocialLoginButtonState extends State<_SocialLoginButton> {
+  bool _hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: AnimatedScale(
+        scale: _hovering ? 1.06 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: widget.onPressed,
+            borderRadius: BorderRadius.circular(8),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: _hovering
+                    ? widget.backgroundColor.withValues(alpha: 0.85)
+                    : widget.backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                border: widget.borderColor != null
+                    ? Border.all(color: widget.borderColor!, width: 1.2)
+                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.backgroundColor.withValues(alpha: _hovering ? 0.5 : 0.3),
+                    blurRadius: _hovering ? 10 : 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  widget.icon,
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.label,
+                    style: TextStyle(
+                      color: widget.labelColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// CustomPainter vẽ logo "G" 4 màu của Google
+// ─────────────────────────────────────────────
+class _GoogleGPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double cx = size.width / 2;
+    final double cy = size.height / 2;
+    final double r = size.width / 2;
+
+    final List<(double, double, Color)> segments = [
+      (-0.52, 1.57, const Color(0xFF4285F4)),
+      (1.05,  1.57, const Color(0xFF34A853)),
+      (2.62,  1.57, const Color(0xFFFBBC05)),
+      (4.19,  1.57, const Color(0xFFEA4335)),
+    ];
+
+    for (final seg in segments) {
+      final paint = Paint()
+        ..color = seg.$3
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size.width * 0.22
+        ..strokeCap = StrokeCap.butt;
+      canvas.drawArc(
+        Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.72),
+        seg.$1,
+        seg.$2,
+        false,
+        paint,
+      );
+    }
+
+    // Thanh ngang bên phải - đặc trưng chữ G
+    canvas.drawRect(
+      Rect.fromLTWH(cx, cy - size.height * 0.13, r * 0.88, size.height * 0.26),
+      Paint()..color = const Color(0xFF4285F4),
+    );
+
+    // Vòng tròn trắng giữa tạo hiệu ứng rỗng
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r * 0.50,
+      Paint()..color = Colors.white,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

@@ -9,6 +9,7 @@ public interface IEmailService
 {
     Task SendVerificationEmailAsync(string email, string token);
     Task SendPasswordResetEmailAsync(string email, string username, string token);
+    Task SendResendActivationEmailAsync(string email, string username, string token);
 }
 
 public class SmtpEmailService : IEmailService
@@ -133,6 +134,61 @@ public class SmtpEmailService : IEmailService
             _logger.LogError(ex, "Failed to send password reset email to {Email}", email);
         }
     }
+
+    public async Task SendResendActivationEmailAsync(string email, string username, string token)
+    {
+        var host = _config["EmailSettings:Host"];
+        var port = int.Parse(_config["EmailSettings:Port"] ?? "587");
+        var mailUsername = _config["EmailSettings:Username"];
+        var password = _config["EmailSettings:Password"];
+        var fromEmail = _config["EmailSettings:FromEmail"];
+
+        if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(mailUsername) || string.IsNullOrEmpty(password) || password == "your_app_password")
+        {
+            _logger.LogWarning("Email settings are missing. Skipping resend activation email. Activation link: {ActivationLink}", $"http://localhost:{Environment.GetEnvironmentVariable("FRONTEND_PORT") ?? "40000"}/#/activate?token={token}");
+            return;
+        }
+
+        var activationLink = $"http://localhost:{Environment.GetEnvironmentVariable("FRONTEND_PORT") ?? "40000"}/#/activate?token={token}";
+        var subject = "Yêu cầu kích hoạt lại tài khoản - Tử Vi Online";
+        
+        var bodyHtml = $@"
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
+                <h2 style='color: #2c3e50; text-align: center;'>Tử Vi Online</h2>
+                <p style='font-size: 16px; color: #333;'>Chào <strong>{username}</strong>,</p>
+                <p style='font-size: 16px; color: #333;'>Hệ thống nhận được yêu cầu gửi lại email kích hoạt tài khoản của bạn.</p>
+                <p style='font-size: 16px; color: #333;'>Vui lòng nhấn vào nút bên dưới (Liên kết này chỉ có hiệu lực trong vòng 15 phút):</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='{activationLink}' style='background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;'>Kích hoạt Tài khoản</a>
+                </div>
+                <p style='font-size: 14px; color: #777;'>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+            </div>";
+
+        using var client = new SmtpClient(host, port)
+        {
+            Credentials = new NetworkCredential(mailUsername, password),
+            EnableSsl = true
+        };
+
+        var mailMessage = new MailMessage
+        {
+            From = new MailAddress(fromEmail ?? mailUsername, "Tử Vi Online"),
+            Subject = subject,
+            Body = bodyHtml,
+            IsBodyHtml = true,
+        };
+        mailMessage.To.Add(email);
+
+        try
+        {
+            await client.SendMailAsync(mailMessage);
+            _logger.LogInformation("Resend activation email sent successfully to {Email}", email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send resend activation email to {Email}", email);
+        }
+    }
 }
 
 public class MockEmailService : IEmailService
@@ -166,6 +222,20 @@ public class MockEmailService : IEmailService
         _logger.LogInformation("Subject: Yêu cầu khôi phục tài khoản tại Tử Vi Online - AI");
         _logger.LogInformation("Username: {Username}", username);
         _logger.LogInformation("Body: Vui lòng click vào link sau để đặt lại mật khẩu: {ResetLink}", resetLink);
+        _logger.LogInformation("================================================");
+
+        return Task.CompletedTask;
+    }
+
+    public Task SendResendActivationEmailAsync(string email, string username, string token)
+    {
+        var activationLink = $"http://localhost:{Environment.GetEnvironmentVariable("FRONTEND_PORT") ?? "40000"}/#/activate?token={token}";
+        
+        _logger.LogInformation("================================================");
+        _logger.LogInformation("MOCK RESEND ACTIVATION EMAIL SENT TO: {Email}", email);
+        _logger.LogInformation("Subject: Yêu cầu kích hoạt lại tài khoản - Tử Vi Online");
+        _logger.LogInformation("Username: {Username}", username);
+        _logger.LogInformation("Body: Vui lòng click vào link sau để kích hoạt: {ActivationLink}", activationLink);
         _logger.LogInformation("================================================");
 
         return Task.CompletedTask;

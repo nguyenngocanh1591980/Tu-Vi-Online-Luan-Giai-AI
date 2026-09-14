@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "data": {
+    "solar_date": "27 tháng 7 năm 2026",
+    "lunar_date": "14/6 đ",
+    "weekday": "Thứ hai",
+    "lunar_day": 14,
+    "lunar_month": 6,
+    "lunar_year": 2026,
+    "lunar_month_is_leap": false,
+    "year_stem_branch": "Bính Ngọ",
+    "month_stem_branch": "Ất Mùi",
+    "day_stem_branch": "Nhâm Dần",
+    "sao_28": "Sao -Tâm trực +Nguy",
+    "tiet_khi": "Tiểu Thử: 08:49 07/07 - Đại Thử: 02:13 23/07",
+    "sao_tot": [
+      "Trực Tinh",
+      "Thiên Tài",
+      "Ngũ Phú",
+      "Hoạt Diệu",
+      "Kim Quỹ Hoàng Đạo",
+      "Mẫu Thương"
+    ],
+    "sao_xau": [
+      "Kim Thần Thất Sát",
+      "Bàng Chính Phát",
+      "Đao Chiêm Sát",
+      "Thổ Cẩm",
+      "Nguyệt Kị",
+      "Tội Chỉ"
+    ],
+    "dong_1_gio_xuat_hanh": [
+      {
+        "chi": "Tý",
+        "time": "23h - 01h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Sửu",
+        "time": "01h - 03h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Dần",
+        "time": "03h - 05h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Mão",
+        "time": "05h - 07h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Thìn",
+        "time": "07h - 09h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Tỵ",
+        "time": "09h - 11h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Ngọ",
+        "time": "11h - 13h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Mùi",
+        "time": "13h - 15h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Thân",
+        "time": "15h - 17h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Dậu",
+        "time": "17h - 19h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Tuất",
+        "time": "19h - 21h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Hợi",
+        "time": "21h - 23h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      }
+    ],
+    "dong_2_gio_hoang_hac_dao": {
+      "hoang_dao": [
+        "Giờ Tý (23h - 01h)",
+        "Giờ Sửu (01h - 03h)",
+        "Giờ Thìn (07h - 09h)",
+        "Giờ Tỵ (09h - 11h)",
+        "Giờ Mùi (13h - 15h)",
+        "Giờ Tuất (19h - 21h)"
+      ],
+      "hac_dao": [
+        "Giờ Dần (03h - 05h)",
+        "Giờ Mão (05h - 07h)",
+        "Giờ Ngọ (11h - 13h)",
+        "Giờ Thân (15h - 17h)",
+        "Giờ Dậu (17h - 19h)",
+        "Giờ Hợi (21h - 23h)"
+      ]
+    },
+    "dong_3_truc": "Trực Nguy",
+    "dong_4_ngay_ky": "Ngày 27-07-2026 là ngày Cát lành.",
+    "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Bính Ngọ Thiên Hà Thủy\nNgày: Nhâm Dần; tức Can Chi tương đồng (Kim), là ngày cát.\nNạp âm: Kim Bạc Kim kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Kim khắc hành Hỏa.\nNgày Dần lục hợp Hợi, tam hợp Ngọ và Tuất thành Hỏa cục. Xung Thân, hình Tỵ, hại Tỵ, phá Hợi, tuyệt Dậu."
+  }
+}

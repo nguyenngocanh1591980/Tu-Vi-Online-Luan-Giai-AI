@@ -24,11 +24,11 @@ class SavedChartModel {
       id: json['id'],
       userId: json['userId'],
       chartName: json['chartName'] ?? '',
-      dob: DateTime.parse(json['dob']),
+      dob: json['dob'] != null ? DateTime.parse(json['dob']).toLocal() : DateTime.now(),
       gender: json['gender'] ?? 'Male',
       chartJsonData: json['chartJsonData'] ?? '{}',
       hasAiReport: json['hasAiReport'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']).toLocal() : DateTime.now(),
     );
   }
 

@@ -4,16 +4,32 @@ import 'package:frontend/screens/chart_screen.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/verify_email_screen.dart';
+import 'package:frontend/screens/shared_chart_screen.dart';
 
 import 'package:provider/provider.dart';
 import 'package:frontend/providers/wallet_provider.dart';
 import 'package:frontend/providers/horoscope_provider.dart';
 import 'package:frontend/services/signalr_service.dart';
+import 'package:frontend/router/app_router.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: ".env");
     
+    // Mặc định khởi động ứng dụng luôn ở chế độ Khách xem, xóa sạch session tài khoản cũ
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('jwt_token');
+      await prefs.remove('username');
+      await prefs.remove('role');
+    } catch (e) {
+      debugPrint('Error clearing initial auth state: $e');
+    }
+
     // Khởi tạo kết nối WebSocket toàn cục
     await signalRService.initConnection();
     
@@ -58,32 +74,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Tử Vi AI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade900),
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        if (settings.name != null) {
-          final uri = Uri.parse(settings.name!);
-          if (uri.path == '/verify') {
-            final token = uri.queryParameters['token'];
-            if (token != null && token.isNotEmpty) {
-              return MaterialPageRoute(
-                builder: (context) => VerifyEmailScreen(token: token),
-              );
-            }
-          } else if (uri.path == '/login') {
-            return MaterialPageRoute(
-              builder: (context) => const LoginScreen(initialIsLogin: true),
-            );
-          }
-        }
-        return MaterialPageRoute(builder: (context) => const HomeScreen());
-      },
+      routerConfig: appRouter,
     );
   }
 }

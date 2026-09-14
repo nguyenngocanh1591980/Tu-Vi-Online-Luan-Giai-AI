@@ -61,10 +61,62 @@ def get_hour_can_chi(day_can: str, hour: int) -> str:
     
     return f"{can} {chi}"
 
+import ephem
+import math
+
+def get_historical_lunar_and_jd(year, month, day):
+    # 1. Chuyển đổi sang giờ UTC (Việt Nam là UTC+7)
+    # Lấy mốc 12:00 trưa VN (tức 05:00 UTC) để tính toán cho an toàn trong ngày
+    utc_date = datetime(year, month, day, 5, 0, 0)
+    ephem_date = ephem.Date(utc_date)
+
+    # 2. Tính Julian Day (JD) chuẩn xác
+    jd = ephem.julian_date(ephem_date)
+    jd_int = int(math.floor(jd + 0.5))
+
+    # 3. Tính Can Chi của Ngày (Dựa vào JD chuẩn, dùng cho Tử Vi)
+    day_can_idx = (jd_int + 9) % 10  # 0: Giáp, 1: Ất...
+    day_chi_idx = (jd_int + 1) % 12  # 0: Tý, 1: Sửu...
+
+    # 4. Tính Ngày Âm Lịch (Dựa vào Điểm Sóc - New Moon)
+    prev_new_moon = ephem.previous_new_moon(ephem_date)
+    
+    # Đổi Điểm Sóc từ UTC về giờ Việt Nam (+7) để xem mùng 1 rơi vào ngày dương nào
+    new_moon_utc = prev_new_moon.datetime()
+    from datetime import timedelta, date
+    new_moon_vn = new_moon_utc + timedelta(hours=7)
+    
+    target_date_vn = date(year, month, day)
+    mung_1_date_vn = new_moon_vn.date()
+
+    # Khoảng cách từ mùng 1 đến ngày đang xét chính là Ngày Âm Lịch
+    lunar_day = (target_date_vn - mung_1_date_vn).days + 1
+
+    return {
+        "julian_day": jd_int,
+        "day_can": day_can_idx,
+        "day_chi": day_chi_idx,
+        "lunar_day": lunar_day
+    }
+
 def convert_solar_to_lunar(day: int, month: int, year: int) -> dict:
     """
     Hàm convert Dương Lịch sang Âm Lịch sử dụng package vnlunar.
+    Dùng ephem làm fallback cho các năm trước 1800.
     """
+    if year < 1800:
+        hist_data = get_historical_lunar_and_jd(year, month, day)
+        lunar_y = year
+        lunar_m = month - 1 if month > 1 else 12
+        if month == 1: lunar_y -= 1
+        lunar_d = hist_data['lunar_day']
+        return {
+            "lunar_day": lunar_d,
+            "lunar_month": lunar_m,
+            "lunar_year": lunar_y,
+            "hist_data": hist_data
+        }
+
     try:
         import vnlunar
         # Dùng time_zone = 7.0 cho Âm lịch Việt Nam (quan trọng)
@@ -124,7 +176,14 @@ def get_full_astrology_data(day: int, month: int, year: int, hour: int, minute: 
 
     year_cc = get_year_can_chi(lunar_y)
     month_cc = get_month_can(year_cc.split()[0], lunar_m)
-    day_cc = get_day_can_chi(solar_d, solar_m, solar_y)
+    
+    if is_solar and 'hist_data' in lunar:
+        day_can_idx = lunar['hist_data']['day_can']
+        day_chi_idx = lunar['hist_data']['day_chi']
+        day_cc = f"{CAN[day_can_idx]} {CHI[day_chi_idx]}"
+    else:
+        day_cc = get_day_can_chi(solar_d, solar_m, solar_y)
+        
     hour_cc = get_hour_can_chi(day_cc.split()[0], hour)
     
     return {

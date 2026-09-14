@@ -1,0 +1,184 @@
+{
+  "solar": {
+    "day": 3,
+    "month": 9,
+    "year": 2026,
+    "day_of_week": "Thứ năm"
+  },
+  "lunar": {
+    "day": 22,
+    "month": 7,
+    "year": 2026,
+    "leap": 0,
+    "month_name": "Tháng 7"
+  },
+  "can_chi": {
+    "day": "Canh Thìn",
+    "month": "Bính Thân",
+    "year": "Bính Ngọ",
+    "hour": "Bính Tý"
+  },
+  "year_element": {
+    "can": "Bính",
+    "chi": "Ngọ",
+    "animal": "Ngựa",
+    "can_chi": "Bính Ngọ",
+    "name": "Hỏa",
+    "element": "Hỏa",
+    "can_element": "Hỏa",
+    "chi_element": "Hỏa"
+  },
+  "elements": {
+    "day": {
+      "can": "Kim",
+      "chi": "Thổ"
+    },
+    "year": {
+      "can": "Bính",
+      "chi": "Ngọ",
+      "animal": "Ngựa",
+      "can_chi": "Bính Ngọ",
+      "name": "Hỏa",
+      "element": "Hỏa",
+      "can_element": "Hỏa",
+      "chi_element": "Hỏa"
+    }
+  },
+  "12_stars": {
+    "name": "Bình",
+    "status": "neutral",
+    "color": "orange",
+    "description": "Trung bình, an táng, tu bổ"
+  },
+  "12_constructions": {
+    "name": "Trực nguy",
+    "good_for": [
+      "An phủ biên cảnh",
+      "tuyển tướng",
+      "an sàng"
+    ],
+    "bad_for": [
+      "Mọi việc khác"
+    ]
+  },
+  "12_gods": {
+    "name": "Thanh Long",
+    "type": "auspicious",
+    "status": "good",
+    "description": "Sao tốt - Hoàng Đạo"
+  },
+  "28_mansions": {
+    "name": "Khuê",
+    "animal": "Sói",
+    "element": "Mộc",
+    "good": false,
+    "description": "Xấu"
+  },
+  "nayin": {
+    "name": "Kiếm Phong Kim",
+    "element": "Kim",
+    "can": "Canh",
+    "chi": "Thìn"
+  },
+  "day_type": {
+    "type": "Hắc Đạo",
+    "star": "Bình",
+    "good": false,
+    "bad": true,
+    "desc": "Ngày Hắc Đạo - Xấu, nên tránh"
+  },
+  "conflicting_ages": {
+    "day_chi": "Thìn",
+    "day_animal": "Rồng",
+    "conflict_chi": "Tuất",
+    "conflict_animal": "Chó",
+    "description": "Ngày Thìn (Rồng) xung với tuổi Tuất (Chó)",
+    "conflicting_ages": [
+      {
+        "year": 2018,
+        "can_chi": "Mậu Tuất",
+        "age": 8,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 2006,
+        "can_chi": "Bính Tuất",
+        "age": 20,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1994,
+        "can_chi": "Giáp Tuất",
+        "age": 32,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1982,
+        "can_chi": "Nhâm Tuất",
+        "age": 44,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1970,
+        "can_chi": "Canh Tuất",
+        "age": 56,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1958,
+        "can_chi": "Mậu Tuất",
+        "age": 68,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1946,
+        "can_chi": "Bính Tuất",
+        "age": 80,
+        "chi": "Tuất",
+        "animal": "Chó"
+      },
+      {
+        "year": 1934,
+        "can_chi": "Giáp Tuất",
+        "age": 92,
+        "chi": "Tuất",
+        "animal": "Chó"
+      }
+    ],
+    "note": "Người tuổi xung nên tránh làm việc quan trọng trong ngày này"
+  },
+  "directions": {
+    "day_chi": "Thìn",
+    "good": [
+      "Bắc",
+      "Đông",
+      "Tây"
+    ],
+    "bad": [
+      "Nam",
+      "Đông Bắc",
+      "Tây Bắc",
+      "Đông Nam",
+      "Tây Nam"
+    ],
+    "description": "Ngày Thìn: Hướng tốt để xuất hành",
+    "good_text": "Bắc, Đông, Tây",
+    "bad_text": "Nam, Đông Bắc, Tây Bắc, Đông Nam, Tây Nam"
+  },
+  "god_directions": {
+    "day_can": "Canh",
+    "joy_god": "Tây Bắc",
+    "wealth_god": "Tây",
+    "fortune_god": "Tây",
+    "description": "Ngày Canh: Hướng các thần tài lộc"
+  },
+  "auspicious_hours": "Dần (3-5h), Thìn (7-9h), Tỵ (9-11h), Thân (15-17h), Dậu (17-19h), Hợi (21-23h)",
+  "day_of_week": "Thứ năm",
+  "jd": 2461287
+}

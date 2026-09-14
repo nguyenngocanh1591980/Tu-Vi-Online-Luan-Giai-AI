@@ -31,6 +31,69 @@ def train_knowledge():
     result = train_knowledge_base()
     return {"status": "success", "message": result}
 
+class AlmanacData(BaseModel):
+    date: str  # YYYY-MM-DD
+    time: str = "00:00" # HH:MM
+
+@app.post("/api/calculate-almanac")
+def calculate_almanac(data: AlmanacData):
+    """
+    API Tính toán Lịch Vạn Sự đầy đủ 5 trường dữ liệu bổ sung.
+    """
+    hour = 0
+    minute = 0
+    if ":" in data.time:
+        parts = data.time.split(":")
+        hour = int(parts[0])
+        minute = int(parts[1])
+        
+    parts = data.date.split("-")
+    year = int(parts[0])
+    month = int(parts[1])
+    day = int(parts[2])
+    
+    from ai_engine.almanac_engine import calculate_almanac_details
+    almanac_res = calculate_almanac_details(day, month, year, hour, minute)
+    
+    return {
+        "status": "success",
+        "data": almanac_res
+    }
+
+@app.get("/api/sun-times")
+@app.post("/api/sun-times")
+def api_get_sun_times(date: Optional[str] = None):
+    """
+    API Tính toán giờ Mặt Trời mọc và lặn tại Hà Nội và TP. Hồ Chí Minh (GMT+7).
+    """
+    from sun_times import get_sun_times_full_response
+    return get_sun_times_full_response(date)
+
+@app.post("/api/calculate-astrology-core")
+def calculate_astrology_core(data: BirthData):
+    """
+    API Nguồn Chân Lý: Tính toán lịch Âm, Can Chi từ ngày Dương.
+    """
+    hour = 0
+    minute = 0
+    if ":" in data.birth_time:
+        parts = data.birth_time.split(":")
+        hour = int(parts[0])
+        minute = int(parts[1])
+        
+    parts = data.birth_date.split("-")
+    year = int(parts[0])
+    month = int(parts[1])
+    day = int(parts[2])
+    
+    from ai_engine.lunar_converter import get_full_astrology_data
+    core_data = get_full_astrology_data(day, month, year, hour, minute, is_solar=True)
+    
+    return {
+        "status": "success",
+        "data": core_data
+    }
+
 @app.post("/api/calculate-chart")
 def calculate_chart(data: BirthData):
     # Sử dụng LLM và RAG để đọc quy tắc an sao và luận giải

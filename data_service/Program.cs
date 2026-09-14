@@ -19,7 +19,7 @@ builder.Services.AddHttpClient<IAiEngineClientService, AiEngineClientService>();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddOpenApi();
-
+builder.Services.AddDataProtection();
 builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("UserRateLimit", context =>
@@ -29,6 +29,17 @@ builder.Services.AddRateLimiter(options =>
         {
             PermitLimit = 1,
             Window = TimeSpan.FromSeconds(2),
+            QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        });
+    });
+    options.AddPolicy("ResendActivationLimit", context =>
+    {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown_ip";
+        return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(ip, _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 3,
+            Window = TimeSpan.FromMinutes(15),
             QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
             QueueLimit = 0
         });

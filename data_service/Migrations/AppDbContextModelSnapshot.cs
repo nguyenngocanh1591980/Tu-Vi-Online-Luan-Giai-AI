@@ -191,7 +191,18 @@ namespace data_service.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("FacebookId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("GoogleId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsInvisible")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LanguageCode")
@@ -230,6 +241,10 @@ namespace data_service.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ZaloId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 

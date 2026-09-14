@@ -1,0 +1,371 @@
+{
+  "case1_2014_09_24": {
+    "solar_date": "24 tháng 9 năm 2014",
+    "lunar_date": "1/9 t",
+    "weekday": "Thứ tư",
+    "lunar_day": 1,
+    "lunar_month": 9,
+    "lunar_year": 2014,
+    "lunar_month_is_leap": false,
+    "year_stem_branch": "Giáp Ngọ",
+    "month_stem_branch": "Quý Dậu",
+    "day_stem_branch": "Mậu Tuất",
+    "sao_28": "Sao -Sâm trực -Trừ",
+    "tiet_khi": "Bạch Lộ: 00:01 08/09 - Thu Phân: 09:29 23/09",
+    "sao_tot": [
+      "Thiên Mã",
+      "Mãn Đức Tinh"
+    ],
+    "sao_xau": [
+      "Yêu Tinh",
+      "Thiên Bổng",
+      "Bạch Hổ Hắc Đạo",
+      "Thổ Phủ",
+      "Tam Tang",
+      "Ly Sào",
+      "Tội Chí"
+    ],
+    "sao_meanings": [
+      {
+        "star": "Thiên Mã",
+        "meaning": "Tốt cho xuất hành, giao dịch, cầu tài lộc"
+      },
+      {
+        "star": "Mãn Đức Tinh",
+        "meaning": "Tốt mọi việc"
+      },
+      {
+        "star": "Yêu Tinh",
+        "meaning": "Xấu mọi việc"
+      },
+      {
+        "star": "Thiên Bổng",
+        "meaning": "Kiêng kiện tụng, những việc liên quan đến chính quyền"
+      },
+      {
+        "star": "Bạch Hổ Hắc Đạo",
+        "meaning": "Kiêng mai táng"
+      },
+      {
+        "star": "Thổ Phủ",
+        "meaning": "Kiêng động thổ"
+      },
+      {
+        "star": "Tam Tang",
+        "meaning": "Kiêng khởi tạo, hôn nhân, an táng"
+      },
+      {
+        "star": "Ly Sào",
+        "meaning": "Kiêng xuất hành, hôn nhân, lên nhà mới"
+      },
+      {
+        "star": "Tội Chí",
+        "meaning": "Kiêng tế tự, kiện cáo"
+      }
+    ],
+    "dong_1_gio_xuat_hanh": [
+      {
+        "chi": "Tý",
+        "time": "23h - 01h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Sửu",
+        "time": "01h - 03h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Dần",
+        "time": "03h - 05h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Mão",
+        "time": "05h - 07h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Thìn",
+        "time": "07h - 09h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Tỵ",
+        "time": "09h - 11h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Ngọ",
+        "time": "11h - 13h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Mùi",
+        "time": "13h - 15h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Thân",
+        "time": "15h - 17h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Dậu",
+        "time": "17h - 19h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Tuất",
+        "time": "19h - 21h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Hợi",
+        "time": "21h - 23h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      }
+    ],
+    "dong_2_gio_hoang_hac_dao": {
+      "hoang_dao": [
+        "Giờ Dần (03h - 05h)",
+        "Giờ Thìn (07h - 09h)",
+        "Giờ Tỵ (09h - 11h)",
+        "Giờ Thân (15h - 17h)",
+        "Giờ Dậu (17h - 19h)",
+        "Giờ Hợi (21h - 23h)"
+      ],
+      "hac_dao": [
+        "Giờ Tý (23h - 01h)",
+        "Giờ Sửu (01h - 03h)",
+        "Giờ Mão (05h - 07h)",
+        "Giờ Ngọ (11h - 13h)",
+        "Giờ Mùi (13h - 15h)",
+        "Giờ Tuất (19h - 21h)"
+      ]
+    },
+    "dong_3_truc": "Trực Trừ",
+    "dong_4_ngay_ky": "Ngày 24-09-2014 là ngày Cát lành.",
+    "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Giáp Ngọ Sa Trung Kim\nNgày: Mậu Tuất; tức Can Chi tương đồng (Mộc), là ngày cát.\nNạp âm: Bình Địa Mộc kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Mộc khắc hành Hỏa.\nNgày Tuất lục hợp Mão, tam hợp Dần và Ngọ thành Hỏa cục. Xung Thìn, hình Sửu, hại Dậu, phá Mùi, tuyệt Hợi."
+  },
+  "case2_2026_09_26": {
+    "solar_date": "26 tháng 9 năm 2026",
+    "lunar_date": "16/8 t",
+    "weekday": "Thứ bảy",
+    "lunar_day": 16,
+    "lunar_month": 8,
+    "lunar_year": 2026,
+    "lunar_month_is_leap": false,
+    "year_stem_branch": "Bính Ngọ",
+    "month_stem_branch": "Đinh Dậu",
+    "day_stem_branch": "Quý Mão",
+    "sao_28": "Sao -Nữ trực -Phá",
+    "tiet_khi": "Bạch Lộ: 21:41 07/09 - Thu Phân: 07:05 23/09",
+    "sao_tot": [
+      "Trực Tinh",
+      "Nguyệt Ân",
+      "Thủ Nhật",
+      "Minh Đường"
+    ],
+    "sao_xau": [
+      "Kim Thần Thất Sát",
+      "Thiên Tặc",
+      "Địa Hỏa",
+      "Nguyệt Yếm Đại Họa",
+      "Nguyệt Phá",
+      "Thần Cách",
+      "Phi Ma Sát",
+      "Hoang Vu",
+      "Ngũ Hư",
+      "Tội Chí"
+    ],
+    "sao_meanings": [
+      {
+        "star": "Trực Tinh",
+        "meaning": "Tốt mọi việc"
+      },
+      {
+        "star": "Nguyệt Ân",
+        "meaning": "Tốt mọi việc"
+      },
+      {
+        "star": "Thủ Nhật",
+        "meaning": "Tốt mọi việc"
+      },
+      {
+        "star": "Minh Đường",
+        "meaning": "Tốt mọi việc"
+      },
+      {
+        "star": "Kim Thần Thất Sát",
+        "meaning": "Xấu mọi việc"
+      },
+      {
+        "star": "Thiên Tặc",
+        "meaning": "Kiêng khởi tạo, động thổ, lên nhà mới, khai trương"
+      },
+      {
+        "star": "Địa Hỏa",
+        "meaning": "Kiêng đổ mái, lợp nhà, làm bếp, gieo trồng"
+      },
+      {
+        "star": "Nguyệt Yếm Đại Họa",
+        "meaning": "Kiêng xuất hành, giá thú"
+      },
+      {
+        "star": "Nguyệt Phá",
+        "meaning": "Kiêng về xây dựng, khởi tạo"
+      },
+      {
+        "star": "Thần Cách",
+        "meaning": "Kiêng tế tự, cầu phúc"
+      },
+      {
+        "star": "Phi Ma Sát",
+        "meaning": "Kiêng giá thú, nhập trạch"
+      },
+      {
+        "star": "Hoang Vu",
+        "meaning": "Xấu nói chung"
+      },
+      {
+        "star": "Ngũ Hư",
+        "meaning": "Kiêng hôn nhân, khởi tạo, an táng"
+      },
+      {
+        "star": "Tội Chí",
+        "meaning": "Kiêng tế tự, kiện cáo"
+      }
+    ],
+    "dong_1_gio_xuat_hanh": [
+      {
+        "chi": "Tý",
+        "time": "23h - 01h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Sửu",
+        "time": "01h - 03h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Dần",
+        "time": "03h - 05h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Mão",
+        "time": "05h - 07h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Thìn",
+        "time": "07h - 09h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Tỵ",
+        "time": "09h - 11h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      },
+      {
+        "chi": "Ngọ",
+        "time": "11h - 13h",
+        "que": "Tiểu Cát",
+        "quality": "Cát",
+        "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+      },
+      {
+        "chi": "Mùi",
+        "time": "13h - 15h",
+        "que": "Không Vong",
+        "quality": "Hung",
+        "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+      },
+      {
+        "chi": "Thân",
+        "time": "15h - 17h",
+        "que": "Đại An",
+        "quality": "Cát",
+        "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+      },
+      {
+        "chi": "Dậu",
+        "time": "17h - 19h",
+        "que": "Tốc Hỷ",
+        "quality": "Cát",
+        "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+      },
+      {
+        "chi": "Tuất",
+        "time": "19h - 21h",
+        "que": "Lưu Niên",
+        "quality": "Hung",
+        "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+      },
+      {
+        "chi": "Hợi",
+        "time": "21h - 23h",
+        "que": "Xích Khẩu",
+        "quality": "Hung",
+        "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+      }
+    ],
+    "dong_2_gio_hoang_hac_dao": {
+      "hoang_dao": [
+        "Giờ Tý (23h - 01h)",
+        "Giờ Dần (03h - 05h)",
+        "Giờ Mão (05h - 07h)",
+        "Giờ Ngọ (11h - 13h)",
+        "Giờ Mùi (13h - 15h)",
+        "Giờ Dậu (17h - 19h)"
+      ],
+      "hac_dao": [
+        "Giờ Sửu (01h - 03h)",
+        "Giờ Thìn (07h - 09h)",
+        "Giờ Tỵ (09h - 11h)",
+        "Giờ Thân (15h - 17h)",
+        "Giờ Tuất (19h - 21h)",
+        "Giờ Hợi (21h - 23h)"
+      ]
+    },
+    "dong_3_truc": "Trực Phá",
+    "dong_4_ngay_ky": "Ngày 26-09-2026 là ngày Cát lành.",
+    "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Bính Ngọ Thiên Hà Thủy\nNgày: Quý Mão; tức Can Chi tương đồng (Kim), là ngày cát.\nNạp âm: Kim Bạc Kim kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Kim khắc hành Hỏa.\nNgày Mão lục hợp Tuất, tam hợp Hợi và Mùi thành Mộc cục. Xung Dậu, hình Tý, hại Thìn, phá Ngọ, tuyệt Thân."
+  }
+}

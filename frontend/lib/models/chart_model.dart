@@ -177,6 +177,7 @@ class NativeInfo {
   final String monthStemBranch;
   final String dayStemBranch;
   final String timeStemBranch;
+  final String originalTimeStr;
 
   final int lunarYear;
   final String gender;
@@ -209,6 +210,14 @@ class NativeInfo {
   final String luuNienCung;
   final int tuoiAmNam;
   final int tuoiDaiVan;
+  final String kieuAnSao;
+  final String kieuSinh;
+  final String address;
+  final String currentAddress;
+  final String phone;
+  final String description;
+  final double? lat;
+  final double? lon;
 
   final List<String> anThaiTue; // An Thái Tuế (mảng String dạng 'L.Thái Tuế : CUNG NO BỌC')
   final List<String> anDaiVan; // An Đại Vận
@@ -231,6 +240,7 @@ class NativeInfo {
     this.monthStemBranch = '',
     this.dayStemBranch = '',
     this.timeStemBranch = '',
+    this.originalTimeStr = '',
     required this.lunarYear,
     required this.gender,
     required this.yinYang,
@@ -261,6 +271,14 @@ class NativeInfo {
     this.tuHoaDaiVan = const [],
     this.luuCungDaiVan = const [],
     this.luuCungLuuNien = const [],
+    this.kieuAnSao = 'An Thông Thường',
+    this.kieuSinh = 'Sinh Bình Thường',
+    this.address = '',
+    this.currentAddress = '',
+    this.phone = '',
+    this.description = '',
+    this.lat,
+    this.lon,
   });
 
   Map<String, dynamic> toJson() => {
@@ -276,6 +294,7 @@ class NativeInfo {
     'monthStemBranch': monthStemBranch,
     'dayStemBranch': dayStemBranch,
     'timeStemBranch': timeStemBranch,
+    'originalTimeStr': originalTimeStr,
     'lunarYear': lunarYear,
     'gender': gender,
     'yinYang': yinYang,
@@ -299,6 +318,14 @@ class NativeInfo {
     'luuNienCung': luuNienCung,
     'tuoiAmNam': tuoiAmNam,
     'tuoiDaiVan': tuoiDaiVan,
+    'kieuAnSao': kieuAnSao,
+    'kieuSinh': kieuSinh,
+    'address': address,
+    'currentAddress': currentAddress,
+    'phone': phone,
+    'description': description,
+    'lat': lat,
+    'lon': lon,
   };
 
   factory NativeInfo.fromJson(Map<String, dynamic> json) {
@@ -315,7 +342,8 @@ class NativeInfo {
       monthStemBranch: json['monthStemBranch'] ?? '',
       dayStemBranch: json['dayStemBranch'] ?? '',
       timeStemBranch: json['timeStemBranch'] ?? '',
-      lunarYear: json['lunarYear'] ?? '',
+      originalTimeStr: json['originalTimeStr'] ?? '',
+      lunarYear: json['lunarYear'] ?? 0,
       gender: json['gender'] ?? '',
       yinYang: json['yinYang'] ?? '',
       element: json['element'] ?? '',
@@ -338,6 +366,14 @@ class NativeInfo {
       luuNienCung: json['luuNienCung'] ?? '',
       tuoiAmNam: json['tuoiAmNam'] ?? 0,
       tuoiDaiVan: json['tuoiDaiVan'] ?? 0,
+      kieuAnSao: json['kieuAnSao'] ?? 'An Thông Thường',
+      kieuSinh: json['kieuSinh'] ?? 'Sinh Bình Thường',
+      address: json['address'] ?? '',
+      currentAddress: json['currentAddress'] ?? '',
+      phone: json['phone'] ?? '',
+      description: json['description'] ?? '',
+      lat: json['lat'] != null ? (json['lat'] as num).toDouble() : null,
+      lon: json['lon'] != null ? (json['lon'] as num).toDouble() : null,
     );
   }
 }

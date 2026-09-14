@@ -1,0 +1,229 @@
+# Bảng Liệt Kê Chuẩn 221 Thần Sát (Cập nhật và Đính chính)
+
+Danh sách 221 Thần Sát thường dùng trong Trạch Nhật, được chia làm 88 Cát Tinh và 133 Hung Tinh.
+
+## Danh Sách Cát Tinh (88 sao)
+- 1.Âm Đức - 陰德 - Yin Virtue
+- 2. Âm Quý - 陰貴 - Yin Noble
+- 6.Bảo Quang - 寶光  - Precious Light
+- 12.Bất Tương - 不將 - Yin Yang Harmony
+- 15. Binh Bảo – Binh Cát – Binh Phúc - Treasure Army, Auspicious Army - Fortune Army - 兵寶, 兵吉, 兵福
+- 16.Cát Kì - 吉奇  - Auspicious Period
+- 31.Đại Hồng Sa - 大紅砂 - Greater Red Embrace
+- 35.Dân Nhật - 民日 - Civilian Day
+- 40. Địa Tài(Bảo Quang Hoàng Đạo (地財) (Earthly Wealth)
+- 41.Dịch Mã - 驛馬 - Sky Horse
+- 43.Dương Đức - 陽德 - Yang Virtue
+- 44.Dương Quý - 陽貴 - Yang Noble
+- 45.Giải Thần - 解神 - Relief God
+- 48.Hỉ Thần (喜神) (Happy Spirit)
+- 49. Hoạt Diệu (活躍)
+- 55.Ích Hậu - 益後 - Benefit Descendants
+- 58.Kim Đường Hoàng Đạo - 金堂 - Gold Hall
+- 59.Kim Quĩ Hoàng Đạo - 金櫃 - Golden Lock
+- 60.Kính An - 鏡安 - Esteemed Stability
+- 61.Lâm Nhật - 臨日 - Arrival Day
+- 63.Lộc Khố  -  祿庫 - Wealth Storage
+- 65.Lục Hợp - 六合 - Six Combo
+- 66.Lục Nghi - 六疑 - Six Noble
+- 68.Mẫu Thương - 母倉 - Earthly Storage
+- 69.Minh Đường Hoàng Đạo- 明堂 - Bright Hall
+- 70.Minh Tinh - 明星 - Bright Star
+- 72.Ngọc Đường Hoàng Đạo- 玉堂 - Jade Hall
+- 73.Ngọc Thủ - Jade House
+- 74.Ngọc Vũ - 玉雨 - Jade Rain
+- 75.Ngũ Hợp - 五合 - Five Combo
+- 78.Ngũ Phú(Ngũ Phúc) - 五富 - Five Fortune
+- 80.Nguyệt Ân - 月恩     - Monthly Benevolence
+- 81.Nguyệt Đức - 月德 - Monthly Virtue
+- 82. Nguyệt Đức Hợp -月德合- Monthly Virtue Combo
+- 87.Nguyệt Không (月空) (Month Emptiness)
+- 93.Nguyệt Tài - 月財 - Monthly Wealth
+- 98.Phổ Hộ - Universal Protection - 普護
+- 102.Phúc Đức - 福德 - Fortune Virtue
+- 103.Phúc Hậu - 福厚 - Fortune Depth
+- 105.Phúc Sinh - 福生 - Fortune Generating
+- 106.Phúc Tinh - 福星 - Prosperity Star
+- 107. Quan Nhật - 官日 - Officer Day
+- 108. Sinh Khí - 生氣 - Life Generating
+- 110.Tam Hợp - 三合 - Three Harmony
+- 112.Thanh Long Hoàng Đạo- 青龍 - Green Dragon
+- 113.Thánh Tâm - 聖心 - Holy Heart
+- 114.Thiên Ân - 天恩 - Heavenly Benevolence
+- 120.Thiên Đức Hoàng Đạo (天德) (Heavenly Virtue)
+- 121.Thiên Đức Hợp (天德合) (Heavenly Virtue Combo)
+- 122.Thiên Hậu - 天后 - Heavenly Descendants
+- 125.Thiên Hỷ - 天喜 - Sky Happiness
+- 128.Thiên Mã(Lộc Mã) - 天馬 - Heavenly Horse
+- 130.Thiên Nguyện - Heavenly Wish - 天願
+- 132.Thiên Phú - 天富 - Heavenly Wealth
+- 133.Thiên Quan (Tư Mệnh Hoàng Đạo) (天官) (Heavenly Officer)
+- 134.Thiên Quý - 天貴 - Heavenly Noble
+- 136.Thiên Tài(Kim Qũy Hoàng Đạo) - 天財 - Heavenly Assets
+- 137.Thiên Thương - 天倉 - Heavenly Storage
+- 138.Thiên Vu(Thiên Vũ) - 天蕪 - Sky Wilderness
+- 139.Thiên Xá - 天赦 - Heavenly Pardon
+- 140.Thiên Y - 天醫 - Heavenly Doctor
+- 148.Thời Âm - 時陰 - Hour Yin
+- 149.Thời Đức - 時德 - Hour Virtue
+- 150.Thời Dương - 時陽 - Hour Yang
+- 151.Thủ Nhật - 守日 - Guard Day
+- 157.Trừ Thần -  除神 - Relief God
+- 166.Tư Mệnh Hoàng Đạo - 司命 - Life Govenor
+- 170.Tứ Tướng - 四相 - Four Mutuals
+- 171.Tục Thế - 續世 - Continuous Descendants
+- 172.Tuế Đức - 歲德 - Duke Virtue
+- 173.Tuế Đức Hợp - 歲德合 - Duke Virtue Combo
+- 175.Tuế Lộc - 歲祿 - Duke Prosperity
+- 178.Tướng Nhật - 相日 - Minister Day
+- 181.Vương Nhật - 王日 - Prosperous Day
+- 183.Yếu An - 要安 - Important Stabliity
+- 184.Mãn Đức Tinh
+- 186.U vi tinh
+- 190.Nguyệt Giải
+- 201.Cát Khánh
+- 205.Thiên Đức
+- 206.Thiên Phúc
+- 207.Thiên Thành
+- 208.Kính Tâm
+- 209.Tuế Hợp
+- 210.Yến Yên
+- 211.Hoàng Ân
+- 212.Diệu Xương
+- 213.Tứ Vượng
+- 221. Nhân Chuyên
+
+## Danh Sách Hung Tinh (133 sao)
+- 3. Âm Sai / Âm Thác - Yin Mistake
+- 4.Bạch Hổ Hắc Đạo- 白虎 - White Tiger
+- 5.Bàng Phế - 傍廢 - Near Abandonment
+- 7.Bát Chuyên - 八專 - Eight Focus
+- 8.Bát Long - Eight Dragons - 八龍
+- 9.Bát Phong - 八風 - Eight Wind
+- 10.Bát Toạ - 八座 - Eight Seat Star
+- 11.Bất Thành – 不成 - Unsuccessful
+- 13.Bệnh Phù - 病符 - Sickness Charm
+- 14. Bát Ma (披麻)
+- 17. Câu Giảo - Grappling Silk - 勾角
+- 18.Câu Trần Hắc Đạo - 勾陳 - Grappling Hook
+- 19.Chích Thoái - 炙退 - Roasting Star
+- 20.Chiêu Dao - 照耀 - Beckon Wave
+- 21.Chu Tước Hăc Đạo - 朱雀 - Red Phoenix
+- 22.Cô Thần - 孤神 - Lonesome Star
+- 23.Cửu Hổ - 九虎 - Nine Tigers
+- 24.Cửu Khảm - 九坎 - Nine Ridges
+- 25.Cửu Không - 九空  - Nine Void
+- 26.Cửu Tiêu - 九焦 - Nine Burnt
+- 27.Dương Thác - Yang Mistake - 陽錯
+- 28.Đại Bại - 大敗 - Great Failure
+- 29.Đại Hao (大耗) (Great Consumer)
+- 30.Đại Hoạ - 大禍 - Big Mishap
+- 32.Đại Sát (大煞) (Great Sha)
+- 33.Đại Thời - 大時 - Greater Timing
+- 34.Đại Tướng Quân  - 大將軍 - Big General
+- 36.Đao Châm Sát- 刀砧 - Knife Block
+- 37.Địa Hỏa - 地火 - Earthly Fire
+- 38.Địa Nang - Earthly Satchel - 地囊
+- 39.Địa Tặc - 地賊 - Earthly Thief
+- 42.Du Họa - 游禍 - Travelling Mishap
+- 46.Hà Khôi - 河魁 - River Star
+- 47.Hàm Trì - 咸池 - Salty Pool
+- 50.Hoàng Sa - 黃砂 - Yellow Embrace
+- 51.Hoang Vu - 荒蕪 - Wilderness
+- 52.Huyền Vũ Hắc Đạo- 玄武 - Black Tortoise
+- 53.Huyết Chi - 血支 - Blood Branch
+- 54.Huyết Kỵ - 血忌 - Blood Fear
+- 56.Khô Tiêu - 枯蕭 - Char Trees
+- 57.Kiếp Sát (劫煞) (Robbery Sha)
+- 62. Lỗ Ban Sát - 魯班 - Ignorant Class
+- 64.Lôi Công - 雷公 - Thunder
+- 67.Lục Xà
+- 71.Mộc Mã Sát (木馬) - Wooden Horse
+- 76.Ngũ Hư - 五虛 - Five Void
+- 77.Ngũ Mộ - Five Tombs - 五墓
+- 79.Ngũ Quỷ - 五鬼 - Five Ghost
+- 83.Nguyệt Hại - 月害 - Monthly Harm
+- 84.Nguyệt Hình - 月刑 - Monthly Punishment
+- 85.Nguyệt Hoả(Độc Hỏa) - 月火 - Monthly Fire
+- 86.Nguyệt Hư (Nguyệt Sát) - 月虛 - Monthly Void
+- 88.Nguyệt Kiến - 月建 - Monthly Establishment
+- 89.Nguyệt Phá - 月破 - Monthly Breaker
+- 90. Nguyệt Chuyển (月轉):
+- 91. Ngõa Toái (瓦碎):
+- 92.Nguyệt Sát - 月煞 - Monthly Sha
+- 94.Nguyệt Yếm Đại Họa(Nguyệt Áp) - 月厭 - Monthly Detest
+- 95.Nhân Cách - 人隔 - Human Separator
+- 96.Phá Bại – Destructive - 破敗
+- 97. Phủ Sát (斧殺):
+- 99.Phi Liêm - 飛廉 - Flying Chaste
+- 100.Phi Ma Sát(Tai Sát) - 披麻 - Drapes
+- 101.Phục Binh (Tọa Sát) (伏兵) (Subsided Army)
+- 104.Phục Nhật - 復日 - Emptiness Day
+- 109.Tai Sát (Thiên Hỏa) (災煞) (Calamity Sha)
+- 111.Thần Cách - 神隔 - Spirit Separator
+- 115.Thiên Bổng - 天棒 - Heavenly Bat
+- 116.Thiên Cẩu - 天狗 - Heavenly Dog
+- 117.Thiên Cương - 天罡 - Sky Bright
+- 118.Thiên Địa Chuyển(Thiên Địa Chính Chuyển) - 天地轉 - Heaven and Earth Shifting Sha
+- 119.Thiên Địa Chuyển Sát
+- 123.Thiên Hình Hắc Đạo - 天刑 - Heaven Punishment
+- 124.Thiên Hoả - 天火 - Heavenly Fire
+- 126.Thiên Lại - 天來 - Heaven Arrival
+- 127.Thiên Lao Hắc Đạo - 天牢 - Heavenly Prison
+- 129.Thiên Ngục(Thiên Hỏa) - 天獄 - Heavenly Jail
+- 131.Thiên Ôn - 天瘟 - Heavenly Depression
+- 135.Thiên Tặc - 天賊 - Heavenly Thief
+- 141.Thọ Tử - Receive Death
+- 142.Thổ Cấm - 土禁 - Earth Forbid
+- 143.Thổ Kỵ - Earth Fear - 土忌
+- 144.Thổ Ôn(Thiên Cẩu) - Earth Depression - 土瘟
+- 145. Tàn Bại (殘敗):
+- 146. Thiên Địa Trục (天地軸):
+- 147.Thổ Phù - 土府 - Earth Mansion
+- 152. Thiên Sứ (天吏):
+- 153. Thụ Tử (受死):
+- 154.Tiểu Hao - 小耗 - Lesser Consumer
+- 155.Tiểu Hồng Sa - 小紅砂 - Lesser Red Embrace
+- 156.Tiểu Thời - 小時 - Lesser Timing
+- 158.Trùng Nhật - 重日 - Volumous Day
+- 159.Trùng Tang - 重喪 - Double Funeral
+- 160.Tứ Đại Mộ (Tứ thời đại mộ) - 四大墓 - Four Major Grave
+- 161.Tử Khí - 死汽 - Dead Qi
+- 162.Tứ Cùng - Four Poverty - 四窮
+- 163.Tứ Hao - 四耗 - Four Loss
+- 164.Tứ Kích - Four Assault - 四擊
+- 165.Tứ Kỵ - 四忌 - Four Forbids
+- 167. Thiên Phủng
+- 168.Tứ Phế - 四廢 - Four Abandonment
+- 169.Tử Phù - 死符 - Death Charm
+- 174.Tuế Hình (歲刑) (Duke Punishment)
+- 176.Tuế Phá - 歲破 - Year Breaker
+- 177.Tuế Sát (Annual Sha)
+- 179.Ương Bại - 殃敗 - Calamitous Sha
+- 180.Vãng Vong - 往亡 - Emptiness
+- 182.Yếm Đối - 厭對 - Detest Opposition
+- 185.Tứ thời Cô Quả
+- 187.Sát Cống
+- 188.Trùng Phục
+- 189.Băng Tiêu Ngõa Hãm
+- 191.Ly Sào
+- 192.Sát Chủ Âm
+- 193.Dương Công Kỵ
+- 194.Xích Khẩu
+- 195.Tam Nương
+- 196.Kim Thần Thất Sát
+- 197.Ly Sàng
+- 198.Tam Tang
+- 222.Không Phòng
+- 200.Lập Tảo
+- 202.Nguyệt Kiến Chuyển Sát
+- 203.Phủ Đầu Sát
+- 204.Hỏa Tai
+- 214.Nguyệt Kỵ
+- 215.Nhập Tòa Địa Phá
+- 216.Lục Bất Thành
+- 217.Quả Tú
+- 218.Sát Chủ Dương
+- 219.Tội Chỉ
+- 220.Âm Thác
+- 221.Quỷ Khốc

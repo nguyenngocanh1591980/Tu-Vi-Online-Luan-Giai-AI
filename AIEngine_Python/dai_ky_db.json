@@ -1,0 +1,241 @@
+{
+  "source_doc": "E:\\Tu vi online\\AI học tử vi\\Thư Viện cho AI Học\\Tầng 1- Dữ Liệu Chuẩn Hóa\\Các Ngày Đại Kỵ Trong Năm Và Cách Hóa Giải(Đã chỉnh lý).docx",
+  "tam_nuong": {
+    "id": "195.Tam Nương",
+    "name": "Tam Nương",
+    "header": "1: Ngày Tam Nương(195.Tam Nương)",
+    "lunar_days": [
+      3,
+      7,
+      13,
+      18,
+      22,
+      27
+    ],
+    "y_nghia": "\"Tam\" nghĩa là ba, \"Nương\" là người phụ nữ. Tên gọi gắn liền với tích cổ về ba người phi tần (Muội Hỉ, Đát Kỷ, Bao Tự) hoặc sự kiện ba người đẹp giáng trần. Những ngày này mang sát khí lớn, thường được xem là không may mắn dễ gặp vận hạn hoặc trắc trở. Dân gian cho rằng vào những ngày này, không nên tiến hành các việc quan trọng như cưới hỏi, động thổ, xuất hành hay khai trương."
+  },
+  "nguyet_ky": {
+    "id": "213.Nguyệt Kỵ",
+    "name": "Nguyệt Kỵ",
+    "header": "2: Ngày Nguyệt Kỵ (213.Nguyệt Kỵ)",
+    "lunar_days": [
+      5,
+      14,
+      23
+    ],
+    "y_nghia": "Quan niệm dân gian có câu “Mùng năm, mười bốn, hai ba – đi chơi còn lỗ nữa là đi buôn”, phản ánh ý nghĩa không may mắn của những ngày này, thường kiêng xuất hành và khai trương. Các việc thường kiêng kỵ: Xuất hành hoặc đi xa, khai trương, mở cửa hàng, cưới hỏi, kết hôn, động thổ, xây dựng nhà cửa."
+  },
+  "sat_chu_am": {
+    "id": "192.Sát Chủ Âm",
+    "name": "Sát Chủ Âm",
+    "header": "192.Sát Chủ Âm",
+    "matrix_month_chi": {
+      "1": "Tỵ",
+      "2": "Tý",
+      "3": "Mùi",
+      "4": "Mão",
+      "5": "Thân",
+      "6": "Tuất",
+      "7": "Sửu",
+      "8": "Hợi",
+      "9": "Ngọ",
+      "10": "Dậu",
+      "11": "Dần",
+      "12": "Thìn"
+    },
+    "y_nghia": "Được xem là ngày dễ gây hao tài, tổn thất và vận xui. Nếu làm việc lớn vào ngày này có thể ảnh hưởng đến gia đạo và tài lộc. Sát chủ Âm đây là những ngày xấu, đại kỵ cho các công việc liên quan đến phần âm, mồ mả, mai táng, cải táng, bốc mộ hoặc ma chay."
+  },
+  "sat_chu_duong": {
+    "id": "217.Sát Chủ Dương",
+    "name": "Sát Chủ Dương",
+    "header": "217.Sát Chủ Dương",
+    "matrix_month_chi": {
+      "1": "Tuất",
+      "2": "Thìn",
+      "3": "Mùi",
+      "4": "Tỵ",
+      "5": "Tý",
+      "6": "Sửu",
+      "7": "Thân",
+      "8": "Mão",
+      "9": "Tuất",
+      "10": "Hợi",
+      "11": "Tý",
+      "12": "Sửu"
+    },
+    "y_nghia": "Được xem là ngày dễ gây hao tài, tổn thất và vận xui. Nếu làm việc lớn vào ngày này có thể ảnh hưởng đến gia đạo và tài lộc. Sát Chủ Dương đây là những ngày xấu, kiêng kỵ cho các công việc trọng đại liên quan đến người sống và phần dương như cưới hỏi, động thổ, xây nhà, khai trương, xuất hành, mua xe."
+  },
+  "tho_tu": {
+    "id": "141.Thọ Tử - Receive Death",
+    "name": "Thọ Tử",
+    "header_ngay": "Thọ Tử: (141.Thọ Tử - Receive Death)",
+    "header_gio": ": Giờ Thọ Tử: (141.Thọ Tử - Receive Death)",
+    "header_ca_hai": ":Ngày Thọ Tử: (141.Thọ Tử - Receive Death)",
+    "matrix_day_by_month": {
+      "1": "Tuất",
+      "2": "Thìn",
+      "3": "Hợi",
+      "4": "Tỵ",
+      "5": "Tý",
+      "6": "Ngọ",
+      "7": "Sửu",
+      "8": "Mùi",
+      "9": "Dần",
+      "10": "Thân",
+      "11": "Mão",
+      "12": "Dậu"
+    },
+    "matrix_hour_by_day_chi": {
+      "Tý": "Sửu",
+      "Sửu": "Ngọ",
+      "Dần": "Ngọ",
+      "Mão": "Tỵ",
+      "Thìn": "Tỵ",
+      "Tỵ": "Ngọ",
+      "Ngọ": "Mùi",
+      "Mùi": "Ngọ",
+      "Thân": "Mão",
+      "Dậu": "Tỵ",
+      "Tuất": "Mùi",
+      "Hợi": "Ngọ"
+    },
+    "hour_frames": {
+      "Tý": "23:00 - 01:00",
+      "Sửu": "01:00 - 03:00",
+      "Dần": "03:00 - 05:00",
+      "Mão": "05:00 - 07:00",
+      "Thìn": "07:00 - 09:00",
+      "Tỵ": "09:00 - 11:00",
+      "Ngọ": "11:00 - 13:00",
+      "Mùi": "13:00 - 15:00",
+      "Thân": "15:00 - 17:00",
+      "Dậu": "17:00 - 19:00",
+      "Tuất": "19:00 - 21:00",
+      "Hợi": "21:00 - 23:00"
+    },
+    "y_nghia_ngay": "Là Ngày mang sát khí cao, không thích hợp cho mọi việc đặc biệt kiêng kỵ làm việc lớn như cưới hỏi, xuất hành hay động thổ tang lễ hoặc các lễ nghi tâm linh. Ngoại trừ câu cá hay bẫy thú.",
+    "y_nghia_gio": "Là giờ mang sát khí cao, không thích hợp cho mọi việc đặc biệt kiêng kỵ làm việc lớn như cưới hỏi, xuất hành hay động thổ tang lễ hoặc các lễ nghi tâm linh. Ngoại trừ câu cá hay bẫy thú.",
+    "y_nghia_ca_hai": "Là ngày và giờ mang sát khí cao, không thích hợp cho mọi việc đặc biệt kiêng kỵ làm việc lớn như cưới hỏi, xuất hành hay động thổ tang lễ hoặc các lễ nghi tâm linh. Ngoại trừ câu cá hay bẫy thú."
+  },
+  "duong_cong_ky": {
+    "id": "193.Dương Công Kỵ",
+    "name": "Dương Công Kỵ",
+    "header": "5: Ngày Dương Công Kỵ: (193.Dương Công Kỵ)",
+    "lunar_month_days": {
+      "1": [
+        13
+      ],
+      "2": [
+        11
+      ],
+      "3": [
+        9
+      ],
+      "4": [
+        7
+      ],
+      "5": [
+        5
+      ],
+      "6": [
+        3
+      ],
+      "7": [
+        1,
+        29
+      ],
+      "8": [
+        27
+      ],
+      "9": [
+        25
+      ],
+      "10": [
+        23
+      ],
+      "11": [
+        21
+      ],
+      "12": [
+        19
+      ]
+    },
+    "y_nghia": "Ngày đại hung theo phong thủy, 13 ngày đại hung (xấu) tính theo lịch âm trong năm, đây là những ngày bách kỵ (trăm sự đều kỵ), tuyệt đối tránh làm việc lớn như Cưới hỏi, kết hôn, động thổ, xây sửa nhà cửa, an táng, khai trương, xuất hành, giao dịch lớn, ký kết hợp đồng quan trọng."
+  },
+  "kim_than_that_sat": {
+    "id": "196.Kim Thần Thất Sát",
+    "name": "Kim Thần Thất Sát",
+    "header": "6: Ngày Kim Thần Thất Sát: (196.Kim Thần Thất Sát)",
+    "matrix_year_can_day_chi": {
+      "Giáp": [
+        "Ngọ",
+        "Mùi"
+      ],
+      "Kỷ": [
+        "Ngọ",
+        "Mùi"
+      ],
+      "Ất": [
+        "Thìn",
+        "Tỵ"
+      ],
+      "Canh": [
+        "Thìn",
+        "Tỵ"
+      ],
+      "Bính": [
+        "Tý",
+        "Sửu",
+        "Dần",
+        "Mão"
+      ],
+      "Tân": [
+        "Tý",
+        "Sửu",
+        "Dần",
+        "Mão"
+      ],
+      "Đinh": [
+        "Tuất",
+        "Hợi"
+      ],
+      "Nhâm": [
+        "Tuất",
+        "Hợi"
+      ],
+      "Mậu": [
+        "Thân",
+        "Dậu"
+      ],
+      "Quý": [
+        "Thân",
+        "Dậu"
+      ]
+    },
+    "y_nghia": "Là một ngày đại hung (rất xấu) theo phong thủy trạch cát và thuật chọn ngày, chủ về những điều tai ương, rủi ro, chiến tranh, chết chóc hay dịch bệnh. Ngày này dễ phát sinh tranh chấp, mâu thuẫn hoặc gặp trắc trở, bất lợi trong công việc. Tránh làm việc lớn: Không nên tiến hành cưới hỏi, khai trương, động thổ, xây dựng, ký kết hợp đồng hay xuất hành đi xa."
+  },
+  "tu_ly": {
+    "id": "7: Ngày Tứ Ly",
+    "name": "Tứ Ly",
+    "header": "7: Ngày Tứ Ly",
+    "terms": [
+      "Xuân Phân",
+      "Hạ Chí",
+      "Thu Phân",
+      "Đông Chí"
+    ],
+    "y_nghia": "Theo phong tục cổ truyền, đây là những ngày giao mùa có sự thay đổi khí âm dương mạnh mẽ, dễ làm lòng người bất an, quyết định sai lầm. Kiêng làm việc lớn: Người ta thường kiêng làm các việc trọng đại như cưới hỏi (dễ kỵ ly biệt, chia tay), khai trương, xuất hành hay xây dựng nhà cửa vào những ngày này."
+  },
+  "tu_tuyet": {
+    "id": "8: Ngày Tứ Tuyệt",
+    "name": "Tứ Tuyệt",
+    "header": "8: Ngày Tứ Tuyệt",
+    "terms": [
+      "Lập Xuân",
+      "Lập Hạ",
+      "Lập Thu",
+      "Lập Đông"
+    ],
+    "y_nghia": "Người xưa cho rằng đây là thời điểm giao mùa, âm dương và ngũ hành thay đổi mạnh mẽ, chưa ổn định. Năng lượng vũ trụ xáo trộn dễ sinh ra trắc trở, đổ vỡ, chia ly hoặc khiến việc lớn khó bề vẹn tròn. Theo phong thủy truyền thống, đây là những ngày đại kỵ (xấu), nên tránh làm các việc trọng đại như cưới hỏi, xuất hành, động thổ, xây nhà hay ký kết hợp đồng lớn để hạn chế rủi ro, trắc trở."
+  }
+}

@@ -135,7 +135,6 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
         ),
       ),
       desktopBody: Scaffold(
-        appBar: const MainNavigationBar(),
         body: Row(
           children: [
             // Example Sidebar for Desktop

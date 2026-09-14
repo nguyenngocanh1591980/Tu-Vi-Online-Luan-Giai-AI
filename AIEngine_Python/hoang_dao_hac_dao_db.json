@@ -1,0 +1,1114 @@
+{
+  "title": "Cách Tính Ngày và Giờ Hoàng Đạo, Hắc Đạo Trong Năm (Đã chỉnh lý)",
+  "stars_info": [
+    {
+      "name": "Thanh Long",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Minh Đường",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Thiên Hình",
+      "type": "Hắc Đạo",
+      "is_good": false
+    },
+    {
+      "name": "Chu Tước",
+      "type": "Hắc Đạo",
+      "is_good": false
+    },
+    {
+      "name": "Kim Quỹ",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Kim Đường",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Bạch Hổ",
+      "type": "Hắc Đạo",
+      "is_good": false
+    },
+    {
+      "name": "Ngọc Đường",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Thiên Lao",
+      "type": "Hắc Đạo",
+      "is_good": false
+    },
+    {
+      "name": "Huyền Vũ",
+      "type": "Hắc Đạo",
+      "is_good": false,
+      "alias": "Nguyên vũ"
+    },
+    {
+      "name": "Tư Mệnh",
+      "type": "Hoàng Đạo",
+      "is_good": true
+    },
+    {
+      "name": "Câu Trận",
+      "type": "Hắc Đạo",
+      "is_good": false
+    }
+  ],
+  "star_meanings": {
+    "Minh Đường": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp.",
+    "Thanh Long": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ.",
+    "Kim Đường": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra.",
+    "Kim Quỹ": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa.",
+    "Ngọc Đường": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ.",
+    "Tư Mệnh": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán.",
+    "Thiên Hình": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi.",
+    "Chu Tước": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận.",
+    "Bạch Hổ": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật.",
+    "Thiên Lao": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ.",
+    "Huyền Vũ": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng.",
+    "Câu Trận": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+  },
+  "matrix_lookup": {
+    "1": {
+      "Tý": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Sửu": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Dần": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Mão": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Thìn": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Tỵ": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Ngọ": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Mùi": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Thân": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Dậu": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Tuất": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Hợi": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      }
+    },
+    "2": {
+      "Tý": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Sửu": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Dần": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Mão": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Thìn": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Tỵ": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Ngọ": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Mùi": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Thân": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Dậu": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Tuất": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Hợi": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      }
+    },
+    "3": {
+      "Tý": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Sửu": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Dần": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Mão": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Thìn": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Tỵ": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Ngọ": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Mùi": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Thân": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Dậu": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Tuất": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Hợi": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      }
+    },
+    "4": {
+      "Tý": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Sửu": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Dần": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Mão": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Thìn": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Tỵ": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Ngọ": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Mùi": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Thân": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Dậu": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Tuất": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Hợi": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      }
+    },
+    "5": {
+      "Tý": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Sửu": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Dần": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Mão": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Thìn": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Tỵ": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Ngọ": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Mùi": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Thân": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Dậu": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Tuất": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Hợi": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      }
+    },
+    "6": {
+      "Tý": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Sửu": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Dần": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Mão": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Thìn": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Tỵ": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Ngọ": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Mùi": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Thân": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Dậu": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Tuất": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Hợi": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      }
+    },
+    "7": {
+      "Tý": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Sửu": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Dần": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Mão": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Thìn": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Tỵ": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Ngọ": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Mùi": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Thân": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Dậu": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Tuất": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Hợi": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      }
+    },
+    "8": {
+      "Tý": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Sửu": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Dần": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Mão": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Thìn": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Tỵ": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Ngọ": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Mùi": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Thân": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Dậu": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Tuất": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Hợi": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      }
+    },
+    "9": {
+      "Tý": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Sửu": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Dần": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Mão": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Thìn": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Tỵ": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Ngọ": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Mùi": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Thân": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Dậu": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Tuất": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Hợi": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      }
+    },
+    "10": {
+      "Tý": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Sửu": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Dần": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Mão": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Thìn": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Tỵ": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Ngọ": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Mùi": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Thân": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Dậu": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Tuất": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Hợi": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      }
+    },
+    "11": {
+      "Tý": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Sửu": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Dần": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Mão": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Thìn": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Tỵ": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Ngọ": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Mùi": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Thân": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Dậu": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      },
+      "Tuất": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Hợi": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      }
+    },
+    "12": {
+      "Tý": {
+        "star": "Thiên Hình",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Hình Hắc Đạo",
+        "meaning": "Chủ về luật pháp, kiện tụng, tranh chấp và hình phạt. Tránh làm việc liên quan đến tòa án, ký giấy tờ pháp lý hay tranh cãi."
+      },
+      "Sửu": {
+        "star": "Chu Tước",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Chu Tước Hắc Đạo",
+        "meaning": "Chủ về thị phi, tai tiếng, điều tiếng và cãi vã. Tránh việc hội họp, đàm phán, ký kết hay tranh luận."
+      },
+      "Dần": {
+        "star": "Kim Quỹ",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Quỹ Hoàng Đạo",
+        "meaning": "Đây là khung Ngày/Giờ hoàng đạo thuộc 2 chòm sao Nguyệt Tiên và Phúc Đức. Ngày/Giờ này hợp với sinh con nối dõi tông đường. Đứa trẻ sinh ra vào giờ này sẽ thông minh, kháu khỉnh, khỏe mạnh, công danh sự nghiệp sẽ vô cùng sáng sủa."
+      },
+      "Mão": {
+        "star": "Kim Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Kim Đường Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ này thuộc sao Bảo Quang chiếu sáng, hợp với các sự kiện khai trương, giúp phát tài phát lộc, ăn nên làm ra."
+      },
+      "Thìn": {
+        "star": "Bạch Hổ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Bạch Hổ Hắc Đạo",
+        "meaning": "Chủ về tai nạn, thương tích, hao tài tốn of hoặc tang tóc. Tránh xuất hành đi xa, làm nhà hay tiến hành phẫu thuật."
+      },
+      "Tỵ": {
+        "star": "Ngọc Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Ngọc Đường Hoàng Đạo",
+        "meaning": "Đây là Ngày/Giờ thuộc sao Thiếu Vi và sao Thiên Khái chiếu sáng, hợp với việc khởi nghiệp. Vậy nên, xây dựng sự nghiệp vào khung Ngày/Giờ này sẽ vô cùng may mắn và được quý nhân giúp đỡ."
+      },
+      "Ngọ": {
+        "star": "Thiên Lao",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Thiên Lao Hắc Đạo",
+        "meaning": "Chủ về sự kìm kẹp, tù tội, trói buộc và bế tắc. Tránh khai trương, khởi công hay mưu sự lớn vì dễ bị đình trệ."
+      },
+      "Mùi": {
+        "star": "Huyền Vũ",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Huyền Vũ Hắc Đạo",
+        "meaning": "Chủ về trộm cắp, mất mát tài sản, lừa gạt. Tránh giao dịch tiền bạc, đầu tư lớn hoặc đi đường vắng."
+      },
+      "Thân": {
+        "star": "Tư Mệnh",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Tư Mệnh Hoàng Đạo",
+        "meaning": "Khung Ngày/Giờ hoàng đạo này được sao Nguyệt Tiên và sao Phượng Liễn chiếu sáng, giúp chủ nhân gặt hái thành công, tiền tài rủng rỉnh bằng con đường làm ăn kinh doanh, buôn bán."
+      },
+      "Dậu": {
+        "star": "Câu Trận",
+        "type": "Hắc Đạo",
+        "is_good": false,
+        "display_text": "Hôm nay là Ngày Câu Trận Hắc Đạo",
+        "meaning": "Chủ về sự cản trở, trì trệ, rắc rối dây dưa và công việc không trôi chảy. Tránh khởi động các dự án mới hoặc di dời đồ đạc."
+      },
+      "Tuất": {
+        "star": "Thanh Long",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Thanh Long Hoàng Đạo",
+        "meaning": "Đây Ngày/Giờ hoàng đạo may mắn, thuộc khung Ngày/Giờ của sao Thiên Ất. Ngày/Giờ Thanh Long hợp với kết hôn, giúp cuộc sống hạnh phúc, bình an, gia đạo hòa thuận và vui vẻ."
+      },
+      "Hợi": {
+        "star": "Minh Đường",
+        "type": "Hoàng Đạo",
+        "is_good": true,
+        "display_text": "Hôm nay là Ngày Minh Đường Hoàng Đạo",
+        "meaning": "Minh Đường thuộc sao Ngự Trị. Ngày/Giờ Minh Đường sẽ luôn được quý nhân giúp đỡ và tương trợ xuyên suốt quá trình lập nghiệp."
+      }
+    }
+  }
+}

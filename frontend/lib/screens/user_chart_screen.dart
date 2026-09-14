@@ -12,7 +12,11 @@ import 'package:vnlunar/vnlunar.dart';
 import '../utils/lunar_utils.dart';
 import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 import '../utils/chart_generator.dart';
-
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 class UserChartScreen extends StatefulWidget {
   final String name;
   final String gender;
@@ -47,6 +51,11 @@ class _UserChartScreenState extends State<UserChartScreen> {
   late ChartData mockData;
   final GlobalKey _chartKey = GlobalKey();
   late TextEditingController _yearController;
+  
+  bool _isHideName = false;
+  bool _isHideDob = false;
+  bool _isUploading = false;
+  String _generatedUrl = kIsWeb ? Uri.base.origin : 'http://localhost:5000';
 
   @override
   void initState() {
@@ -89,6 +98,206 @@ class _UserChartScreenState extends State<UserChartScreen> {
       month: widget.month,
       year: widget.year,
       viewYear: widget.viewYear,
+    );
+  }
+
+  Future<void> _launchSocialUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint('Could not launch $urlString');
+      }
+    } catch (e) {
+      debugPrint('Error launching url: $e');
+    }
+  }
+
+  Future<void> _handleNativeShare(String platform) async {
+    if (kIsWeb) {
+      final String shareUrl = 'http://localhost:5000'; // Dùng URL web app thực tế khi deploy
+      final String encodedUrl = Uri.encodeComponent(shareUrl);
+      if (platform == 'zalo') {
+        final Uri zaloScheme = Uri.parse('zalo://share?link=$encodedUrl');
+        try {
+          if (await canLaunchUrl(zaloScheme)) {
+            await launchUrl(zaloScheme, mode: LaunchMode.externalApplication);
+          } else {
+            _launchSocialUrl('https://chat.zalo.me/?v=cb&url=$encodedUrl');
+          }
+        } catch (e) {
+          _launchSocialUrl('https://chat.zalo.me/?v=cb&url=$encodedUrl');
+        }
+      } else if (platform == 'facebook') {
+        _launchSocialUrl('https://www.facebook.com/sharer/sharer.php?u=$encodedUrl');
+      } else if (platform == 'x') {
+        _launchSocialUrl('https://twitter.com/intent/tweet?url=$encodedUrl');
+      } else if (platform == 'telegram') {
+        _launchSocialUrl('https://t.me/share/url?url=$encodedUrl');
+      } else {
+        Share.share(shareUrl);
+      }
+      return;
+    }
+
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đang chuẩn bị ảnh chia sẻ...')),
+        );
+      }
+      ChartData? originalData = mockData;
+      if (_isHideName || _isHideDob) {
+        Map<String, dynamic> jsonMap = mockData.toJson();
+        if (_isHideName) {
+          jsonMap['native']['name'] = '[Tên đã được ẩn]';
+        }
+        if (_isHideDob) {
+          jsonMap['native']['birthYearStr'] = '***';
+          jsonMap['native']['birthMonthStr'] = '**';
+          jsonMap['native']['birthDayStr'] = '**';
+          jsonMap['native']['birthTimeStr'] = '**';
+          jsonMap['native']['lunarMonthStr'] = '**';
+          jsonMap['native']['lunarDayStr'] = '**';
+          jsonMap['native']['lunarTimeStr'] = '**';
+        }
+        ChartData maskedData = ChartData.fromJson(jsonMap);
+        setState(() { mockData = maskedData; });
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      RenderRepaintBoundary boundary = _chartKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 1.5);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      if (_isHideName || _isHideDob) {
+        setState(() { mockData = originalData; });
+      }
+
+      final directory = await getTemporaryDirectory();
+      final File tempFile = File('${directory.path}/chart_share.png');
+      await tempFile.writeAsBytes(pngBytes);
+
+      await Share.shareXFiles([XFile(tempFile.path)], text: 'Xem lá số Tử Vi của tôi nhé!');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi chia sẻ: $e')),
+        );
+      }
+    }
+  }
+
+  void _showNativeShareDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Chia sẻ lá số này tới:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                if (kIsWeb) 
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Text('Lưu ý: Môi trường Web yêu cầu website của bạn phải đang chạy trên Internet (host thật) thay vì localhost để hiển thị được ảnh Preview.', style: TextStyle(color: Colors.red, fontSize: 13)),
+                  ),
+                const SizedBox(height: 20),
+                Wrap(
+                  spacing: 24,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    _buildShareButton(
+                      icon: Icons.chat_bubble,
+                      color: Colors.blue,
+                      label: 'Zalo',
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _handleNativeShare('zalo');
+                      },
+                    ),
+                    _buildShareButton(
+                      icon: Icons.facebook,
+                      color: const Color(0xFF1877F2),
+                      label: 'Facebook',
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _handleNativeShare('facebook');
+                      },
+                    ),
+                    _buildShareButton(
+                      icon: Icons.close,
+                      color: Colors.black,
+                      label: 'X',
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _handleNativeShare('x');
+                      },
+                    ),
+                    _buildShareButton(
+                      icon: Icons.telegram,
+                      color: const Color(0xFF0088cc),
+                      label: 'Telegram',
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _handleNativeShare('telegram');
+                      },
+                    ),
+                    _buildShareButton(
+                      icon: Icons.more_horiz,
+                      color: Colors.grey.shade700,
+                      label: 'Khác...',
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _handleNativeShare('other');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildShareButton({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
     );
   }
 
@@ -344,28 +553,48 @@ class _UserChartScreenState extends State<UserChartScreen> {
                         children: [
                           const Text('Chia sẻ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           const SizedBox(height: 8),
-                          const Text('Bấm nút chép đoạn mã BBCode và dán vào bài viết trên diễn đàn'),
-                          const SizedBox(height: 8),
                           Row(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: const Text('[img]https://lyso.vn/lasotuvi/2026/A4K3L2.jpg[/img]', overflow: TextOverflow.ellipsis),
-                                ),
+                              Checkbox(
+                                value: _isHideName,
+                                onChanged: (val) { setState(() { _isHideName = val ?? false; }); },
                               ),
-                              const SizedBox(width: 8),
-                              ElevatedButton.icon(
-                                onPressed: () {},
-                                icon: const Icon(Icons.copy, size: 16),
-                                label: const Text('Chép'),
-                                style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.grey.shade200),
+                              const Text('Ẩn họ tên'),
+                              const SizedBox(width: 16),
+                              Checkbox(
+                                value: _isHideDob,
+                                onChanged: (val) { setState(() { _isHideDob = val ?? false; }); },
                               ),
+                              const Text('Ẩn ngày sinh'),
                             ],
+                          ),
+                          const SizedBox(height: 16),
+                          const Text('Liên kết ảnh (Link):', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(_generatedUrl, overflow: TextOverflow.ellipsis),
+                                ),
+                                const SizedBox(width: 8),
+                                InkWell(
+                                  onTap: () {
+                                    Clipboard.setData(ClipboardData(text: _generatedUrl));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Đã chép liên kết vào khay nhớ tạm')),
+                                    );
+                                  },
+                                  child: const Icon(Icons.copy, size: 20, color: Colors.blue),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 16),
                           const Text('Bấm nút chia sẻ ảnh lên các ứng dụng khác hoặc bấm nút tải về'),
@@ -376,24 +605,22 @@ class _UserChartScreenState extends State<UserChartScreen> {
                               Row(
                                 children: [
                                   ElevatedButton.icon(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      _showNativeShareDialog(context);
+                                    },
                                     icon: const Icon(Icons.share, size: 16),
                                     label: const Text('Chia sẻ'),
                                     style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.grey.shade200),
                                   ),
                                   const SizedBox(width: 8),
                                   ElevatedButton.icon(
-                                    onPressed: () {},
+                                    onPressed: _printChart,
                                     icon: const Icon(Icons.download, size: 16),
                                     label: const Text('Tải hình ảnh'),
                                     style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.grey.shade200),
                                   ),
                                 ],
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
-                                onPressed: _printChart,
-                              )
                             ],
                           )
                         ],

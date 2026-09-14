@@ -1,0 +1,72 @@
+[
+  {
+    "ten_sao": "62. Lỗ Ban Sát - 魯班 - Ignorant Class",
+    "phan_loai": "Hung Tinh",
+    "y_nghia_goc": "Ý nghĩa Sao: Tránh xa mọi hoạt động xây dựng và thi công. Kỵ: Khởi công, khởi tạo, giá mã.",
+    "y_nghia_rut_gon": "[CẦN_AI_TÓM_TẮT]",
+    "logic_an_sao": {
+      "theo_gio": {
+        "chi_ngay_dần": {
+          "chi_gio": [
+            "Tý"
+          ]
+        },
+        "chi_ngay_thân": {
+          "chi_gio": [
+            "Ngọ"
+          ]
+        },
+        "chi_ngay_mão": {
+          "chi_gio": [
+            "Tý"
+          ]
+        },
+        "chi_ngay_dậu": {
+          "chi_gio": [
+            "Ngọ"
+          ]
+        },
+        "chi_ngay_thìn": {
+          "chi_gio": [
+            "Tý"
+          ]
+        },
+        "chi_ngay_tuất": {
+          "chi_gio": [
+            "Ngọ"
+          ]
+        },
+        "chi_ngay_tỵ": {
+          "chi_gio": [
+            "Mão"
+          ]
+        },
+        "chi_ngay_hợi": {
+          "chi_gio": [
+            "Dậu"
+          ]
+        },
+        "chi_ngay_ngọ": {
+          "chi_gio": [
+            "Mão"
+          ]
+        },
+        "chi_ngay_tý": {
+          "chi_gio": [
+            "Dậu"
+          ]
+        },
+        "chi_ngay_mùi": {
+          "chi_gio": [
+            "Mão"
+          ]
+        },
+        "chi_ngay_sửu": {
+          "chi_gio": [
+            "Dậu"
+          ]
+        }
+      }
+    }
+  }
+]

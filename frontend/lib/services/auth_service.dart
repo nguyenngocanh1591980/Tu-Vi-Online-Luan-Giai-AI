@@ -16,7 +16,7 @@ class AuthService {
     }
     return 'http://localhost:5169/api/auth';
   }
-  Future<String?> login(String username, String password) async {
+  Future<String?> login(String username, String password, {bool rememberMe = false, bool hideOnlineStatus = false}) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
@@ -24,6 +24,8 @@ class AuthService {
         body: jsonEncode({
           'username': username,
           'password': password,
+          'rememberMe': rememberMe,
+          'hideOnlineStatus': hideOnlineStatus,
         }),
       );
 
@@ -157,6 +159,30 @@ class AuthService {
     }
   }
 
+  Future<String?> resendActivation(String username, String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/resend-activation'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'email': email}),
+      );
+
+      if (response.statusCode == 200) {
+        return null; // Success
+      } else {
+        try {
+            final data = jsonDecode(response.body);
+            if (data['error'] != null) return data['error'];
+        } catch (_) {}
+        final error = response.body.replaceAll('"', '');
+        return error.isEmpty ? 'Lỗi từ server (${response.statusCode})' : error;
+      }
+    } catch (e) {
+      print('Resend activation error: $e');
+      return 'Lỗi kết nối: $e';
+    }
+  }
+
   Future<String> verifyEmail(String token) async {
     try {
       final response = await http.get(
@@ -177,6 +203,38 @@ class AuthService {
       }
     } catch (e) {
       print('Verify email error: $e');
+      return 'Lỗi kết nối: $e';
+    }
+  }
+
+  Future<String?> socialLogin(String provider, String token) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/$provider'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'token': token}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final jwtToken = data['token'] ?? data['Token'];
+        final username = data['username'] ?? data['Username'];
+
+        if (jwtToken == null) return 'Lỗi: Không nhận được token từ server';
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', jwtToken);
+        await prefs.setString('username', username ?? provider);
+        
+        final role = _extractRoleFromJwt(jwtToken);
+        await prefs.setString('role', role);
+        
+        return null;
+      } else {
+        return 'Xác thực $provider thất bại.';
+      }
+    } catch (e) {
+      print('Social login error: $e');
       return 'Lỗi kết nối: $e';
     }
   }

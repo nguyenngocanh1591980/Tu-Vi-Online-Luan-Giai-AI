@@ -73,6 +73,10 @@ public static class AuthEndpoints
             if (!user.IsEmailVerified)
                 return Results.Json(new { error = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email để xác nhận." }, statusCode: 403);
 
+            // Cập nhật trạng thái IsInvisible vào Database nếu người dùng có tick chọn
+            user.IsInvisible = request.HideOnlineStatus;
+            await dbContext.SaveChangesAsync();
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtKey = configuration["JwtSettings:Key"];
             if (string.IsNullOrEmpty(jwtKey))
@@ -81,6 +85,12 @@ public static class AuthEndpoints
             }
 
             var key = Encoding.ASCII.GetBytes(jwtKey);
+            
+            // Nếu RememberMe = true -> 30 ngày. Nếu false -> 1 giờ (Session-only token)
+            var expirationTime = request.RememberMe 
+                ? DateTime.UtcNow.AddDays(30) 
+                : DateTime.UtcNow.AddHours(1);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -89,7 +99,7 @@ public static class AuthEndpoints
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role ?? "User")
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = expirationTime,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = configuration["JwtSettings:Issuer"],
                 Audience = configuration["JwtSettings:Audience"]
@@ -98,7 +108,13 @@ public static class AuthEndpoints
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Results.Ok(new { Token = tokenString, Username = user.Username });
+            return Results.Ok(new 
+            { 
+                Token = tokenString, 
+                Username = user.Username,
+                IsInvisible = user.IsInvisible,
+                ExpiresIn = request.RememberMe ? "30d" : "1h" 
+            });
         });
 
         group.MapGet("/verify-email", async (string token, AppDbContext dbContext) =>
@@ -429,6 +445,258 @@ public static class AuthEndpoints
 </html>";
             return Results.Content(successHtml, "text/html");
         });
+
+        group.MapPost("/resend-activation", async (ResendActivationRequest request, AppDbContext dbContext, IEmailService emailService, IConfiguration configuration) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Email))
+                return Results.BadRequest(new { error = "Username và Email là bắt buộc." });
+
+            var genericSuccessMsg = "Nếu thông tin chính xác, một email chứa hướng dẫn kích hoạt đã được gửi cho bạn.";
+
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == request.Username && u.Email == request.Email);
+
+            if (user == null || user.IsEmailVerified)
+            {
+                // Anti-Enumeration: Âm thầm trả về thành công nếu không tìm thấy hoặc đã kích hoạt
+                return Results.Ok(new { message = genericSuccessMsg });
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtKey = configuration["JwtSettings:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                return Results.Problem("JWT Key is not configured properly.");
+            }
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim("purpose", "activation")
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = configuration["JwtSettings:Issuer"],
+                Audience = configuration["JwtSettings:Audience"]
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            await emailService.SendResendActivationEmailAsync(user.Email, user.Username, tokenString);
+
+            return Results.Ok(new { message = genericSuccessMsg });
+        }).RequireRateLimiting("ResendActivationLimit");
+
+        group.MapGet("/activate", async (string token, AppDbContext dbContext, IConfiguration configuration) =>
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.BadRequest(new { error = "Token không được cung cấp." });
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtKey = configuration["JwtSettings:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                return Results.Problem("JWT Key is not configured properly.");
+            }
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                
+                var purposeClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "purpose")?.Value;
+                if (purposeClaim != "activation")
+                    return Results.BadRequest(new { error = "Token không hợp lệ cho thao tác này." });
+
+                var userIdClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+                    return Results.BadRequest(new { error = "Token không hợp lệ." });
+
+                var user = await dbContext.Users.FindAsync(userId);
+                if (user == null)
+                    return Results.NotFound(new { error = "Không tìm thấy tài khoản." });
+
+                if (user.IsEmailVerified)
+                    return Results.BadRequest(new { error = "Tài khoản này đã được kích hoạt trước đó." });
+
+                user.IsEmailVerified = true;
+                await dbContext.SaveChangesAsync();
+
+                return Results.Ok(new { message = "Tài khoản của bạn đã được kích hoạt thành công! Bạn có thể đăng nhập." });
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return Results.BadRequest(new { error = "Liên kết kích hoạt đã hết hạn (quá 15 phút). Vui lòng yêu cầu lại." });
+            }
+            catch (Exception)
+            {
+                return Results.BadRequest(new { error = "Liên kết kích hoạt không hợp lệ hoặc đã bị can thiệp." });
+            }
+        });
+
+        // ==========================================
+        // SSO ENDPOINTS
+        // ==========================================
+
+        group.MapPost("/google", async (SocialLoginRequest request, AppDbContext dbContext, IConfiguration configuration) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.Token)) return Results.BadRequest("Token is required.");
+
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync($"https://oauth2.googleapis.com/tokeninfo?id_token={request.Token}");
+            if (!response.IsSuccessStatusCode) return Results.Unauthorized();
+
+            var payload = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+            var googleId = payload.GetProperty("sub").GetString();
+            var email = payload.GetProperty("email").GetString();
+
+            if (string.IsNullOrEmpty(googleId) || string.IsNullOrEmpty(email)) return Results.Unauthorized();
+
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.GoogleId == googleId || u.Email == email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Username = $"google_{googleId}",
+                    Email = email,
+                    GoogleId = googleId,
+                    IsEmailVerified = true,
+                    Role = "User"
+                };
+                dbContext.Users.Add(user);
+            }
+            else
+            {
+                user.GoogleId = googleId;
+            }
+            await dbContext.SaveChangesAsync();
+
+            var tokenString = GenerateJwtToken(user, configuration, true);
+            return Results.Ok(new { Token = tokenString, Username = user.Username, ExpiresIn = "30d" });
+        });
+
+        group.MapPost("/facebook", async (SocialLoginRequest request, AppDbContext dbContext, IConfiguration configuration) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.Token)) return Results.BadRequest("Token is required.");
+
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync($"https://graph.facebook.com/me?fields=id,name,email&access_token={request.Token}");
+            if (!response.IsSuccessStatusCode) return Results.Unauthorized();
+
+            var payload = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+            var facebookId = payload.GetProperty("id").GetString();
+            var email = payload.TryGetProperty("email", out var emailProp) ? emailProp.GetString() : null;
+
+            if (string.IsNullOrEmpty(facebookId)) return Results.Unauthorized();
+
+            User? user = null;
+            if (!string.IsNullOrEmpty(email))
+            {
+                user = await dbContext.Users.FirstOrDefaultAsync(u => u.FacebookId == facebookId || u.Email == email);
+            }
+            else
+            {
+                user = await dbContext.Users.FirstOrDefaultAsync(u => u.FacebookId == facebookId);
+            }
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Username = $"fb_{facebookId}",
+                    Email = email ?? $"fb_{facebookId}@facebook.com",
+                    FacebookId = facebookId,
+                    IsEmailVerified = true,
+                    Role = "User"
+                };
+                dbContext.Users.Add(user);
+            }
+            else
+            {
+                user.FacebookId = facebookId;
+            }
+            await dbContext.SaveChangesAsync();
+
+            var tokenString = GenerateJwtToken(user, configuration, true);
+            return Results.Ok(new { Token = tokenString, Username = user.Username, ExpiresIn = "30d" });
+        });
+
+        group.MapPost("/zalo", async (SocialLoginRequest request, AppDbContext dbContext, IConfiguration configuration) =>
+        {
+            if (string.IsNullOrWhiteSpace(request.Token)) return Results.BadRequest("Token is required.");
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("access_token", request.Token);
+            var response = await httpClient.GetAsync("https://graph.zalo.me/v2.0/me?fields=id,name,picture");
+            if (!response.IsSuccessStatusCode) return Results.Unauthorized();
+
+            var payload = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+            var error = payload.TryGetProperty("error", out var err) ? err.GetInt32() : 0;
+            if (error != 0) return Results.Unauthorized();
+
+            var zaloId = payload.GetProperty("id").GetString();
+
+            if (string.IsNullOrEmpty(zaloId)) return Results.Unauthorized();
+
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.ZaloId == zaloId);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Username = $"zalo_{zaloId}",
+                    Email = $"zalo_{zaloId}@zalo.me",
+                    ZaloId = zaloId,
+                    IsEmailVerified = true,
+                    Role = "User"
+                };
+                dbContext.Users.Add(user);
+            }
+            await dbContext.SaveChangesAsync();
+
+            var tokenString = GenerateJwtToken(user, configuration, true);
+            return Results.Ok(new { Token = tokenString, Username = user.Username, ExpiresIn = "30d" });
+        });
+    }
+
+    private static string GenerateJwtToken(User user, IConfiguration configuration, bool rememberMe)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwtKey = configuration["JwtSettings:Key"];
+        if (string.IsNullOrEmpty(jwtKey)) throw new Exception("JWT Key is not configured properly.");
+        
+        var key = Encoding.ASCII.GetBytes(jwtKey);
+        var expirationTime = rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role ?? "User")
+            }),
+            Expires = expirationTime,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+            Issuer = configuration["JwtSettings:Issuer"],
+            Audience = configuration["JwtSettings:Audience"]
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
 }
 
@@ -448,9 +716,22 @@ public class LoginRequest
 {
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    public bool RememberMe { get; set; } = false;
+    public bool HideOnlineStatus { get; set; } = false;
 }
 
 public class RecoverAccountRequest
 {
     public string Email { get; set; } = string.Empty;
+}
+
+public class ResendActivationRequest
+{
+    public string Username { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+}
+
+public class SocialLoginRequest
+{
+    public string Token { get; set; } = string.Empty;
 }

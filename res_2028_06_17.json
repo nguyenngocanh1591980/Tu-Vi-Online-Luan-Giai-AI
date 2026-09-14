@@ -1,0 +1,131 @@
+{
+  "solar_date": "17 tháng 6 năm 2028",
+  "lunar_date": "25/5 t",
+  "weekday": "Thứ bảy",
+  "lunar_day": 25,
+  "lunar_month": 5,
+  "lunar_year": 2028,
+  "lunar_month_is_leap": false,
+  "year_stem_branch": "Mậu Thân",
+  "month_stem_branch": "Mậu Ngọ",
+  "day_stem_branch": "Quý Dậu",
+  "sao_28": "Sao -Liễu trực +Bình",
+  "tiet_khi": "Mang Chủng: 10:15 05/06 - Hạ Chí: 03:02 21/06",
+  "sao_tot": [
+    "Thiên Đức",
+    "Nguyệt Đức",
+    "Mẫu Thương"
+  ],
+  "sao_xau": [
+    "Huyết Chi",
+    "Thổ Kị",
+    "Tiểu Hao"
+  ],
+  "dong_1_gio_xuat_hanh": [
+    {
+      "chi": "Tý",
+      "time": "23h - 01h",
+      "que": "Tiểu Cát",
+      "quality": "Cát",
+      "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+    },
+    {
+      "chi": "Sửu",
+      "time": "01h - 03h",
+      "que": "Không Vong",
+      "quality": "Hung",
+      "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+    },
+    {
+      "chi": "Dần",
+      "time": "03h - 05h",
+      "que": "Đại An",
+      "quality": "Cát",
+      "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+    },
+    {
+      "chi": "Mão",
+      "time": "05h - 07h",
+      "que": "Tốc Hỷ",
+      "quality": "Cát",
+      "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+    },
+    {
+      "chi": "Thìn",
+      "time": "07h - 09h",
+      "que": "Lưu Niên",
+      "quality": "Hung",
+      "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+    },
+    {
+      "chi": "Tỵ",
+      "time": "09h - 11h",
+      "que": "Xích Khẩu",
+      "quality": "Hung",
+      "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+    },
+    {
+      "chi": "Ngọ",
+      "time": "11h - 13h",
+      "que": "Tiểu Cát",
+      "quality": "Cát",
+      "desc": "Gặp nhiều may mắn nhỏ, buôn bán có lời, người đi sắp về."
+    },
+    {
+      "chi": "Mùi",
+      "time": "13h - 15h",
+      "que": "Không Vong",
+      "quality": "Hung",
+      "desc": "Cầu tài không kết quả, hoãn xuất hành xa, tránh giao dịch lớn."
+    },
+    {
+      "chi": "Thân",
+      "time": "15h - 17h",
+      "que": "Đại An",
+      "quality": "Cát",
+      "desc": "Mọi việc đều tốt lành, mở cửa cầu tài hướng Tây Nam. Người đi có tin về."
+    },
+    {
+      "chi": "Dậu",
+      "time": "17h - 19h",
+      "que": "Tốc Hỷ",
+      "quality": "Cát",
+      "desc": "Mọi việc gặp nhiều may mắn, tiến hành công việc nhanh chóng. Buôn bán có lời."
+    },
+    {
+      "chi": "Tuất",
+      "time": "19h - 21h",
+      "que": "Lưu Niên",
+      "quality": "Hung",
+      "desc": "Công việc dây dằng, cầu tài khó thành, phòng kiện tụng hay thị phi."
+    },
+    {
+      "chi": "Hợi",
+      "time": "21h - 23h",
+      "que": "Xích Khẩu",
+      "quality": "Hung",
+      "desc": "Hay xảy ra tranh luận, cãi nã. Hoãn các việc giao dịch lớn."
+    }
+  ],
+  "dong_2_gio_hoang_hac_dao": {
+    "hoang_dao": [
+      "Giờ Tý (23h - 01h)",
+      "Giờ Dần (03h - 05h)",
+      "Giờ Mão (05h - 07h)",
+      "Giờ Ngọ (11h - 13h)",
+      "Giờ Mùi (13h - 15h)",
+      "Giờ Dậu (17h - 19h)"
+    ],
+    "hac_dao": [
+      "Giờ Sửu (01h - 03h)",
+      "Giờ Thìn (07h - 09h)",
+      "Giờ Tỵ (09h - 11h)",
+      "Giờ Thân (15h - 17h)",
+      "Giờ Tuất (19h - 21h)",
+      "Giờ Hợi (21h - 23h)"
+    ]
+  },
+  "dong_3_truc": "Trực Bình",
+  "dong_4_ngay_ky": "Ngày 17-06-2028 là ngày Cát lành.",
+  "dong_5_ngu_hanh": "Ngũ hành niên mệnh: Mậu Thân Đại Trạch Thổ\nNgày: Quý Dậu; tức Can Chi tương đồng (Kim), là ngày cát.\nNạp âm: Kiếm Phong Kim kị tuổi: Canh Tý, Mậu Tý.\nNgày thuộc hành Kim khắc hành Hỏa.\nNgày Dậu lục hợp Thìn, tam hợp Tỵ và Sửu thành Kim cục. Xung Mão, hình Dậu, hại Tuất, phá Tý, tuyệt Dần."
+}

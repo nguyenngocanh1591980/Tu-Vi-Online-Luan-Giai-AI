@@ -36,7 +36,7 @@ class CenterInfo extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildRow(col1: 'Họ Tên:', col2: info.name),
-                          _buildRow(col1: 'Giờ Sinh:', col2: info.birthTimeStr),
+                          _buildRow(col1: 'Giờ Sinh:', col2: _getDisplayTime(info)),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 1.0),
                             child: Row(
@@ -51,7 +51,7 @@ class CenterInfo extends StatelessWidget {
                           _buildRow(col1: 'Năm :', col2: '${info.birthYearStr}', col4: info.yearStemBranch, col5: '${info.element}:\n${_translateNguHanh(info.element)}', col1Color: Colors.red, col2Color: Colors.red, col4Color: Colors.red, col5Color: _getStarColor(info.element)),
                           _buildRow(col1: 'Tháng :', col2: '${info.birthMonthStr}', col3: info.lunarMonthStr, col4: info.monthStemBranch),
                           _buildRow(col1: 'Ngày :', col2: '${info.birthDayStr}', col3: info.lunarDayStr, col4: info.dayStemBranch),
-                          _buildRow(col1: 'Giờ :', col2: '${info.birthTimeStr}', col4: info.timeStemBranch),
+                          _buildRow(col1: 'Giờ :', col2: _getDisplayTime(info), col4: info.timeStemBranch),
                           
                           Builder(builder: (_) {
                             int viewYear = info.lunarYear + info.lunarAge - 1;
@@ -147,7 +147,7 @@ class CenterInfo extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: SingleChildScrollView(
-                      child: Column(
+                      child: isFullMode ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Theo Đại Vận', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
@@ -158,7 +158,37 @@ class CenterInfo extends StatelessWidget {
                           const Text('Theo Tiểu Vận', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Arial', color: Colors.red)),
                           const SizedBox(height: 2),
                           ..._buildTheoTieuVanList(context),
+                          const SizedBox(height: 8),
+                          RichText(
+                            text: TextSpan(
+                              style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold),
+                              children: [
+                                const TextSpan(text: 'Kiểu An Sao: ', style: TextStyle(color: Colors.black)),
+                                TextSpan(text: info.kieuAnSao, style: TextStyle(color: Colors.red)),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          RichText(
+                            text: TextSpan(
+                              style: const TextStyle(fontSize: 14, fontFamily: 'Arial', fontWeight: FontWeight.bold),
+                              children: [
+                                const TextSpan(text: 'Kiểu Sinh: ', style: TextStyle(color: Colors.black)),
+                                TextSpan(text: info.kieuSinh.isNotEmpty ? info.kieuSinh : 'Sinh Bình Thường', style: const TextStyle(color: Colors.red)),
+                              ],
+                            ),
+                          ),
                         ],
+                      ) : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: 'Lá\nSố\nTử\nVi\nLuận\nGiải\nAI'.split('\n').map((word) => Text(
+                          word,
+                          style: GoogleFonts.unifrakturMaguntia(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        )).toList(),
                       ),
                     ),
                   ),
@@ -704,6 +734,8 @@ class CenterInfo extends StatelessWidget {
                 _buildRowText('', info.thanCu, valueColor: Colors.red),
                 _buildRowText('Mệnh chủ :', '${info.destinyLord}', valueColor: _getStarColorByName(info.destinyLord)),
                 _buildRowText('Thân chủ :', '${info.bodyLord}', valueColor: _getStarColorByName(info.bodyLord)),
+                _buildRowText('Kiểu An Sao:', info.kieuAnSao, labelColor: Colors.black, valueColor: Colors.red, isBold: true),
+                _buildRowText('Kiểu Sinh:', info.kieuSinh.isNotEmpty ? info.kieuSinh : 'Sinh Bình Thường', labelColor: Colors.black, valueColor: Colors.red, isBold: true),
               ],
             ),
           ),
@@ -717,7 +749,7 @@ class CenterInfo extends StatelessWidget {
               children: 'Lá\nSố\nTử\nVi\nLuận\nGiải\nAI'.split('\n').map((word) => Text(
                 word,
                 style: GoogleFonts.unifrakturMaguntia(
-                  fontSize: 29,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
                 ),
@@ -747,7 +779,7 @@ class CenterInfo extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 130, child: Text(label, style: TextStyle(fontSize: 24, fontFamily: 'Arial', fontWeight: FontWeight.w600, color: labelColor))),
+          SizedBox(width: 155, child: Text(label, style: TextStyle(fontSize: 24, fontFamily: 'Arial', fontWeight: FontWeight.w600, color: labelColor))),
           Expanded(child: Text(value, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: valueColor, fontWeight: isBold ? FontWeight.bold : FontWeight.normal))),
         ],
       ),
@@ -769,7 +801,7 @@ class CenterInfo extends StatelessWidget {
           _buildCompactDateRow('Năm:', info.birthYearStr, '', info.yearStemBranch),
           _buildCompactDateRow('Tháng:', info.birthMonthStr, info.lunarMonthStr, info.monthStemBranch),
           _buildCompactDateRow('Ngày:', info.birthDayStr, info.lunarDayStr, info.dayStemBranch),
-          _buildCompactDateRow('Giờ:', info.birthTimeStr, '', info.timeStemBranch),
+          _buildCompactDateRow('Giờ:', _getDisplayTime(info), '', info.timeStemBranch),
         ],
       ),
     );
@@ -787,5 +819,9 @@ class CenterInfo extends StatelessWidget {
         Text(col3, style: TextStyle(fontSize: 24, fontFamily: 'Arial', color: Colors.indigo.shade900)),
       ],
     );
+  }
+
+  String _getDisplayTime(NativeInfo info) {
+    return info.birthTimeStr;
   }
 }

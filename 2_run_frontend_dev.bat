@@ -23,7 +23,8 @@ echo de Backend C# va Python khoi dong xong, tranh loi CORS.
 echo ========================================================
 cd frontend
 
-REM Thu chay bang lenh flutter (neu da co trong PATH), neu khong thi dung duong dan E:\flutter\bin\flutter.bat
+REM PORT CO DINH 40000 - Bat buoc de Google OAuth va Zalo OAuth hoat dong dung
+REM (Authorized JS Origins: http://localhost:40000 | Zalo Callback: http://localhost:40000/zalo-callback)
 flutter run -d chrome --web-port=%FRONTEND_PORT% --dart-define-from-file=../.env || call E:\flutter\bin\flutter.bat run -d chrome --web-port=%FRONTEND_PORT% --dart-define-from-file=../.env
 
 pause

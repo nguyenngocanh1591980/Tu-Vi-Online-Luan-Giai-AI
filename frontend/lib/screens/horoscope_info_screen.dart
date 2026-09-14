@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
+import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import '../widgets/action_and_comment_widget.dart';
 import '../widgets/tu_vi_chart.dart';
@@ -7,12 +11,19 @@ import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 import '../utils/chart_generator.dart';
 import 'package:provider/provider.dart';
 import '../providers/horoscope_provider.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:file_saver/file_saver.dart';
+import '../utils/web_save_helper.dart';
 import '../models/saved_chart_model.dart';
 import '../models/chart_model.dart';
 import 'chart_screen.dart';
+import 'almanac_screen.dart';
 import '../screens/contract_form_screen.dart';
 import 'create_post_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/pdf_generator.dart';
 
 class HoroscopeInfoScreen extends StatefulWidget {
   @override
@@ -28,6 +39,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   // Form controllers and state variables
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _currentAddressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _viewYearController = TextEditingController();
@@ -38,6 +50,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   
   SavedChartModel? _quickViewData;
   bool _isSubmitting = false;
+  int? _editingChartId;
+  final GlobalKey _chartBoundaryKey = GlobalKey();
 
   String _userRole = 'User';
 
@@ -66,11 +80,17 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   String? _selectedTimeError;
   String? _nameErrorText;
 
+  // Autocomplete Geocoding State
+  bool _isAddressSelected = false;
+  Map<String, dynamic>? _selectedLocationData;
+  Timer? _debounce;
+
   // Track if user has confirmed to hide inputs
   bool _hideName = false;
   bool _hideBirthday = false;
   bool _lunarGmt8 = false;
-  bool _tuoiNham = false;
+
+  int _validationFailCount = 0;
 
   String _viewPermission = 'Tất cả mọi người';
   String _discussPermission = 'Tất cả mọi người';
@@ -82,11 +102,206 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   void dispose() {
     _nameController.dispose();
     _addressController.dispose();
+    _currentAddressController.dispose();
     _phoneController.dispose();
     _yearController.dispose();
     _viewYearController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  bool _isDownloadingImage = false;
+
+  Future<void> _downloadChartImage() async {
+    if (_isDownloadingImage) return;
+    
+    setState(() {
+      _isDownloadingImage = true;
+    });
+
+    try {
+      if (_chartBoundaryKey.currentContext == null) return;
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đang chuẩn bị ảnh, vui lòng chọn nơi lưu...')),
+        );
+      }
+
+      RenderRepaintBoundary boundary =
+          _chartBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 2.0);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      
+      if (byteData != null) {
+        Uint8List pngBytes = byteData.buffer.asUint8List();
+        String fileName = 'La_So_${_quickViewData?.chartName ?? "Export"}';
+        
+        try {
+          String? resultPath = await FileSaver.instance.saveAs(
+            name: fileName,
+            bytes: pngBytes,
+            ext: 'png',
+            mimeType: MimeType.png,
+          );
+          
+          if (mounted && resultPath != null && resultPath.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Tải ảnh thành công!')),
+            );
+          }
+        } catch (saveError) {
+          if (kIsWeb) {
+            debugPrint('FileSaver saveAs failed on Web, using File System Access API fallback: $saveError');
+            await saveFileAs('$fileName.png', pngBytes, 'image/png');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tải ảnh thành công!')),
+              );
+            }
+          } else {
+            rethrow;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Lỗi tải ảnh: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Không thể tải ảnh. Vui lòng kiểm tra quyền trình duyệt!'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDownloadingImage = false;
+        });
+      }
+    }
+  }
+
+  void _deleteChart(int chartId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xác nhận xóa'),
+        content: const Text('Bạn có chắc chắn muốn xóa lá số này không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              try {
+                await context.read<HoroscopeProvider>().deleteHoroscope(chartId);
+                setState(() {
+                  _quickViewData = null;
+                  _editingChartId = null;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Đã xóa lá số')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Lỗi: $e')),
+                );
+              }
+            },
+            child: const Text('Xóa', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, int> _extractDobPartsFromChart(SavedChartModel chart) {
+    try {
+      final oldChart = ChartData.fromJson(jsonDecode(chart.chartJsonData));
+      final native = oldChart.native;
+      final localDob = chart.dob.toLocal();
+      final hour = localDob.hour;
+      final minute = localDob.minute;
+      final day = localDob.day;
+      final month = localDob.month;
+      final year = localDob.year;
+      return {
+        'hour': hour,
+        'minute': minute,
+        'day': day,
+        'month': month,
+        'year': year,
+      };
+    } catch (_) {
+      final localDob = chart.dob.toLocal();
+      return {
+        'hour': localDob.hour,
+        'minute': localDob.minute,
+        'day': localDob.day,
+        'month': localDob.month,
+        'year': localDob.year,
+      };
+    }
+  }
+
+  void _editChart() {
+    if (_quickViewData == null) return;
+    try {
+      final chartData = ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData));
+      final native = chartData.native;
+      final dobParts = _extractDobPartsFromChart(_quickViewData!);
+
+      setState(() {
+        _editingChartId = _quickViewData!.id;
+        _nameController.text = _quickViewData!.chartName;
+        _gender = _quickViewData!.gender;
+        _yearController.text = dobParts['year']!.toString();
+        _selectedMonth = dobParts['month']!.toString().padLeft(2, '0');
+        _selectedDay = dobParts['day']!.toString().padLeft(2, '0');
+        _selectedHour = dobParts['hour']!.toString().padLeft(2, '0');
+        _selectedMinute = dobParts['minute']!.toString().padLeft(2, '0');
+
+        _addressController.text = native.address;
+        _currentAddressController.text = native.currentAddress;
+        _phoneController.text = native.phone;
+        _descriptionController.text = native.description;
+
+        _kieuAnSao = native.kieuAnSao.isNotEmpty ? native.kieuAnSao : 'An Thông Thường';
+        _kieuSinh = native.kieuSinh.isNotEmpty ? native.kieuSinh : 'Sinh Bình Thường';
+
+        if (native.lat != null && native.lon != null) {
+          _selectedLocationData = {
+            'lat': native.lat.toString(),
+            'lon': native.lon.toString(),
+            'display_name': native.address,
+          };
+          _isAddressSelected = true;
+        } else {
+          _selectedLocationData = null;
+          _isAddressSelected = false;
+        }
+
+        _quickViewData = null; // Clear view to show form
+      });
+    } catch (e) {
+      debugPrint('Error editing chart: $e');
+      final dobParts = _extractDobPartsFromChart(_quickViewData!);
+      setState(() {
+        _editingChartId = _quickViewData!.id;
+        _nameController.text = _quickViewData!.chartName;
+        _gender = _quickViewData!.gender;
+        _yearController.text = dobParts['year']!.toString();
+        _selectedMonth = dobParts['month']!.toString().padLeft(2, '0');
+        _selectedDay = dobParts['day']!.toString().padLeft(2, '0');
+        _selectedHour = dobParts['hour']!.toString().padLeft(2, '0');
+        _selectedMinute = dobParts['minute']!.toString().padLeft(2, '0');
+        _quickViewData = null;
+      });
+    }
   }
 
   Future<void> _handleAiAction(String actionType, [String? actionDetail]) async {
@@ -105,7 +320,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
     final viewYear = int.tryParse(_viewYearController.text) ?? DateTime.now().year;
 
     // Generate ChartData using ChartGenerator
-    final chartData = ChartGenerator.generate(
+    final chartData = await ChartGenerator.generateAsync(
       isFullMode: true, // Always full mode for AI to get maximum info
       name: _nameController.text,
       gender: _gender,
@@ -116,6 +331,12 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
       month: month,
       year: year,
       viewYear: viewYear,
+      kieuAnSao: _kieuAnSao,
+      kieuSinh: _kieuSinh,
+      address: _addressController.text,
+      currentAddress: _currentAddressController.text,
+      phone: _phoneController.text,
+      description: _descriptionController.text,
     );
 
     // Map actionType to proper C# API Endpoint
@@ -313,6 +534,56 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
     );
   }
 
+  void _showPrintFullScreen() {
+    if (_quickViewData == null) return;
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.grey.shade200,
+          appBar: AppBar(
+            backgroundColor: Colors.red.shade900,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: const Text(
+              'Tử Vi AI - Chuyên Gia Luận Giải',
+              style: TextStyle(color: Colors.white),
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.print, color: Colors.white),
+                onPressed: () async {
+                  final data = ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData));
+                  final isAdmin = _userRole == 'Admin' || _userRole == 'Expert';
+                  await PdfGenerator.printChart(data, isAdmin: isAdmin);
+                },
+              ),
+            ],
+          ),
+          body: Center(
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 3.0,
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.all(16.0),
+                child: TuViChart(
+                  data: ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData)),
+                  isFullMode: _userRole == 'Admin' || _userRole == 'Expert',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -364,11 +635,21 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             children: [
                               Text('Ứng dụng Lý số', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50))),
                               SizedBox(height: 24),
-                              Text('Lịch vạn sự', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                              InkWell(
+                                onTap: () {
+                                  context.go('/almanac');
+                                },
+                                child: Text('Lịch vạn sự', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                              ),
                               SizedBox(height: 16),
                               Text('Lá số Tử vi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
                               SizedBox(height: 16),
-                              Text('Đối Lịch Âm Dương', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                              InkWell(
+                                onTap: () {
+                                  context.go('/almanac');
+                                },
+                                child: Text('Đối Lịch Âm Dương', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                              ),
                               SizedBox(height: 24),
                               Row(
                                 children: [
@@ -430,18 +711,31 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                 InkWell(
                                                   onTap: () {
                                                     try {
+                                                      final dobParts = _extractDobPartsFromChart(chart);
+                                                      String kieuAnSao = 'An Thông Thường';
+                                                      double? latVal;
+                                                      double? lonVal;
+                                                      try {
+                                                        final cData = ChartData.fromJson(jsonDecode(chart.chartJsonData));
+                                                        kieuAnSao = cData.native.kieuAnSao;
+                                                        latVal = cData.native.lat;
+                                                        lonVal = cData.native.lon;
+                                                      } catch (_) {}
                                                       Navigator.push(context, MaterialPageRoute(
                                                         builder: (context) => ChartScreen(
                                                           initialIsFullMode: true,
                                                           name: chart.chartName,
                                                           gender: chart.gender,
                                                           calendarType: 'Dương lịch',
-                                                          hour: chart.dob.hour,
-                                                          minute: chart.dob.minute,
-                                                          day: chart.dob.day,
-                                                          month: chart.dob.month,
-                                                          year: chart.dob.year,
+                                                          hour: dobParts['hour']!,
+                                                          minute: dobParts['minute']!,
+                                                          day: dobParts['day']!,
+                                                          month: dobParts['month']!,
+                                                          year: dobParts['year']!,
                                                           viewYear: DateTime.now().year,
+                                                          kieuAnSao: kieuAnSao,
+                                                          lat: latVal,
+                                                          lon: lonVal,
                                                         )
                                                       ));
                                                     } catch(e) {
@@ -507,9 +801,15 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 16.0),
-                                      child: TuViChart(
-                                        data: ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData)),
-                                        isFullMode: _userRole == 'Admin' || _userRole == 'Expert',
+                                      child: RepaintBoundary(
+                                        key: _chartBoundaryKey,
+                                        child: Container(
+                                          color: Colors.white, // Cần màu nền trắng khi xuất ảnh
+                                          child: TuViChart(
+                                            data: ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData)),
+                                            isFullMode: _userRole == 'Admin' || _userRole == 'Expert',
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -518,13 +818,93 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                         chartId: _quickViewData!.id,
                                         chartName: _quickViewData!.chartName,
                                         onNewChart: () {
-                                          setState(() => _quickViewData = null);
+                                          setState(() {
+                                            _quickViewData = null;
+                                            _editingChartId = null;
+                                            _nameController.clear();
+                                            _yearController.clear();
+                                            _descriptionController.clear();
+                                            _isConfirmed = false;
+                                          });
                                         },
-                                        onEditChart: () {
-                                          // Placeholder for edit chart
+                                        onEditChart: _editChart,
+                                        onDeleteChart: () => _deleteChart(_quickViewData!.id),
+                                        onDownloadImage: _downloadChartImage,
+                                        onPrintFullScreen: _showPrintFullScreen,
+                                        isAdmin: _userRole == 'Admin' || _userRole == 'Expert',
+                                        onViewFullChart: () {
+                                          try {
+                                            final dobParts = _extractDobPartsFromChart(_quickViewData!);
+                                            String kieuAnSao = 'An Thông Thường';
+                                            double? latVal;
+                                            double? lonVal;
+                                            ChartData? pData;
+                                            try {
+                                              pData = ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData));
+                                              kieuAnSao = pData.native.kieuAnSao;
+                                              latVal = pData.native.lat;
+                                              lonVal = pData.native.lon;
+                                            } catch (_) {}
+                                            Navigator.push(context, MaterialPageRoute(
+                                              builder: (context) => ChartScreen(
+                                                initialIsFullMode: true,
+                                                name: _quickViewData!.chartName,
+                                                gender: _quickViewData!.gender,
+                                                calendarType: 'Dương lịch',
+                                                hour: dobParts['hour']!,
+                                                minute: dobParts['minute']!,
+                                                day: dobParts['day']!,
+                                                month: dobParts['month']!,
+                                                year: dobParts['year']!,
+                                                viewYear: DateTime.now().year,
+                                                kieuAnSao: kieuAnSao,
+                                                lat: latVal,
+                                                lon: lonVal,
+                                                preloadedData: pData,
+                                              )
+                                            ));
+                                          } catch(e) {
+                                            print(e);
+                                          }
                                         },
-                                        onDeleteChart: () {
-                                          // Placeholder for delete chart
+                                        onViewYearChange: (int year) async {
+                                             final oldChart = ChartData.fromJson(jsonDecode(_quickViewData!.chartJsonData));
+                                             final dobParts = _extractDobPartsFromChart(_quickViewData!);
+                                             final hour = dobParts['hour']!;
+                                             final minute = dobParts['minute']!;
+                                             final day = dobParts['day']!;
+                                             final month = dobParts['month']!;
+                                             final dobYear = dobParts['year']!;
+                                             final chartData = await ChartGenerator.generateAsync(
+                                               isFullMode: _userRole == 'Admin' || _userRole == 'Expert',
+                                               name: _quickViewData!.chartName,
+                                               gender: _quickViewData!.gender,
+                                               calendarType: 'Dương lịch',
+                                               hour: hour,
+                                               minute: minute,
+                                               day: day,
+                                               month: month,
+                                               year: dobYear,
+                                               viewYear: year,
+                                               kieuAnSao: oldChart.native.kieuAnSao,
+                                               kieuSinh: oldChart.native.kieuSinh,
+                                               address: oldChart.native.address,
+                                               currentAddress: oldChart.native.currentAddress,
+                                               phone: oldChart.native.phone,
+                                               description: oldChart.native.description,
+                                             );
+                                            setState(() {
+                                              _quickViewData = SavedChartModel(
+                                              id: _quickViewData!.id,
+                                              userId: _quickViewData!.userId,
+                                              chartName: _quickViewData!.chartName,
+                                              dob: _quickViewData!.dob,
+                                              gender: _quickViewData!.gender,
+                                              hasAiReport: _quickViewData!.hasAiReport,
+                                              createdAt: _quickViewData!.createdAt,
+                                              chartJsonData: jsonEncode(chartData.toJson()),
+                                            );
+                                          });
                                         },
                                       ),
                                     ),
@@ -548,6 +928,12 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 250,
                                     child: TextFormField(
                                       controller: _nameController,
+                                      validator: (value) {
+                                        if (value == null || value.trim().isEmpty) {
+                                          return 'Vui lòng nhập họ tên để lưu và quản lý lá số.';
+                                        }
+                                        return null;
+                                      },
                                       onChanged: (val) {
                                         if (_nameErrorText != null) {
                                           setState(() => _nameErrorText = null);
@@ -565,11 +951,114 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                 ),
 
                                 _buildFormRow(
-                                  'Địa chỉ',
+                                  'Địa Chỉ Nơi Sinh Ra',
+                                  SizedBox(
+                                    width: 250,
+                                    child: Autocomplete<Map<String, dynamic>>(
+                                      optionsBuilder: (TextEditingValue textEditingValue) async {
+                                        if (textEditingValue.text.length < 2) {
+                                          return const Iterable<Map<String, dynamic>>.empty();
+                                        }
+                                        
+                                        // Handle debounce
+                                        if (_debounce?.isActive ?? false) _debounce!.cancel();
+                                        
+                                        Completer<Iterable<Map<String, dynamic>>> completer = Completer();
+                                        
+                                        _debounce = Timer(const Duration(milliseconds: 800), () async {
+                                          try {
+                                            final response = await http.get(
+                                              Uri.parse('https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(textEditingValue.text)}&format=json&addressdetails=1&limit=5'),
+                                              headers: {'User-Agent': 'TuViOnlineApp/1.0'}
+                                            );
+                                            if (response.statusCode == 200) {
+                                              final List<dynamic> data = jsonDecode(response.body);
+                                              final results = data.map((e) => e as Map<String, dynamic>).toList();
+                                              completer.complete(results);
+                                            } else {
+                                              completer.complete(const Iterable<Map<String, dynamic>>.empty());
+                                            }
+                                          } catch (e) {
+                                            completer.complete(const Iterable<Map<String, dynamic>>.empty());
+                                          }
+                                        });
+                                        
+                                        return completer.future;
+                                      },
+                                      displayStringForOption: (Map<String, dynamic> option) => option['display_name'] ?? '',
+                                      onSelected: (Map<String, dynamic> selection) {
+                                        _isAddressSelected = true;
+                                        _selectedLocationData = selection;
+                                        _addressController.text = selection['display_name'] ?? '';
+                                      },
+                                      fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                                        if (_addressController.text.isNotEmpty && textEditingController.text.isEmpty) {
+                                          textEditingController.text = _addressController.text;
+                                        }
+                                        textEditingController.addListener(() {
+                                          _addressController.text = textEditingController.text;
+                                        });
+                                        return TextFormField(
+                                          controller: textEditingController,
+                                          focusNode: focusNode,
+                                          onChanged: (val) {
+                                            _isAddressSelected = false;
+                                            _addressController.text = val;
+                                          },
+                                          validator: (value) {
+                                            if (value == null || value.trim().isEmpty) {
+                                              return 'Vui lòng nhập địa chỉ nơi sinh ra.';
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                            isDense: true, 
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
+                                            border: OutlineInputBorder(),
+                                            hintText: 'Nhập địa chỉ...',
+                                            hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400)
+                                          ),
+                                        );
+                                      },
+                                      optionsViewBuilder: (context, onSelected, options) {
+                                        return Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Material(
+                                            elevation: 4.0,
+                                            child: ConstrainedBox(
+                                              constraints: const BoxConstraints(maxHeight: 200, maxWidth: 250),
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap: true,
+                                                itemCount: options.length,
+                                                itemBuilder: (BuildContext context, int index) {
+                                                  final option = options.elementAt(index);
+                                                  return InkWell(
+                                                    onTap: () {
+                                                      onSelected(option);
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(12.0),
+                                                      child: Text(option['display_name'] ?? '', style: TextStyle(fontSize: 13)),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  hint: '(Chỉ mình bạn biết)',
+                                ),
+
+                                _buildFormRow(
+                                  'Địa Chỉ Hiện Tại',
                                   SizedBox(
                                     width: 250,
                                     child: TextFormField(
-                                      controller: _addressController,
+                                      controller: _currentAddressController,
                                       decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
                                     ),
                                   ),
@@ -625,11 +1114,14 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                       Text('Sinh Bình Thường', style: TextStyle(fontSize: 13)),
                                       Radio<String>(value: 'Sinh Bình Thường', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
                                       SizedBox(width: 8),
-                                      Text('Sinh Đôi Ra trước', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Đôi Ra trước', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      Text('Sinh Đôi Long Phụng', style: TextStyle(fontSize: 13)),
+                                      Radio<String>(value: 'Sinh Đôi Long Phụng', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
                                       SizedBox(width: 8),
-                                      Text('Sinh Đôi Ra Sau', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Đôi Ra Sau', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      Text('Sinh Đôi Cùng Giới Ra Trước', style: TextStyle(fontSize: 13)),
+                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Trước', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      SizedBox(width: 8),
+                                      Text('Sinh Đôi Cùng Giới Ra Sau', style: TextStyle(fontSize: 13)),
+                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Sau', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
                                     ],
                                   ),
                                   labelColor: Colors.blue,
@@ -705,9 +1197,18 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                         width: 80,
                                         child: TextFormField(
                                           controller: _yearController,
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
-                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder(), errorMaxLines: 5, errorStyle: TextStyle(color: Colors.red)),
                                           style: TextStyle(fontSize: 13),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return 'Vui lòng nhập năm sinh là số nguyên dương hợp lệ.';
+                                            }
+                                            final year = int.tryParse(value);
+                                            if (year == null || year <= 0) {
+                                              return 'Vui lòng nhập năm sinh là số nguyên dương hợp lệ.';
+                                            }
+                                            return null;
+                                          },
                                         ),
                                       ),
                                     ],
@@ -720,33 +1221,33 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 100,
                                     child: TextFormField(
                                       controller: _viewYearController,
-                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
-                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder(), errorMaxLines: 5, errorStyle: TextStyle(color: Colors.red)),
                                       style: TextStyle(fontSize: 13),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Vui lòng nhập năm xem hợp lệ.';
+                                        }
+                                        final viewYear = int.tryParse(value);
+                                        if (viewYear == null || viewYear <= 0) {
+                                          return 'Vui lòng nhập năm xem hợp lệ.';
+                                        }
+                                        final birthYear = int.tryParse(_yearController.text);
+                                        if (birthYear != null) {
+                                          if (viewYear < birthYear) {
+                                            return 'Năm xem không được nhỏ hơn năm sinh.';
+                                          }
+                                          if (viewYear - birthYear > 120) {
+                                            return 'Tuổi xem không hợp lý (không được vượt quá 120 tuổi).';
+                                          }
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ),
                                   hint: '(Nhập năm xem dương lịch hoặc tuổi âm lịch)',
                                 ),
 
-                                _buildSectionTitle('Tùy chọn'),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Wrap(
-                                        spacing: 16,
-                                        crossAxisAlignment: WrapCrossAlignment.center,
-                                        children: [
-                                          Row(mainAxisSize: MainAxisSize.min, children: [Text('Ẩn họ tên', style: TextStyle(fontSize: 13)), Checkbox(value: _hideName, onChanged: (val) => setState(() => _hideName = val ?? false))]),
-                                          Row(mainAxisSize: MainAxisSize.min, children: [Text('Ẩn ngày sinh', style: TextStyle(fontSize: 13)), Checkbox(value: _hideBirthday, onChanged: (val) => setState(() => _hideBirthday = val ?? false))]),
-                                          Row(mainAxisSize: MainAxisSize.min, children: [Text('Theo âm lịch GMT+8', style: TextStyle(fontSize: 13)), Checkbox(value: _lunarGmt8, onChanged: (val) => setState(() => _lunarGmt8 = val ?? false))]),
-                                        ],
-                                      ),
-                                      Row(mainAxisSize: MainAxisSize.min, children: [Text('Tuổi Nhâm sao Thiên Phủ hóa Khoa', style: TextStyle(fontSize: 13)), Checkbox(value: _tuoiNham, onChanged: (val) => setState(() => _tuoiNham = val ?? false))]),
-                                    ],
-                                  ),
-                                ),
+
 
                                 _buildSectionTitle('Mô tả bản thân'),
                                 Text('Thông tin về hình dáng, tính tình, gia cảnh, một số vận hạn đã trải qua. Nêu câu hỏi cần giải đáp', style: TextStyle(fontSize: 13)),
@@ -793,10 +1294,17 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
                                         onPressed: _isSubmitting ? null : () async {
-                                          if (_formKey.currentState!.validate()) {
-                                            setState(() {
-                                              _isSubmitting = true;
-                                            });
+                                          if (!_formKey.currentState!.validate()) {
+                                            _validationFailCount++;
+                                            if (_validationFailCount >= 3) {
+                                              Navigator.of(context).popUntil((route) => route.isFirst);
+                                            }
+                                            return;
+                                          }
+                                          _validationFailCount = 0;
+                                          setState(() {
+                                            _isSubmitting = true;
+                                          });
                                             try {
                                               final hour = int.tryParse(_selectedHour ?? '0') ?? 0;
                                               final minute = int.tryParse(_selectedMinute ?? '0') ?? 0;
@@ -805,7 +1313,36 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                               final year = int.tryParse(_yearController.text) ?? DateTime.now().year;
                                               final viewYear = int.tryParse(_viewYearController.text) ?? DateTime.now().year;
 
-                                              final chartData = ChartGenerator.generate(
+                                              if (!_isAddressSelected && _addressController.text.isNotEmpty) {
+                                                try {
+                                                  final response = await http.get(
+                                                    Uri.parse('https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(_addressController.text)}&format=json&limit=1'),
+                                                    headers: {'User-Agent': 'TuViOnline/1.0'},
+                                                  );
+                                                  if (response.statusCode == 200) {
+                                                    final List<dynamic> results = jsonDecode(response.body);
+                                                    if (results.isNotEmpty) {
+                                                      _selectedLocationData = results.first as Map<String, dynamic>;
+                                                      _isAddressSelected = true;
+                                                    }
+                                                  }
+                                                } catch (_) {}
+                                              }
+
+                                              if (_kieuAnSao == 'An Đặc Biệt') {
+                                                if (_selectedLocationData == null || _selectedLocationData!['lat'] == null || _selectedLocationData!['lon'] == null) {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Không tìm thấy toạ độ cho địa chỉ này. Vui lòng chọn lại địa chỉ Nơi Sinh Ra từ danh sách gợi ý để sử dụng tính năng An Đặc Biệt!'),
+                                                      backgroundColor: Colors.red,
+                                                      duration: Duration(seconds: 4),
+                                                    ),
+                                                  );
+                                                  return;
+                                                }
+                                              }
+
+                                              final chartData = await ChartGenerator.generateAsync(
                                                 isFullMode: true,
                                                 name: _nameController.text,
                                                 gender: _gender,
@@ -816,29 +1353,71 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                 month: month,
                                                 year: year,
                                                 viewYear: viewYear,
+                                                kieuAnSao: _kieuAnSao,
+                                                kieuSinh: _kieuSinh,
+                                                address: _addressController.text,
+                                                currentAddress: _currentAddressController.text,
+                                                phone: _phoneController.text,
+                                                description: _descriptionController.text,
+                                                lat: _selectedLocationData != null ? double.tryParse(_selectedLocationData!['lat']?.toString() ?? '') : null,
+                                                lon: _selectedLocationData != null ? double.tryParse(_selectedLocationData!['lon']?.toString() ?? '') : null,
                                               );
                                               
                                               final dob = DateTime(year, month, day, hour, minute);
 
-                                              await context.read<HoroscopeProvider>().createHoroscope(
-                                                _nameController.text,
-                                                _gender,
-                                                dob,
-                                                chartData
-                                              );
+                                              bool saveSuccess = false;
+                                              SavedChartModel? savedChart;
+                                              try {
+                                                if (_editingChartId != null) {
+                                                  savedChart = await context.read<HoroscopeProvider>().updateHoroscope(
+                                                    _editingChartId!,
+                                                    _nameController.text,
+                                                    _gender,
+                                                    dob,
+                                                    chartData
+                                                  );
+                                                } else {
+                                                  savedChart = await context.read<HoroscopeProvider>().createHoroscope(
+                                                    _nameController.text,
+                                                    _gender,
+                                                    dob,
+                                                    chartData
+                                                  );
+                                                }
+                                                saveSuccess = true;
+                                              } catch (saveError) {
+                                                final cleanSaveError = saveError.toString().replaceFirst('Exception: ', '');
+                                                if (cleanSaveError.contains('đã tồn tại')) {
+                                                  setState(() => _nameErrorText = cleanSaveError);
+                                                  rethrow;
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text('$cleanSaveError (Bạn vẫn có thể xem lá số)'),
+                                                      backgroundColor: Colors.orange.shade800,
+                                                      duration: const Duration(seconds: 4),
+                                                    ),
+                                                  );
+                                                }
+                                              }
 
                                               setState(() {
                                                 _isConfirmed = true;
+                                                _editingChartId = null; // Clean up after success
+                                                if (saveSuccess && savedChart != null) {
+                                                  _quickViewData = savedChart;
+                                                }
                                               });
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
-                                              );
-                                            } catch (e) {
-                                              if (e.toString().contains('đã tồn tại')) {
-                                                setState(() => _nameErrorText = e.toString().replaceFirst('Exception: ', ''));
-                                              } else {
+                                              if (saveSuccess) {
                                                 ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(content: Text('Lỗi: $e'), backgroundColor: Colors.red.shade900),
+                                                  const SnackBar(content: Text('Xác nhận thành công. Thông tin đã được lưu lại.')),
+                                                );
+                                              }
+                                            } catch (e) {
+                                              if (_nameErrorText == null) {
+                                                final cleanError = e.toString().replaceFirst('Exception: ', '');
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text(cleanError), backgroundColor: Colors.red.shade900),
                                                 );
                                               }
                                             } finally {
@@ -848,129 +1427,10 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                 });
                                               }
                                             }
-                                          }
-                                        },
+                                          },
                                         child: _isSubmitting 
                                             ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                                             : Text('Xác nhận'),
-                                      ),
-                                      if (_userRole == 'Admin' || _userRole == 'Expert')
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade900, foregroundColor: Colors.white),
-                                          onPressed: () {
-                                            if (!_isConfirmed) {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
-                                              return;
-                                            }
-                                            if (!_formKey.currentState!.validate()) return;
-                                            Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
-                                              initialIsFullMode: true, name: _nameController.text, gender: _gender, calendarType: _calendarType,
-                                              hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
-                                            )));
-                                          },
-                                          child: Text('Lá Số Tử Vi (Admin)'),
-                                        ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
-                                        onPressed: () {
-                                          if (!_isConfirmed) {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
-                                            return;
-                                          }
-                                          if (!_formKey.currentState!.validate()) return;
-                                          Navigator.push(context, MaterialPageRoute(builder: (_) => ChartScreen(
-                                            initialIsFullMode: false, name: _nameController.text, gender: _gender, calendarType: _calendarType,
-                                            hour: int.tryParse(_selectedHour ?? '0') ?? 0, minute: int.tryParse(_selectedMinute ?? '0') ?? 0, day: int.tryParse(_selectedDay ?? '1') ?? 1, month: int.tryParse(_selectedMonth ?? '1') ?? 1, year: int.tryParse(_yearController.text) ?? 2000, viewYear: int.tryParse(_viewYearController.text) ?? DateTime.now().year,
-                                          )));
-                                        },
-                                        child: Text('Lá Số Tử Vi'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 24),
-                                
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Wrap(
-                                    spacing: 16,
-                                    runSpacing: 16,
-                                    alignment: WrapAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 320,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            if (!_isConfirmed) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước')));
-                                          },
-                                          child: AbsorbPointer(
-                                            absorbing: !_isConfirmed,
-                                            child: DropdownButtonFormField<String>(
-                                              isExpanded: true,
-                                              decoration: InputDecoration(filled: true, fillColor: Colors.yellow, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
-                                              hint: Center(child: Text('AI-Luận giải Các Cung Lá Số', style: TextStyle(color: Colors.black))),
-                                              value: _selectedCung,
-                                              items: ['Tổng Luận 12 Cung Và Cung An Thân', 'Luận Giải Cung Mệnh', 'Luận Giải Cung Phụ Mẫu', 'Luận Giải Cung Phúc Đức', 'Luận Giải Cung Điền Trạch', 'Luận Giải Cung Quan Lộc', 'Luận Giải Cung Nô bộc', 'Luận Giải Cung Thiên Di', 'Luận Giải Cung Tật Ách', 'Luận Giải Cung Tài Bạch', 'Luận Giải Cung Tử Tức', 'Luận Giải Cung Phu Thê', 'Luận Giải Cung Huynh Đệ', 'Luận Giải Cung An Thân'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                                              onChanged: (val) {
-                                                if (_isConfirmed && val != null) {
-                                                  setState(() => _selectedCung = val);
-                                                  _handleAiAction('luan_giai_cung', val);
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
-                                        onPressed: () {
-                                          if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
-                                          _handleAiAction('luan_giai_dai_han_12');
-                                        },
-                                        child: Text('AI-Luận Giải Đại Hạn 12 Đại Hạn Lớn'),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow, foregroundColor: Colors.black),
-                                        onPressed: () {
-                                          if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
-                                          _handleAiAction('luan_giai_chi_tiet_dai_han');
-                                        },
-                                        child: Text('AI-Luận giải Chi Tiết Đại Hạn Theo Năm Xem'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 24),
-                                
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Wrap(
-                                    spacing: 16,
-                                    runSpacing: 16,
-                                    alignment: WrapAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
-                                        onPressed: () {
-                                          if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
-                                          _handleAiAction('luan_giai_han_nam');
-                                        },
-                                        child: Text('AI-Luận Giải Hạn Theo Năm Xem'),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.black),
-                                        onPressed: () {
-                                          if (!_isConfirmed) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xin vui lòng bấm vào nút Xác Nhận trước'))); return; }
-                                          _handleAiAction('giai_phap_nam');
-                                        },
-                                        child: Text('AI-Giải Pháp Theo Năm Xem'),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Chức năng đặt lịch đang được phát triển.')));
-                                        },
-                                        child: Text('Đặt Lịch Xem Trực Tiếp Chuyên Gia Tử Vi'),
                                       ),
                                     ],
                                   ),

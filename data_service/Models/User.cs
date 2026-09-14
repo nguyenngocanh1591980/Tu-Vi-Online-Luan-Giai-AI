@@ -55,4 +55,16 @@ public class User
     public ICollection<SavedChart> SavedCharts { get; set; } = new List<SavedChart>();
     public ICollection<Post> Posts { get; set; } = new List<Post>();
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    
+    public bool IsInvisible { get; set; } = false;
+
+    // Social SSO IDs
+    [MaxLength(100)]
+    public string? GoogleId { get; set; }
+
+    [MaxLength(100)]
+    public string? FacebookId { get; set; }
+
+    [MaxLength(100)]
+    public string? ZaloId { get; set; }
 }

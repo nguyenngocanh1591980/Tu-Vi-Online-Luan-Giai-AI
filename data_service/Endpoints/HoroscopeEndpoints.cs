@@ -3,6 +3,7 @@ using data_service.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -145,7 +146,146 @@ public static class HoroscopeEndpoints
                 return Results.Ok(safeDto);
             }
         });
+
+        group.MapPut("/update/{id}", async (int id, AppDbContext db, ClaimsPrincipal user, HoroscopeCreateRequest req) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Results.Unauthorized();
+            }
+
+            var role = user.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+            var chart = await db.SavedCharts.FirstOrDefaultAsync(c => c.Id == id);
+            
+            if (chart == null)
+            {
+                return Results.NotFound();
+            }
+
+            // Only owner or Admin can update
+            if (chart.UserId != userId && role != "Admin")
+            {
+                return Results.Forbid();
+            }
+
+            var newChartName = (req.Name ?? "Chưa đặt tên").Trim();
+
+            // Check if name exists for this user (excluding current chart)
+            bool exists = await db.SavedCharts.AnyAsync(h => 
+                h.UserId == chart.UserId && 
+                h.Id != id &&
+                h.ChartName.ToLower() == newChartName.ToLower());
+            
+            if (exists)
+            {
+                return Results.Conflict(new { message = "Tên lá số này đã tồn tại trong danh sách của bạn. Vui lòng nhập một tên khác để phân biệt." });
+            }
+
+            chart.ChartName = newChartName;
+            if (req.Gender != null) chart.Gender = req.Gender;
+            if (req.Dob != default) chart.Dob = req.Dob.ToUniversalTime();
+            if (req.ChartData != null) chart.ChartJsonData = JsonSerializer.Serialize(req.ChartData);
+
+            await db.SaveChangesAsync();
+
+            return Results.Ok(chart);
+        });
+
+        group.MapDelete("/{id}", async (int id, AppDbContext db, ClaimsPrincipal user) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Results.Unauthorized();
+            }
+
+            var role = user.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+            var chart = await db.SavedCharts.FirstOrDefaultAsync(c => c.Id == id);
+            
+            if (chart == null)
+            {
+                return Results.NotFound();
+            }
+
+            // Only owner or Admin can delete
+            if (chart.UserId != userId && role != "Admin")
+            {
+                return Results.Forbid();
+            }
+
+            db.SavedCharts.Remove(chart);
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new { message = "Xóa lá số thành công" });
+        });
+
+        group.MapGet("/generate-share-token", async (int id, bool hideName, bool hideDob, AppDbContext db, ClaimsPrincipal user, IDataProtectionProvider dataProtectionProvider) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdString, out int userId)) return Results.Unauthorized();
+
+            var chart = await db.SavedCharts.FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+            if (chart == null) return Results.NotFound();
+
+            var protector = dataProtectionProvider.CreateProtector("ChartShare");
+            var payload = JsonSerializer.Serialize(new ChartSharePayload { Id = id, HideName = hideName, HideDob = hideDob });
+            var token = protector.Protect(payload);
+            
+            return Results.Ok(new { token });
+        });
+
+        app.MapGet("/api/v1/horoscope/public-read", async (string token, AppDbContext db, IDataProtectionProvider dataProtectionProvider) =>
+        {
+            try
+            {
+                var protector = dataProtectionProvider.CreateProtector("ChartShare");
+                var payload = protector.Unprotect(token);
+                
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var shareData = JsonSerializer.Deserialize<ChartSharePayload>(payload, options);
+                
+                if (shareData == null) return Results.BadRequest(new { message = "Invalid token payload" });
+
+                var chart = await db.SavedCharts.FirstOrDefaultAsync(c => c.Id == shareData.Id);
+                if (chart == null) return Results.NotFound(new { message = "Không tìm thấy lá số" });
+
+                var fullData = JsonSerializer.Deserialize<SafeChartDataDTO>(chart.ChartJsonData, options);
+                
+                if (fullData != null)
+                {
+                    if (shareData.HideName)
+                    {
+                        fullData.Native.Name = "[Tên đã được ẩn]";
+                    }
+                    if (shareData.HideDob)
+                    {
+                        fullData.Native.BirthYearStr = "***";
+                        fullData.Native.BirthMonthStr = "**";
+                        fullData.Native.BirthDayStr = "**";
+                        fullData.Native.BirthTimeStr = "**";
+                        fullData.Native.LunarMonthStr = "**";
+                        fullData.Native.LunarDayStr = "**";
+                        fullData.Native.LunarTimeStr = "**";
+                        fullData.Native.LunarYear = 0;
+                    }
+                }
+
+                return Results.Ok(fullData);
+            }
+            catch
+            {
+                return Results.BadRequest(new { message = "Invalid or corrupted token" });
+            }
+        });
     }
+}
+
+public class ChartSharePayload
+{
+    public int Id { get; set; }
+    public bool HideName { get; set; }
+    public bool HideDob { get; set; }
 }
 
 public class HoroscopeUserViewDTO
