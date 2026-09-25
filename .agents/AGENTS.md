@@ -16,6 +16,11 @@
      + Bước tiếp theo CẦN LÀM NGAY khi mở lại: (hành động đầu tiên sẽ thực hiện vào phiên tiếp theo).
    - **KHI NHẬN LỆNH BẮT ĐẦU PHIÊN MỚI (RESUME)**: Khi người dùng dán lại bảng "CHECK-POINT" kèm lệnh "Làm tiếp công việc chưa hoàn thiện phiên trước" hoặc "Tiếp tục nào", AI PHẢI đọc hiểu bối cảnh ngay lập tức và TRỰC TIẾP bắt tay thực hiện phần "Bước tiếp theo CẦN LÀM NGAY" đã lưu trong Check-point, sau đó báo cáo kết quả khởi động.
 
-5. **Ngôn ngữ của Implementation Plan**: Mặc định KHI GỬI IMPLEMENTATION PLAN (Bản kế hoạch triển khai), AI BẮT BUỘC phải viết toàn bộ nội dung của file kế hoạch đó bằng TIẾNG VIỆT 100%. Không được dùng tiếng Anh, ngoại trừ các từ khóa chuyên ngành lập trình.
+5. **Quy tắc Tối Cao về Kế Hoạch Triển Khai (Implementation Plan - ĐÓNG BĂNG & CHẾ ĐỘ CHỜ)**:
+   - **Đóng băng hoạt động & Để chế độ chờ (Freeze & Standby)**: Mặc định từ nay, ngay sau khi xây dựng Kế hoạch Triển khai (`implementation_plan.md`), AI **BẮT BUỘC PHẢI ĐÓNG BĂNG TOÀN BỘ MỌI HOẠT ĐỘNG VÀ ĐỂ CHẾ ĐỘ CHỜ**.
+   - **Tuyệt đối không tự ý triển khai**: Nghiêm cấm tuyệt đối AI tự ý viết code, tự ý chỉnh sửa tệp hay chạy lệnh can thiệp trước khi có sự chấp thuận.
+   - **Điều kiện duy nhất để triển khai**: CHỈ KHI NÀO người dùng xác nhận bằng từ **"Proceed"** (hoặc bấm nút "Proceed" trên giao diện kế hoạch), AI mới được phép tiến hành triển khai. Mọi phản hồi khác không phải "Proceed" đều không được xem là lệnh thực thi.
+   - **Ngôn ngữ bắt buộc**: Toàn bộ nội dung của file `implementation_plan.md` BẮT BUỘC phải viết bằng **TIẾNG VIỆT 100%**. Không được dùng tiếng Anh, ngoại trừ các từ khóa chuyên ngành lập trình.
+   - **Metadata bắt buộc**: Khi tạo hoặc cập nhật `implementation_plan.md`, luôn luôn đặt `RequestFeedback: true` và `UserFacing: true` để giao diện hiển thị nút "Proceed" cho người dùng xác nhận.
 
 6. **Quy tắc nguồn dữ liệu An Sao Thần Sát**: Khi an bất kỳ sao Thần Sát nào (Cát Tinh hoặc Hung Tinh) từ tài liệu chuẩn hóa, mặc định AI **CHỈ ĐƯỢC DÙNG bảng biểu** (dạng bảng kẻ ô/ma trận) làm dữ liệu chính và **DUY NHẤT** để mã hóa và an sao. Nghiêm cấm tuyệt đối không được sử dụng các đoạn văn bản Lịch lệ / Khẩu quyết / Thi ca (dữ liệu dạng chữ mô tả) để tham khảo, làm kim chỉ nam hoặc suy diễn thay thế cho bảng biểu. Nếu phát hiện có bất kỳ vấn đề, điểm khó hiểu hoặc lỗi định dạng nào trong bảng biểu, AI phải **treo cờ hỏi trực tiếp người dùng** để nhận chỉ dẫn.

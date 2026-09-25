@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:vnlunar/vnlunar.dart';
-import '../widgets/main_navigation_bar.dart';
 import '../data/tiet_khi_data.dart';
 import '../data/hoang_dao_hac_dao_data.dart';
 import '../data/truc_tu_data.dart';
@@ -180,53 +179,86 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
   }
 
 
-  void _handleApiError(String message) {
-    if (!mounted) return;
-    setState(() {
-      _isLoading = false;
-      _almanacData = null;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF0F2F5),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Instruction text
-              const Text(
-                'Nhập thông tin đầy đủ rồi bấm vào nút xác nhận. Sau đó có thể chia sẻ thông tin hoặc dịch vụ luận giải',
-                style: TextStyle(fontSize: 14, color: Color(0xFF003399)),
-              ),
-              const SizedBox(height: 12),
-
-              // Form Input Row
-              _buildFormInputRow(),
-              const SizedBox(height: 20),
-
-              // Results Container
-              if (_isLoading)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: CircularProgressIndicator(),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
+              decoration: const BoxDecoration(
+                color: Color(0xFF1E2640),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    spreadRadius: 1,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
                   ),
-                )
-              else if (_almanacData != null)
-                _buildAlmanacResultView(),
-            ],
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Title Bar chuẩn Dark Navy mép-tới-mép 1024px
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF131A30),
+                        border: Border(bottom: BorderSide(color: Colors.white24, width: 1)),
+                      ),
+                      child: const Text(
+                        'Lịch Vạn Sự Tử Vi Online - AI',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFFD700),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Instruction text
+                          const Text(
+                            'Nhập thông tin đầy đủ rồi bấm vào nút xác nhận. Sau đó có thể chia sẻ thông tin hoặc dịch vụ luận giải',
+                            style: TextStyle(fontSize: 14, color: Color(0xFF64B5F6)),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Form Input Row
+                          _buildFormInputRow(),
+                          const SizedBox(height: 20),
+
+                          // Results Container
+                          if (_isLoading)
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(32.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          else if (_almanacData != null)
+                            _buildAlmanacResultView(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -239,35 +271,35 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
       spacing: 10,
       runSpacing: 10,
       children: [
-        const Text('Giờ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+        const Text('Giờ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
         _buildDropdown(
           value: _selectedHour,
           items: List.generate(24, (index) => index),
           onChanged: (val) => setState(() => _selectedHour = val!),
           format: (val) => val.toString().padLeft(2, '0'),
         ),
-        const Text('Phút', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+        const Text('Phút', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
         _buildDropdown(
           value: _selectedMinute,
           items: List.generate(60, (index) => index),
           onChanged: (val) => setState(() => _selectedMinute = val!),
           format: (val) => val.toString().padLeft(2, '0'),
         ),
-        const Text('Ngày', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+        const Text('Ngày', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
         _buildDropdown(
           value: _selectedDay,
           items: List.generate(31, (index) => index + 1),
           onChanged: (val) => setState(() => _selectedDay = val!),
           format: (val) => val.toString().padLeft(2, '0'),
         ),
-        const Text('Tháng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+        const Text('Tháng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
         _buildDropdown(
           value: _selectedMonth,
           items: List.generate(12, (index) => index + 1),
           onChanged: (val) => setState(() => _selectedMonth = val!),
           format: (val) => val.toString().padLeft(2, '0'),
         ),
-        const Text('Năm', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+        const Text('Năm', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
         _buildDropdown(
           value: _selectedYear,
           items: List.generate(150, (index) => 1900 + index),
@@ -278,14 +310,14 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
         ElevatedButton(
           onPressed: _fetchAlmanacData,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEFEFEF),
-            foregroundColor: const Color(0xFF003399),
+            backgroundColor: const Color(0xFF8B0000),
+            foregroundColor: Colors.white,
             elevation: 1,
-            side: const BorderSide(color: Colors.grey),
+            side: const BorderSide(color: Colors.white24),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           ),
-          child: const Text('Xem lịch', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF003399))),
+          child: const Text('Xem lịch', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         ),
       ],
     );
@@ -301,19 +333,21 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(color: Colors.white24),
         borderRadius: BorderRadius.circular(3),
-        color: Colors.white,
+        color: Colors.white12,
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: items.contains(value) ? value : items.first,
           isDense: true,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF003399)),
+          dropdownColor: const Color(0xFF131A30),
+          iconEnabledColor: Colors.white70,
+          style: const TextStyle(fontSize: 13, color: Colors.white),
           items: items.map((int item) {
             return DropdownMenuItem<int>(
               value: item,
-              child: Text(format(item), style: const TextStyle(fontSize: 13, color: Color(0xFF003399))),
+              child: Text(format(item), style: const TextStyle(fontSize: 13, color: Colors.white)),
             );
           }).toList(),
           onChanged: onChanged,
@@ -362,8 +396,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
         (ngayHoangHacDao['type'] == 'Hoàng Đạo') ||
         ngayHoangHacDaoDisplayText.contains('Hoàng Đạo');
     final Color ngayHoangHacDaoColor = isNgayHoangDao
-        ? const Color(0xFFC00000) // Ngày đẹp (Hoàng đạo): màu đỏ
-        : const Color(0xFF003399); // Ngày xấu (Hắc đạo): giữ nguyên hình 3 (màu xanh)
+        ? const Color(0xFFEF5350) // Ngày đẹp (Hoàng đạo): màu đỏ tươi
+        : const Color(0xFF64B5F6); // Ngày xấu (Hắc đạo): màu xanh da trời sáng
 
     final Map<String, dynamic> dong2GioHoangHacDao = data['dong_2_gio_hoang_hac_dao'] != null ? Map<String, dynamic>.from(data['dong_2_gio_hoang_hac_dao']) : <String, dynamic>{};
 
@@ -403,8 +437,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        border: Border.all(color: Colors.grey.shade300),
+        color: const Color(0xFF131A30),
+        border: Border.all(color: Colors.white24),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Column(
@@ -419,24 +453,24 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 1. Dòng ngày dương / âm (Hình 1: giữ nguyên màu xanh)
+                  // 1. Dòng ngày dương / âm
                   Text(
                     '$timePrefix $weekday, ngày $solarDate ( $lunarDate )',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF003399),
+                      color: Color(0xFF64B5F6),
                     ),
                   ),
                   const SizedBox(height: 4),
 
-                  // 2. Dòng Can Chi (Hình 2: đổi sang màu da cam)
+                  // 2. Dòng Can Chi
                   Text(
                     'Giờ ${data['hour_stem_branch'] ?? ''} Ngày $dayCC tháng $monthCC năm $yearCC',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFE65100),
+                      color: Color(0xFFFFB74D),
                     ),
                   ),
                 ],
@@ -444,7 +478,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             },
           ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
 
           // 1. Ngày Hoàng Đạo Và Hắc Đạo trong Năm
           const Text(
@@ -452,7 +486,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000), // Đỏ đậm
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -460,8 +494,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
@@ -482,7 +516,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     style: const TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                       height: 1.45,
                     ),
                   ),
@@ -498,27 +532,27 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000), // Đỏ đậm
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 8),
 
-          // Block 1 - Giờ Hoàng Đạo (Giờ tốt) (Hình 4: Màu đỏ)
+          // Block 1 - Giờ Hoàng Đạo (Giờ tốt)
           _buildGioHoangHacDaoTable(
             title: 'Giờ Hoàng đạo (Giờ tốt)',
-            titleColor: const Color(0xFFC00000),
+            titleColor: const Color(0xFFEF5350),
             items: gioHoangDaoList,
-            itemColor: const Color(0xFFC00000),
+            itemColor: const Color(0xFFEF5350),
             itemFontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 12),
 
-          // Block 2 - Giờ Hắc Đạo (Giờ xấu) (Hình 2: Tiêu đề giống màu Hình 3)
+          // Block 2 - Giờ Hắc Đạo (Giờ xấu)
           _buildGioHoangHacDaoTable(
             title: 'Giờ Hắc đạo (Giờ xấu)',
-            titleColor: const Color(0xFF003399),
+            titleColor: const Color(0xFF64B5F6),
             items: gioHacDaoList,
-            itemColor: Colors.black,
+            itemColor: Colors.white,
             itemFontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 12),
@@ -529,7 +563,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000), // Đỏ đậm
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -537,8 +571,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -546,7 +580,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               style: const TextStyle(
                 fontSize: 14.5,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF003399),
+                color: Color(0xFF64B5F6),
               ),
             ),
           ),
@@ -559,18 +593,18 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               margin: const EdgeInsets.only(bottom: 8.0),
               padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
               decoration: BoxDecoration(
-                color: const Color(0xFFF9F9F9),
+                color: const Color(0xFF161F36),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: const Color(0xFFE5E7EB)),
+                border: Border.all(color: Colors.white24),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Dòng 1: Trạng thái Hiện tại (In đậm, màu Xanh Đậm, size 14.5)
+                  // Dòng 1: Trạng thái Hiện tại (In đậm, màu Xanh da trời sáng, size 14.5)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.wb_sunny_outlined, size: 16, color: Color(0xFF003399)),
+                      const Icon(Icons.wb_sunny_outlined, size: 16, color: Color(0xFF64B5F6)),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
@@ -578,7 +612,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                           style: const TextStyle(
                             fontSize: 14.5,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF003399), // Xanh đậm
+                            color: Color(0xFF64B5F6),
                           ),
                         ),
                       ),
@@ -586,26 +620,26 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   ),
                   const SizedBox(height: 4),
 
-                  // Dòng 2: Nội dung Hiện tại (Font Đen Đậm, size 13.5)
+                  // Dòng 2: Nội dung Hiện tại (Font Trắng, size 13.5)
                   if (currentMeaning.isNotEmpty) ...[
                     Text(
                       currentMeaning,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.white,
                         height: 1.45,
                       ),
                     ),
                     const SizedBox(height: 10),
                   ],
 
-                  // Dòng 3: Trạng thái Sắp tới (Hình 1: Màu đỏ)
+                  // Dòng 3: Trạng thái Sắp tới (Màu đỏ tươi)
                   if (nextStatus.isNotEmpty) ...[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.wb_sunny_outlined, size: 16, color: Color(0xFFC00000)),
+                        const Icon(Icons.wb_sunny_outlined, size: 16, color: Color(0xFFEF5350)),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
@@ -613,7 +647,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             style: const TextStyle(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFFC00000), // Màu đỏ
+                              color: Color(0xFFEF5350),
                             ),
                           ),
                         ),
@@ -621,14 +655,14 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     ),
                     const SizedBox(height: 4),
 
-                    // Dòng 4: Nội dung Sắp tới (Font Đen Đậm, size 13.5)
+                    // Dòng 4: Nội dung Sắp tới (Font Trắng, size 13.5)
                     if (nextMeaning.isNotEmpty)
                       Text(
                         nextMeaning,
                         style: const TextStyle(
                           fontSize: 13.5,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white,
                           height: 1.45,
                         ),
                       ),
@@ -644,7 +678,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000), // Đỏ đậm
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -652,8 +686,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
@@ -664,7 +698,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFC00000), // Sao tốt: màu đỏ đậm
+                      color: Color(0xFFEF5350), // Sao tốt: màu đỏ tươi
                     ),
                     children: [
                       const TextSpan(
@@ -684,7 +718,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF003399), // Hình 4: Giống Hình 3 (màu xanh đậm)
+                      color: Color(0xFF64B5F6), // Sao xấu: màu xanh da trời sáng
                     ),
                     children: [
                       const TextSpan(
@@ -707,8 +741,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFE5E7EB)),
+                color: const Color(0xFF161F36),
+                border: Border.all(color: Colors.white24),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Column(
@@ -718,18 +752,18 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   final bool isSubHeader = m['is_sub_header'] == true;
                   final String type = m['type'] ?? 'good';
                   
-                  // Tiêu đề các Nhóm sao (Hình 1-5): Màu da cam
-                  // Phần 2: Sao Hung Tinh: Màu xanh giống Hình 3
-                  // Phần 1: Sao Cát Tinh: Màu đỏ đậm
+                  // Tiêu đề các Nhóm sao: Màu da cam
+                  // Phần 2: Sao Hung Tinh: Màu xanh sáng
+                  // Phần 1: Sao Cát Tinh: Màu đỏ tươi
                   final Color headerColor;
                   if (isSubHeader || (m['star'] != null && m['star'].toString().startsWith('Nhóm'))) {
-                    headerColor = const Color(0xFFE65100); // Màu da cam
+                    headerColor = const Color(0xFFFFB74D); // Màu da cam
                   } else if (type == 'bad') {
-                    headerColor = const Color(0xFF003399); // Phần 2: Sao Hung Tinh
+                    headerColor = const Color(0xFF64B5F6); // Phần 2: Sao Hung Tinh
                   } else {
-                    headerColor = const Color(0xFFC00000); // Phần 1: Sao Cát Tinh
+                    headerColor = const Color(0xFFEF5350); // Phần 1: Sao Cát Tinh
                   }
-                  final Color starColor = type == 'bad' ? const Color(0xFF003399) : const Color(0xFFC00000);
+                  final Color starColor = type == 'bad' ? const Color(0xFF64B5F6) : const Color(0xFFEF5350);
 
                   if (isHeader) {
                     return Padding(
@@ -763,7 +797,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.italic,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                         ],
@@ -784,7 +818,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -792,8 +826,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
@@ -806,8 +840,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   final String desc = item['desc'] ?? '';
 
                   final bool isCat = quality.contains('Cát') || name.contains('Đại An') || name.contains('Tốc Hỷ') || name.contains('Tiểu Cát') || name.contains('Tiểu Các');
-                  // Các chữ Tuyệt Lộ[Hung], Lưu Niên[Hung], Xích Khẩu[Hung] đổi giống màu 2 (xanh đậm)
-                  final Color qualityColor = isCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                  final Color qualityColor = isCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 6.0),
@@ -819,7 +852,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             text: '• $pairLabel : ',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFFE65100), // Hình 3: Phần các giờ đổi thành màu da cam
+                              color: Color(0xFFFFB74D),
                             ),
                           ),
                           TextSpan(
@@ -833,7 +866,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             text: '- ',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                           TextSpan(
@@ -841,7 +874,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -858,7 +891,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     final String part3 = text.substring(dashIdx + 1);
 
                     final bool isCat = part2.contains('Cát') || part2.contains('Đại An') || part2.contains('Tốc Hỷ') || part2.contains('Tiểu Cát') || part2.contains('Tiểu Các');
-                    final Color part2Color = isCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                    final Color part2Color = isCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 6.0),
@@ -870,7 +903,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                               text: part1.startsWith('•') ? '$part1 ' : '• $part1 ',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFFE65100), // Hình 3: Phần các giờ đổi thành màu da cam
+                                color: Color(0xFFFFB74D),
                               ),
                             ),
                             TextSpan(
@@ -884,7 +917,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                               text: '- ',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                             TextSpan(
@@ -892,7 +925,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.italic,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -904,7 +937,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     padding: const EdgeInsets.only(bottom: 6.0),
                     child: Text(
                       text.startsWith('•') ? text : '• $text',
-                      style: const TextStyle(fontSize: 14.5, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 14.5, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   );
                 }
@@ -919,7 +952,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -927,8 +960,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: () {
@@ -938,14 +971,13 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                 final String prefix = fullText.substring(0, colonIndex + 1);
                 final String body = fullText.substring(colonIndex + 1);
                 final bool isPlus = prefix.contains('+');
-                // Trực tốt (+) màu đỏ, trực xấu (-) màu giống hình 2 (xanh đậm)
-                final Color prefixColor = isPlus ? const Color(0xFFC00000) : const Color(0xFF003399);
+                final Color prefixColor = isPlus ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
                 return RichText(
                   text: TextSpan(
                     style: const TextStyle(
                       fontSize: 14.5,
-                      color: Colors.black,
+                      color: Colors.white,
                       height: 1.45,
                     ),
                     children: [
@@ -961,7 +993,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -969,7 +1001,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                 );
               }
               final bool isPlus = fullText.contains('+');
-              final Color fullColor = isPlus ? const Color(0xFFC00000) : const Color(0xFF003399);
+              final Color fullColor = isPlus ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
               return Text(
                 fullText,
                 style: TextStyle(
@@ -990,7 +1022,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -998,8 +1030,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: () {
@@ -1007,13 +1039,13 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               final bool isSaoCat = TrachNhatData.catTuList.any((s) => cleanSao28.contains(s)) ||
                   sao28Detail.contains('Tốt.') ||
                   sao28Detail.contains('(Kiết Tú)');
-              final Color saoColor = isSaoCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+              final Color saoColor = isSaoCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (sao28.isNotEmpty) ...[
-                    // Dòng 1: Tên sao (nếu sao đẹp màu đỏ, nếu sao xấu màu giống màu 2)
+                    // Dòng 1: Tên sao
                     Text(
                       sao28.startsWith('Sao ') ? sao28 : 'Sao $sao28',
                       style: TextStyle(
@@ -1029,7 +1061,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                       final trimmed = line.trim();
                       if (trimmed.isEmpty) return const SizedBox.shrink();
 
-                      // Dòng 2: Đoạn đầu (tên sao, hành, duyên: Xấu/Tốt) -> saoColor; đoạn sau (Thuộc...) -> màu đen đậm nghiêng
+                      // Dòng 2: Đoạn đầu -> saoColor; đoạn sau -> màu trắng nghiêng
                       if (trimmed.contains('Thuộc ')) {
                         final int thuocIdx = trimmed.indexOf('Thuộc ');
                         final String part1 = trimmed.substring(0, thuocIdx);
@@ -1053,7 +1085,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],
@@ -1068,10 +1100,9 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                         final String header = trimmed.substring(0, colonIdx + 1);
                         final String body = trimmed.substring(colonIdx + 1);
 
-                        // "Các chữ 'Nên làm' và 'Ngoại Lệ' để màu đỏ, chữ 'Kiêng cữ' để màu giống hình 2"
-                        Color headerColor = const Color(0xFFC00000);
+                        Color headerColor = const Color(0xFFEF5350);
                         if (header.contains('Kiêng cữ') || header.contains('Kiêng cử') || header.contains('Kiêng Cử')) {
-                          headerColor = const Color(0xFF003399); // Màu giống hình 2
+                          headerColor = const Color(0xFF64B5F6);
                         }
 
                         return Padding(
@@ -1092,7 +1123,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],
@@ -1110,7 +1141,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             fontSize: 14.5,
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
-                            color: Color(0xFFE65100), // Màu da cam cho các câu thơ
+                            color: Color(0xFFFFB74D),
                             height: 1.45,
                           ),
                         ),
@@ -1129,7 +1160,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -1137,8 +1168,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
@@ -1150,7 +1181,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF003399), // Hình 1: Dòng 1 phạm ngày kỵ đổi sang màu xanh đậm giống hình 2
+                      color: Color(0xFF64B5F6),
                       height: 1.4,
                     ),
                   ),
@@ -1169,20 +1200,20 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                               style: const TextStyle(
                                 fontSize: 14.5,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF003399), // Tiêu đề sao kỵ đổi sang màu xanh đậm giống hình 2
+                                color: Color(0xFF64B5F6),
                               ),
                             ),
                             const SizedBox(height: 2),
                             RichText(
                               text: TextSpan(
-                                style: const TextStyle(fontSize: 14.5, color: Colors.black, height: 1.45),
+                                style: const TextStyle(fontSize: 14.5, color: Colors.white, height: 1.45),
                                 children: [
                                   const TextSpan(
                                     text: 'Ý Nghĩa: ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   TextSpan(
@@ -1190,7 +1221,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic,
-                                      color: Colors.black, // Ý nghĩa giữ nguyên đen đậm nghiêng
+                                      color: Colors.white70,
                                     ),
                                   ),
                                 ],
@@ -1206,7 +1237,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFC00000), // Ngày cát giữ nguyên màu đỏ đậm
+                      color: Color(0xFFEF5350),
                       height: 1.4,
                     ),
                   ),
@@ -1222,7 +1253,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -1230,8 +1261,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFFDF0),
-              border: Border.all(color: const Color(0xFFFFE082)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: () {
@@ -1245,49 +1276,45 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   final int idx = entry.key;
                   final String lineText = entry.value;
 
-                  Color lineColor = Colors.black;
+                  Color lineColor = Colors.white;
 
                   // Dòng 1: Ngũ Hành Năm 2026... theo màu sắc của ngũ hành nạp âm
                   if (idx == 0 || lineText.startsWith('Ngũ Hành Năm')) {
                     final String napAmPart = lineText.contains('-') ? lineText.split('-').last : lineText;
                     if (napAmPart.contains('Thủy')) {
-                      lineColor = Colors.black; // Thủy: màu đen (ví dụ nước trên trời là thủy màu đen)
+                      lineColor = const Color(0xFF81D4FA); // Thủy: xanh nước biển sáng
                     } else if (napAmPart.contains('Hỏa')) {
-                      lineColor = const Color(0xFFC00000); // Hỏa: màu đỏ
+                      lineColor = const Color(0xFFEF5350); // Hỏa: đỏ tươi
                     } else if (napAmPart.contains('Mộc')) {
-                      lineColor = const Color(0xFF2E7D32); // Mộc: màu xanh lá
+                      lineColor = const Color(0xFF81C784); // Mộc: xanh lá sáng
                     } else if (napAmPart.contains('Kim')) {
-                      lineColor = const Color(0xFFB78103); // Kim: màu vàng ánh kim
+                      lineColor = const Color(0xFFFFD54F); // Kim: vàng ánh kim
                     } else if (napAmPart.contains('Thổ')) {
-                      lineColor = const Color(0xFF795548); // Thổ: màu nâu đất
+                      lineColor = const Color(0xFFA1887F); // Thổ: nâu sáng
                     } else {
-                      lineColor = Colors.black;
+                      lineColor = Colors.white;
                     }
                   }
                   // Dòng 2: Tháng... Ngày... Tức là Ngày sinh Tháng...
-                  // Nếu khắc thì màu giống hình 5 (xanh đậm Color(0xFF003399)), nếu hợp thì màu đỏ (Color(0xFFC00000))
                   else if (lineText.startsWith('Tháng') || (idx == 1 && (lineText.contains('Tức là Ngày sinh') || lineText.contains('Tức là Tháng')))) {
                     final bool isKhac = lineText.contains('khắc') ||
                         lineText.contains('Khắc') ||
                         lineText.contains('Phạt Nhật') ||
                         lineText.contains('Chế Nhật');
-                    lineColor = isKhac ? const Color(0xFF003399) : const Color(0xFFC00000);
+                    lineColor = isKhac ? const Color(0xFF64B5F6) : const Color(0xFFEF5350);
                   }
                   // Dòng 3: Ngày Tân Mùi, Tức Can... Và Chi... Tức là Ngày...
-                  // Nếu là đẹp thì màu đỏ (Color(0xFFC00000)), nếu Hung(xấu) thì màu giống hình 5 (Color(0xFF003399))
                   else if (lineText.contains('Tức Can') || (lineText.contains('Tức là Ngày') && !lineText.startsWith('Tháng'))) {
                     final bool isHung = lineText.contains('Ngày Hung') || lineText.contains('khắc nhau');
-                    lineColor = isHung ? const Color(0xFF003399) : const Color(0xFFC00000);
+                    lineColor = isHung ? const Color(0xFF64B5F6) : const Color(0xFFEF5350);
                   }
                   // Dòng 4: Nạp Âm (Ngày...) hợp với các tuổi... Xung tuổi...
-                  // Đổi thành màu da cam Color(0xFFE65100)
                   else if (lineText.startsWith('Nạp Âm') || lineText.startsWith('Nạp âm') || lineText.contains('Xung tuổi')) {
-                    lineColor = const Color(0xFFE65100);
+                    lineColor = const Color(0xFFFFB74D);
                   }
                   // 2 dòng cuối cùng: Ngày Thuộc Hành..., Ngày ... lục hợp...
-                  // Giữ nguyên như cũ màu đen đậm
                   else {
-                    lineColor = Colors.black;
+                    lineColor = Colors.white;
                   }
 
                   return Padding(
@@ -1314,7 +1341,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -1322,8 +1349,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
@@ -1347,37 +1374,37 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                         children: [
                           RichText(
                             text: TextSpan(
-                              style: const TextStyle(fontSize: 14.5, color: Colors.black, height: 1.45),
+                              style: const TextStyle(fontSize: 14.5, color: Colors.white, height: 1.45),
                               children: [
                                 const TextSpan(
                                   text: 'Hướng Xuất Hành    ',
-                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                                 TextSpan(
                                   text: 'Đi hướng $hyThan đón ',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                 ),
                                 const TextSpan(
                                   text: 'Hỷ Thần',
-                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF5350)),
                                 ),
                                 TextSpan(
                                   text: '    Đi hướng $taiThan đón ',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                 ),
                                 const TextSpan(
                                   text: 'Tài Thần',
-                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF5350)),
                                 ),
                                 if (isLenTroi)
                                   const TextSpan(
                                     text: '    Không có hướng Hạc Thần. Đi mọi hướng đều an toàn',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   )
                                 else ...[
                                   TextSpan(
                                     text: '    Tránh hướng $hacThan gặp Hạc Thần (xấu)',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ),
                                 ],
                               ],
@@ -1386,11 +1413,11 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                           const SizedBox(height: 6),
                           RichText(
                             text: TextSpan(
-                              style: const TextStyle(fontSize: 14.5, color: Colors.black, height: 1.45),
+                              style: const TextStyle(fontSize: 14.5, color: Colors.white, height: 1.45),
                               children: [
                                 TextSpan(
                                   text: 'Ngày $dayCC    ',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                                 if (goiY.isNotEmpty)
                                   TextSpan(
@@ -1398,7 +1425,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic,
-                                      color: Color(0xFFC00000), // Hình 3: đoạn "Đi chính Nam..." chữ màu đỏ đậm
+                                      color: Color(0xFFEF5350),
                                     ),
                                   ),
                                 if (ghiChu.isNotEmpty)
@@ -1408,14 +1435,14 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic,
                                       color: (ghiChu.contains('Cấm') || ghiChu.contains('kỵ') || ghiChu.contains('Tránh') || ghiChu.contains('xấu') || ghiChu.contains('không nên'))
-                                          ? const Color(0xFF003399) // Hình 3: đoạn "Cấm kỵ..." đổi màu giống hình 2
-                                          : Colors.black,
+                                          ? const Color(0xFF64B5F6)
+                                          : Colors.white,
                                     ),
                                   ),
                                 if (goiY.isEmpty && ghiChu.isEmpty)
                                   TextSpan(
                                     text: line2Text.isNotEmpty ? line2Text : 'Đi $hyThan hoặc $taiThan. Hạc Thần lánh vị, ngày này xuất hành ít bị ảnh hưởng bởi hung thần này.',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ),
                               ],
                             ),
@@ -1438,7 +1465,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                         children: [
                           RichText(
                             text: TextSpan(
-                              style: const TextStyle(fontSize: 14.5, color: Colors.black, height: 1.45),
+                              style: const TextStyle(fontSize: 14.5, color: Colors.white, height: 1.45),
                               children: () {
                                 final List<InlineSpan> spans = [];
                                 if (l1.contains('Hỷ Thần') && l1.contains('Tài Thần')) {
@@ -1451,39 +1478,39 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                   if (beforeHy.startsWith('Hướng Xuất Hành')) {
                                     spans.add(const TextSpan(
                                       text: 'Hướng Xuất Hành    ',
-                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                                     ));
                                     spans.add(TextSpan(
                                       text: beforeHy.replaceFirst('Hướng Xuất Hành', '').trimLeft(),
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                     ));
                                   } else {
                                     spans.add(TextSpan(
                                       text: beforeHy,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                     ));
                                   }
 
                                   spans.add(const TextSpan(
                                     text: 'Hỷ Thần',
-                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF5350)),
                                   ));
                                   spans.add(TextSpan(
                                     text: between,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ));
                                   spans.add(const TextSpan(
                                     text: 'Tài Thần',
-                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF5350)),
                                   ));
                                   spans.add(TextSpan(
                                     text: afterTai,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ));
                                 } else {
                                   spans.add(TextSpan(
                                     text: l1,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ));
                                 }
                                 return spans;
@@ -1494,7 +1521,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             const SizedBox(height: 6),
                             RichText(
                               text: TextSpan(
-                                style: const TextStyle(fontSize: 14.5, color: Colors.black, height: 1.45),
+                                style: const TextStyle(fontSize: 14.5, color: Colors.white, height: 1.45),
                                 children: () {
                                   final List<InlineSpan> spans = [];
                                   if (l2.startsWith('Ngày ')) {
@@ -1504,7 +1531,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                       final String body = l2.substring(tabIdx + 4);
                                       spans.add(TextSpan(
                                         text: header,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                                       ));
 
                                       final int dotIdx = body.indexOf('. ');
@@ -1513,7 +1540,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                         final String part2 = body.substring(dotIdx + 2);
                                         spans.add(TextSpan(
                                           text: part1,
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Color(0xFFC00000)),
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Color(0xFFEF5350)),
                                         ));
                                         final bool isWarning = part2.contains('Cấm') || part2.contains('kỵ') || part2.contains('Tránh') || part2.contains('xấu') || part2.contains('không nên');
                                         spans.add(TextSpan(
@@ -1521,25 +1548,25 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontStyle: FontStyle.italic,
-                                            color: isWarning ? const Color(0xFF003399) : Colors.black,
+                                            color: isWarning ? const Color(0xFF64B5F6) : Colors.white,
                                           ),
                                         ));
                                       } else {
                                         spans.add(TextSpan(
                                           text: body,
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Color(0xFFC00000)),
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Color(0xFFEF5350)),
                                         ));
                                       }
                                     } else {
                                       spans.add(TextSpan(
                                         text: l2,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ));
                                     }
                                   } else {
                                     spans.add(TextSpan(
                                       text: l2,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.black),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                     ));
                                   }
                                   return spans;
@@ -1563,7 +1590,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -1571,8 +1598,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Builder(
@@ -1581,18 +1608,12 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                 final String lucDieuName = module3LucDieu != null ? (module3LucDieu['name'] ?? '') : '';
                 final String tinhChat = module3LucDieu != null ? (module3LucDieu['tinh_chat'] ?? '') : '';
 
-                // Dòng 1: Kiểm tra Lục Diệu Cát/Hung
-                // Cát: Đại An, Tốc Hỷ, Tiểu Cát -> màu đỏ đậm Color(0xFFC00000)
-                // Hung: Lưu Niên, Xích Khẩu, Không Vong -> màu giống hình 2 Color(0xFF003399)
                 final bool isLucDieuCat = ['Đại An', 'Tốc Hỷ', 'Tiểu Cát'].contains(lucDieuName) ||
                     tinhChat.toLowerCase().contains('cát') ||
                     tinhChat.toLowerCase().contains('may mắn') ||
                     tinhChat.toLowerCase().contains('hanh thông');
-                final Color lucDieuColor = isLucDieuCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                final Color lucDieuColor = isLucDieuCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
-                // Dòng 2: Kiểm tra Ngày Khổng Minh Cát/Hung
-                // Cát: Tốt -> màu đỏ đậm Color(0xFFC00000)
-                // Hung: Hung/Xấu -> màu giống hình 2 Color(0xFF003399)
                 final String kmQuality = module4Ngay != null ? (module4Ngay['quality'] ?? '') : '';
                 final String kmMeaning = module4Ngay != null ? (module4Ngay['meaning'] ?? '') : '';
                 final bool isKmCat = kmQuality == 'Tốt' ||
@@ -1601,7 +1622,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     kmMeaning.toLowerCase().contains('thuận lợi') ||
                     kmMeaning.toLowerCase().contains('như ý') ||
                     kmMeaning.toLowerCase().contains('thắng lợi');
-                final Color kmColor = isKmCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                final Color kmColor = isKmCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
 
                 if (module3LucDieu != null || module4Ngay != null) {
                   return Column(
@@ -1614,7 +1635,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             children: [
                               const TextSpan(
                                 text: 'Khổng Minh Lục Diệu    ',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               TextSpan(
                                 text: 'Ngày ${module3LucDieu['name']} là Ngày ${module3LucDieu['tinh_chat']}. ${module3LucDieu['goi_y']}.',
@@ -1632,7 +1653,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                             children: [
                               TextSpan(
                                 text: 'NGÀY ${(module4Ngay['star_name'] ?? '').toUpperCase()}:    ',
-                                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               TextSpan(
                                 text: '${module4Ngay['meaning']}',
@@ -1644,7 +1665,6 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     ],
                   );
                 } else {
-                  // Fallback khi parse từ rawLucDieu
                   final List<String> rawLines = rawLucDieu.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1652,14 +1672,14 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                       if (line.startsWith('Khổng Minh Lục Diệu')) {
                         final String body = line.replaceFirst('Khổng Minh Lục Diệu', '').trim();
                         final bool isCat = body.contains('Tiểu Cát') || body.contains('Đại An') || body.contains('Tốc Hỷ');
-                        final Color c = isCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                        final Color c = isCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
                           child: RichText(
                             text: TextSpan(
                               style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, height: 1.45, color: c),
                               children: [
-                                const TextSpan(text: 'Khổng Minh Lục Diệu    ', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                const TextSpan(text: 'Khổng Minh Lục Diệu    ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                                 TextSpan(text: body, style: TextStyle(color: c, fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -1670,14 +1690,14 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                         final String header = colonIdx != -1 ? line.substring(0, colonIdx + 1) : line;
                         final String body = colonIdx != -1 ? line.substring(colonIdx + 1).trim() : '';
                         final bool isCat = body.contains('thuận lợi') || body.contains('rất tốt') || body.contains('như ý');
-                        final Color c = isCat ? const Color(0xFFC00000) : const Color(0xFF003399);
+                        final Color c = isCat ? const Color(0xFFEF5350) : const Color(0xFF64B5F6);
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
                           child: RichText(
                             text: TextSpan(
                               style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, height: 1.45, color: c),
                               children: [
-                                TextSpan(text: '$header    ', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                TextSpan(text: '$header    ', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                                 TextSpan(text: body, style: TextStyle(color: c, fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -1686,7 +1706,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                       }
                       return Text(
                         line,
-                        style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.black, height: 1.45),
+                        style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.white, height: 1.45),
                       );
                     }).toList(),
                   );
@@ -1702,7 +1722,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFC00000),
+              color: Color(0xFFFFD700),
             ),
           ),
           const SizedBox(height: 6),
@@ -1710,8 +1730,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: const Color(0xFF161F36),
+              border: Border.all(color: Colors.white24),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Builder(
@@ -1725,28 +1745,26 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                 final String firstLine = lines.first;
                 final String lowerFirst = firstLine.toLowerCase();
 
-                // Xác định màu sắc dòng 1 theo phân loại ngày
-                Color d1Color = Colors.black;
+                Color d1Color = Colors.white;
                 FontWeight d1Weight = FontWeight.bold;
 
                 if (lowerFirst.contains('rất đẹp')) {
-                  d1Color = const Color(0xFFC00000);
+                  d1Color = const Color(0xFFEF5350);
                   d1Weight = FontWeight.bold;
                 } else if (lowerFirst.contains('ngày đẹp') || lowerFirst.contains('ngày cát')) {
-                  d1Color = const Color(0xFFC00000);
+                  d1Color = const Color(0xFFEF5350);
                   d1Weight = FontWeight.bold;
                 } else if (lowerFirst.contains('bình thường') || lowerFirst.contains('trung bình')) {
-                  d1Color = const Color(0xFF2E7D32); // Xanh lá cây
+                  d1Color = const Color(0xFF81C784); // Xanh lá cây sáng
                   d1Weight = FontWeight.bold;
                 } else if (lowerFirst.contains('rất xấu') || lowerFirst.contains('đại hung')) {
-                  d1Color = Colors.black;
+                  d1Color = const Color(0xFF64B5F6);
                   d1Weight = FontWeight.bold;
                 } else if (lowerFirst.contains('ngày xấu') || lowerFirst.contains('hung')) {
-                  d1Color = Colors.black;
+                  d1Color = const Color(0xFF64B5F6);
                   d1Weight = FontWeight.bold;
                 }
 
-                // Kiểm tra có dính mục Đại Kỵ không
                 final bool hasDaiKy = (moduleDaiKy != null && moduleDaiKy['is_cat'] == false) ||
                     fullKetLuan.contains('Phạm') ||
                     (data['module_ket_luan'] != null && (data['module_ket_luan']['score_1'] ?? 0) < 0);
@@ -1768,35 +1786,30 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     if (lines.length > 1) ...[
                       const SizedBox(height: 6),
                       ...lines.sublist(1).map((line) {
-                        Color lineColor = Colors.black;
+                        Color lineColor = Colors.white;
                         FontWeight lineWeight = FontWeight.bold;
                         FontStyle lineStyle = FontStyle.normal;
 
                         if (!hasDaiKy) {
-                          // Hình 4: Dòng 2, 3 mặc định màu đen đậm
-                          lineColor = Colors.black;
+                          lineColor = Colors.white;
                           lineWeight = FontWeight.bold;
                           lineStyle = FontStyle.normal;
                         } else {
-                          // Hình 5: Có phạm Đại Kỵ
                           final bool isStarHeader = RegExp(r'^\d+[\.:]').hasMatch(line) ||
                               (moduleDaiKy != null &&
                                   moduleDaiKy['details'] != null &&
                                   (moduleDaiKy['details'] as List).any((d) => (d['header'] ?? '').toString().trim() == line));
 
                           if (line.startsWith('Mục 1 (Đại Kỵ)') && line.contains('Phạm')) {
-                            // Dòng 2: Mục 1 (Đại Kỵ)... (Phạm ...) đổi màu giống hình 2
-                            lineColor = const Color(0xFF003399);
+                            lineColor = const Color(0xFF64B5F6);
                             lineWeight = FontWeight.bold;
                             lineStyle = FontStyle.normal;
                           } else if (isStarHeader) {
-                            // Dòng 4 (tiêu đề sao ví dụ 192.Sát Chủ Âm) đổi màu giống hình 2
-                            lineColor = const Color(0xFF003399);
+                            lineColor = const Color(0xFF64B5F6);
                             lineWeight = FontWeight.bold;
                             lineStyle = FontStyle.normal;
                           } else {
-                            // Dòng 3 và dòng ý nghĩa sao: mặc định đen đậm nghiêng
-                            lineColor = Colors.black;
+                            lineColor = Colors.white70;
                             lineWeight = FontWeight.bold;
                             lineStyle = FontStyle.italic;
                           }
@@ -1824,7 +1837,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
           ),
           const SizedBox(height: 14),
 
-          // Bảng Mặt Trời (Giờ mọc / Giờ lặn) - Thêm vào sau Mục XII (Hình 3)
+          // Bảng Mặt Trời (Giờ mọc / Giờ lặn)
           Builder(
             builder: (context) {
               final DateTime targetDate = DateTime(_selectedYear, _selectedMonth, _selectedDay);
@@ -1839,12 +1852,15 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
               return Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: const Color(0xFFD0D0D0)),
-                  borderRadius: BorderRadius.circular(2),
+                  color: const Color(0xFF161F36),
+                  border: Border.all(color: Colors.white24),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Table(
-                  border: TableBorder.all(color: const Color(0xFFD0D0D0)),
+                  border: const TableBorder(
+                    horizontalInside: BorderSide(color: Colors.white24),
+                    verticalInside: BorderSide(color: Colors.white24),
+                  ),
                   columnWidths: const {
                     0: FlexColumnWidth(1.2),
                     1: FlexColumnWidth(1.2),
@@ -1853,30 +1869,30 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   children: [
                     // Header Row
                     TableRow(
-                      decoration: const BoxDecoration(color: Color(0xFFE6E6E6)),
+                      decoration: const BoxDecoration(color: Color(0xFF1E2640)),
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           child: Text(
                             'Mặt trời',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.black),
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           child: Text(
-                            'Giờ mọc',
+                            'Giờ Mọc',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.black),
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           child: Text(
-                            'Giờ lặn',
+                            'Giờ Lặn',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.black),
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
                       ],
@@ -1888,21 +1904,21 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             'Hà Nội',
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFEF5350)),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             hanoiRise,
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             hanoiSet,
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ),
                       ],
@@ -1914,21 +1930,21 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             'TP.Hồ Chí Minh',
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFFEF5350)),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             hcmRise,
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           child: Text(
                             hcmSet,
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ),
                       ],
@@ -1976,8 +1992,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
   Widget _buildGioHoangHacDaoTable({
     required String title,
     required List<dynamic> items,
-    Color titleColor = const Color(0xFF003399),
-    Color itemColor = Colors.black87,
+    Color titleColor = const Color(0xFF64B5F6),
+    Color itemColor = Colors.white,
     FontWeight itemFontWeight = FontWeight.w500,
   }) {
     if (items.isEmpty) return const SizedBox.shrink();
@@ -1985,24 +2001,24 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        color: const Color(0xFF161F36),
+        border: Border.all(color: Colors.white24),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header Bar (Nền hồng nhạt chuẩn theo Hình 3)
+          // Header Bar
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: const BoxDecoration(
-              color: Color(0xFFFBF1F2),
+              color: Color(0xFF1E2640),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(3),
                 topRight: Radius.circular(3),
               ),
               border: Border(
-                bottom: BorderSide(color: Color(0xFFE5E7EB)),
+                bottom: BorderSide(color: Colors.white24),
               ),
             ),
             child: Text(
@@ -2017,8 +2033,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
           // Rows (3 hàng x 2 cột = 6 items)
           Table(
             border: const TableBorder(
-              horizontalInside: BorderSide(color: Color(0xFFE5E7EB)),
-              verticalInside: BorderSide(color: Color(0xFFE5E7EB)),
+              horizontalInside: BorderSide(color: Colors.white24),
+              verticalInside: BorderSide(color: Colors.white24),
             ),
             children: [
               for (int i = 0; i < items.length; i += 2)

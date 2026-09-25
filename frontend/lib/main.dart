@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:frontend/screens/chart_screen.dart';
-import 'package:frontend/screens/login_screen.dart';
-import 'package:frontend/screens/home_screen.dart';
-import 'package:frontend/screens/verify_email_screen.dart';
-import 'package:frontend/screens/shared_chart_screen.dart';
 
 import 'package:provider/provider.dart';
 import 'package:frontend/providers/wallet_provider.dart';
@@ -30,8 +25,8 @@ void main() {
       debugPrint('Error clearing initial auth state: $e');
     }
 
-    // Khởi tạo kết nối WebSocket toàn cục
-    await signalRService.initConnection();
+    // Khởi tạo kết nối WebSocket toàn cục chạy ngầm (không chặn quá trình tải giao diện)
+    unawaited(signalRService.initConnection());
     
     // Thiết lập ErrorWidget.builder để hiển thị lỗi ngay trên UI mà không gây crash framework
     ErrorWidget.builder = (FlutterErrorDetails details) {

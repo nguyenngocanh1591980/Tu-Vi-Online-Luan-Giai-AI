@@ -7,11 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:frontend/providers/wallet_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:confetti/confetti.dart';
-import 'login_screen.dart';
-import 'terms_screen.dart';
-import 'horoscope_info_screen.dart';
-import 'almanac_screen.dart';
-import 'forum/forum_home_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:frontend/features/ai_report/views/ai_report_screen.dart';
 import 'package:frontend/providers/horoscope_provider.dart';
 
@@ -40,33 +36,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     });
     // Nháy theo / báo đang xử lý
     await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
     setState(() {
       _isHeroProcessing = false;
     });
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TermsScreen()),
-    );
+    context.go('/terms');
   }
 
   void _onHeroRegisterClicked() async {
     setState(() {
-      _isHeaderHidden = true;
       _isHeroProcessing = true;
     });
     // Báo đang xử lý
     await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
     setState(() {
       _isHeroProcessing = false;
     });
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TermsScreen()),
-    );
-    // Khôi phục lại header khi quay về
-    setState(() {
-      _isHeaderHidden = false;
-    });
+    context.go('/terms');
   }
 
   @override
@@ -132,11 +119,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           'Xin chào, $_username!',
           style: const TextStyle(
             color: Color(0xFFD4AF37),
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         SizedBox(
           width: 250,
           child: Column(
@@ -151,11 +138,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF009688),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  textStyle: const TextStyle(fontSize: 11),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  textStyle: const TextStyle(fontSize: 10),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
@@ -165,11 +152,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF009688),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  textStyle: const TextStyle(fontSize: 11),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  textStyle: const TextStyle(fontSize: 10),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
@@ -180,8 +167,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC62828),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  textStyle: const TextStyle(fontSize: 11),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  textStyle: const TextStyle(fontSize: 10),
                 ),
               ),
             ],
@@ -202,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -217,9 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     InkWell(
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Chức năng chọn ảnh từ máy đang được tích hợp.')),
-                        );
+                        _showBoxedSnackBar('Chức năng chọn ảnh từ máy đang được tích hợp.');
                       },
                       child: const CircleAvatar(
                         radius: 14,
@@ -229,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildUserInfo(),
               ],
             ),
@@ -239,40 +224,118 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
+  // Hàm hiển thị thanh thông báo nổi chuẩn Boxed Layout 1024px (Khử tràn viền vô cực)
+  void _showBoxedSnackBar(
+    String message, {
+    Color backgroundColor = const Color(0xFF323232),
+    Color textColor = Colors.white,
+    Border? border,
+    Duration duration = const Duration(seconds: 4),
+  }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(bottom: 24),
+        duration: duration,
+        content: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                border: border,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Hiển thị thanh thông báo yêu cầu đăng ký/đăng nhập (Boxed Layout 1024px, Nền Đỏ Chữ Vàng)
+  void _showLoginRequiredNotification([String? message]) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(bottom: 24),
+        duration: const Duration(seconds: 4),
+        content: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              decoration: BoxDecoration(
+                color: const Color(0xFFC62828),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                message ??
+                    'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
+                style: const TextStyle(
+                  color: Color(0xFFD4AF37),
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(color: Color(0xFFD4AF37), blurRadius: 4),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   // Hàm gọi API Sinh Tử (E2E Test)
   Future<void> _askAi() async {
     if (_isLoadingAi) return;
     _confettiController.play();
 
     if (!_isLoggedIn) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: const Color(0xFF0B1021).withOpacity(0.95),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-          ),
-          content: const Text(
-            'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-            style: TextStyle(
-              color: Color(0xFF00E5FF),
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(color: Color(0xFF00E5FF), blurRadius: 8),
-              ],
-            ),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      _showLoginRequiredNotification();
       return;
     }
 
     final wallet = Provider.of<WalletProvider>(context, listen: false);
     if (wallet.coinBalance < 10) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tài khoản không đủ Coin. Vui lòng nạp thêm!')),
-      );
+      _showBoxedSnackBar('Tài khoản không đủ Coin. Vui lòng nạp thêm!');
       return;
     }
 
@@ -325,15 +388,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       } else {
         setState(() => _isLoadingAi = false);
         final err = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: ${err['message'] ?? response.statusCode}')),
-        );
+        _showBoxedSnackBar('Lỗi: ${err['message'] ?? response.statusCode}');
       }
     } catch (e) {
       setState(() => _isLoadingAi = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi kết nối máy chủ: $e')),
-      );
+      _showBoxedSnackBar('Lỗi kết nối máy chủ: $e');
     }
   }
 
@@ -344,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: const Color(0xFF0B1021).withOpacity(0.95), // Nền xanh đêm
               borderRadius: BorderRadius.circular(16),
@@ -370,24 +429,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         'AI TỬ VI LUẬN GIẢI',
                         style: TextStyle(
                           color: Color(0xFFD4AF37),
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Text(
                     content,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14,
                       height: 1.6,
                     ),
                     textAlign: TextAlign.justify,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 18),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
@@ -410,23 +469,30 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background (Xanh Đêm Huyền Bí)
-          Positioned.fill(
-            child: Container(
-              color: const Color(0xFF0B1021),
-            ),
-          ),
-          
-          // Nội dung chính có cuộn
+          // Nội dung chính có cuộn (Đóng Hộp Boxed Layout 1024px Nền Tím Đen căn giữa)
           SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeroSection(),
-                _buildBodySection(context),
-                _buildFooterSection(),
-              ],
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1024),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF0B1021), // Nền Tím Đen của khối nội dung 1024px
+                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildHeroSection(),
+                      _buildBodySection(context),
+                      _buildFooterSection(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
           
@@ -447,8 +513,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   // ==================== HERO SECTION ====================
   Widget _buildHeroSection() {
     return Container(
-      height: 600,
+      height: 520,
       width: double.infinity,
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -466,9 +534,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 48),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.black45,
                   borderRadius: BorderRadius.circular(30),
@@ -478,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   '"Vận mệnh không nằm ở lòng bàn tay, vận mệnh nằm ở sự thấu hiểu"',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 22,
                     fontStyle: FontStyle.italic,
                     shadows: [
                       Shadow(color: Color(0xFF00E5FF), blurRadius: 10),
@@ -487,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 26),
               Column(
                 children: [
                   if (!_isLoggedIn) ...[
@@ -495,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       onTap: _isHeroProcessing ? null : _onHeroRegisterClicked,
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 13),
                       decoration: BoxDecoration(
                         color: const Color(0xFF009688), // Nền màu xanh ngọc
                         borderRadius: BorderRadius.circular(10),
@@ -513,44 +581,44 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: _isHeroProcessing
                           ? const [
-                              SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.red, strokeWidth: 2)),
-                              SizedBox(width: 12),
+                              SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.red, strokeWidth: 2)),
+                              SizedBox(width: 10),
                               Text(
                                 'ĐANG XỬ LÝ...',
                                 style: TextStyle(
                                   color: Colors.red,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.2,
                                 ),
                               ),
                             ]
                           : const [
-                              Icon(Icons.auto_awesome, color: Colors.purple, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
-                              SizedBox(width: 12),
+                              Icon(Icons.auto_awesome, color: Colors.purple, size: 20, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
+                              SizedBox(width: 10),
                               Text(
                                 'Đăng Ký Ngay & Nhiều Ưu Đãi Cho Thành Viên Mới',
                                 style: TextStyle(
                                   color: Colors.red, // Chữ màu đỏ
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.2,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Icon(Icons.auto_awesome, color: Colors.purple, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
+                              SizedBox(width: 10),
+                              Icon(Icons.auto_awesome, color: Colors.purple, size: 20, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
                             ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 22),
                   ],
                   
                   InkWell(
                     onTap: _isLoadingAi ? null : _askAi,
                     borderRadius: BorderRadius.circular(10), // Bo góc nhẹ 10px
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                       decoration: BoxDecoration(
                         color: const Color(0xFFC62828),
                         borderRadius: BorderRadius.circular(10), // Bo góc 10px
@@ -567,26 +635,26 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         mainAxisSize: MainAxisSize.min,
                         children: _isLoadingAi
                           ? const [
-                              SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Color(0xFFD4AF37), strokeWidth: 2)),
-                              SizedBox(width: 12),
+                              SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Color(0xFFD4AF37), strokeWidth: 2)),
+                              SizedBox(width: 10),
                               Text(
                                 'ĐANG XỬ LÝ...',
                                 style: TextStyle(
                                   color: Color(0xFFD4AF37),
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 1.5,
                                 ),
                               ),
                             ]
                           : const [
-                              Icon(Icons.auto_awesome, color: Color(0xFFD4AF37)),
-                              SizedBox(width: 12),
+                              Icon(Icons.auto_awesome, color: Color(0xFFD4AF37), size: 20),
+                              SizedBox(width: 10),
                               Text(
                                 'LẬP LÁ SỐ & AI LUẬN GIẢI CHUYÊN SÂU',
                                 style: TextStyle(
                                   color: Color(0xFFD4AF37),
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 1.5,
                                 ),
@@ -595,7 +663,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 18),
                   // Nút TEST AI STREAMING
                   ElevatedButton.icon(
                     onPressed: () {
@@ -606,15 +674,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                       );
                     },
-                    icon: const Icon(Icons.rocket_launch),
+                    icon: const Icon(Icons.rocket_launch, size: 20),
                     label: const Text(
                       "🚀 TEST AI STREAMING LUẬN GIẢI",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber.shade400,
                       foregroundColor: Colors.black87,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       elevation: 8,
                       shadowColor: Colors.amberAccent,
                       shape: RoundedRectangleBorder(
@@ -637,20 +705,23 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     bool isDesktop = width > 900;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+      padding: EdgeInsets.symmetric(
+        horizontal: width > 1024 ? 0 : 12,
+        vertical: 28,
+      ),
       child: isDesktop
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(flex: 7, child: _buildLeftColumn()),
-                const SizedBox(width: 40),
+                const SizedBox(width: 24),
                 Expanded(flex: 3, child: _buildRightColumn()),
               ],
             )
           : Column(
               children: [
                 _buildLeftColumn(),
-                const SizedBox(height: 40),
+                const SizedBox(height: 24),
                 _buildRightColumn(),
               ],
             ),
@@ -662,21 +733,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          children: [
-            Icon(Icons.explore, color: const Color(0xFF00E5FF)),
-            const SizedBox(width: 12),
-            const Text(
+          children: const [
+            Icon(Icons.explore, color: Color(0xFF00E5FF), size: 22),
+            SizedBox(width: 10),
+            Text(
               'THIÊN CƠ THẢO LUẬN',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         
         _buildPostCard(
           title: '[Góc Kiểm Chứng] Sự dịch chuyển của sao Mộc năm 2026 - AI dự báo trúng phóc tháng tôi hụt hợp đồng!',
@@ -684,14 +755,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           tag: 'AI Bình giải',
           tagColor: const Color(0xFF00E5FF),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         _buildPostCard(
           title: 'Khám phá bí ẩn Tử Vi Vô Chính Diệu - Cách tôi dùng 10 Coin để tìm ra hướng đi đổi đời',
           excerpt: '"Lá số VCD luôn là một thách thức với những người học Tử Vi. Thay vì lo lắng, mình nhờ AI tổng hợp báo cáo và giờ đã hiểu con đường kinh doanh năm nay. Chuyên gia tư vấn rất sát!"',
           tag: 'AI Bình giải',
           tagColor: const Color(0xFF00E5FF),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         _buildPostCard(
           title: 'Cách hóa giải Sát tinh nhập mệnh: Xin Đạo trưởng chỉ đường hóa giải ca này, chi phí bao nhiêu cũng xin gửi!',
           excerpt: '"Đã nhờ AI phân tích, AI báo ca này nghiệp quả sâu dày ở cung Phu Thê, khuyên nên thỉnh trực tiếp Chuyên gia thật để tìm đường sinh cơ. Mình đính kèm lá số ở đây, hữu duyên mong các Thầy [Tông Sư] đang online qua lại điểm hóa giúp mình một câu. Chi phí bao nhiêu mình cũng xin gửi ạ!"',
@@ -706,20 +777,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.white.withOpacity(0.1)), // Lớp viền mỏng trong suốt 10%
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0), // Blur 12px
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   decoration: BoxDecoration(
                     color: tagColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -727,33 +798,33 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                   child: Text(
                     tag,
-                    style: TextStyle(color: tagColor, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: tagColor, fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Text(
                   title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   excerpt,
-                  style: TextStyle(color: Colors.white70, fontSize: 15, height: 1.5, fontStyle: FontStyle.italic),
+                  style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.5, fontStyle: FontStyle.italic),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Row(
-                  children: [
-                    Icon(Icons.comment, color: Colors.white54, size: 16),
-                    const SizedBox(width: 6),
-                    Text('108', style: TextStyle(color: Colors.white54)),
-                    const SizedBox(width: 16),
-                    Icon(Icons.remove_red_eye, color: Colors.white54, size: 16),
-                    const SizedBox(width: 6),
-                    Text('2k view', style: TextStyle(color: Colors.white54)),
+                  children: const [
+                    Icon(Icons.comment, color: Colors.white54, size: 14),
+                    SizedBox(width: 5),
+                    Text('108', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    SizedBox(width: 14),
+                    Icon(Icons.remove_red_eye, color: Colors.white54, size: 14),
+                    SizedBox(width: 5),
+                    Text('2k view', style: TextStyle(color: Colors.white54, fontSize: 12)),
                   ],
                 )
               ],
@@ -771,14 +842,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         // Coin Status
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [const Color(0xFF1E2640), const Color(0xFF0B1021)],
+            gradient: const LinearGradient(
+              colors: [Color(0xFF1E2640), Color(0xFF0B1021)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
           ),
           child: Column(
@@ -789,36 +860,34 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Tính năng Nạp Coin đang phát triển.')),
-                      );
+                      _showBoxedSnackBar('Tính năng Nạp Coin đang phát triển.');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF009688),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('NẠP COIN', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('NẠP COIN', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Text(
                   _username.isNotEmpty ? 'TÊN TÀI KHOẢN: $_username' : 'TÊN TÀI KHOẢN: CHƯA RÕ',
-                  style: const TextStyle(color: Colors.white54, fontSize: 16, letterSpacing: 1),
+                  style: const TextStyle(color: Colors.white54, fontSize: 14, letterSpacing: 1),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.monetization_on, color: Color(0xFFD4AF37), size: 36),
-                    const SizedBox(width: 12),
+                    const Icon(Icons.monetization_on, color: Color(0xFFD4AF37), size: 30),
+                    const SizedBox(width: 10),
                     Consumer<WalletProvider>(
                       builder: (context, wallet, child) {
                         if (wallet.isLoading) {
                           return const SizedBox(
-                            width: 20, height: 20,
+                            width: 18, height: 18,
                             child: CircularProgressIndicator(color: Color(0xFFD4AF37), strokeWidth: 2),
                           );
                         }
@@ -827,265 +896,175 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           child: Text(
                             '${wallet.coinBalance} Coin',
                             key: ValueKey<int>(wallet.coinBalance),
-                            style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
                           ),
                         );
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 18),
               ],
               
               // CÁC NÚT BẤM (Hiển thị cho cả hai trạng thái, xử lý logic bên trong onPressed)
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoadingAi ? null : () {
-                      _confettiController.play();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                            style: TextStyle(
-                              color: Color(0xFF00E5FF),
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
-                            ),
-                          ),
-                          duration: Duration(seconds: 4),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC62828),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoadingAi ? null : () {
+                    _confettiController.play();
+                    _showLoginRequiredNotification();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC62828),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      'Nhờ AI Luận Giải Tổng Quát 12 Cung&Cung An Thân',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF00E5FF),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(color: const Color(0xFF00E5FF), blurRadius: 8)],
-                      ),
+                  ),
+                  child: const Text(
+                    'Nhờ AI Luận Giải Tổng Quát 12 Cung&Cung An Thân',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF00E5FF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoadingAi ? null : () {
-                      _confettiController.play();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                            style: TextStyle(
-                              color: Color(0xFF00E5FF),
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
-                            ),
-                          ),
-                          duration: Duration(seconds: 4),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC62828),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoadingAi ? null : () {
+                    _confettiController.play();
+                    _showLoginRequiredNotification();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC62828),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      'Nhờ AI Luận Giải Tổng Quát 12 Đại Hạn Hơn 120 Năm Một Đời Người',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF00E5FF),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(color: const Color(0xFF00E5FF), blurRadius: 8)],
-                      ),
+                  ),
+                  child: const Text(
+                    'Nhờ AI Luận Giải Tổng Quát 12 Đại Hạn Hơn 120 Năm Một Đời Người',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF00E5FF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoadingAi ? null : () {
-                      _confettiController.play();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                            style: TextStyle(
-                              color: Color(0xFF00E5FF),
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
-                            ),
-                          ),
-                          duration: Duration(seconds: 4),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC62828),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoadingAi ? null : () {
+                    _confettiController.play();
+                    _showLoginRequiredNotification();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC62828),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      'Nhờ AI Luận Giải Tổng Quát Đại Hạn 10 Năm Của Năm Hiện tại',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF00E5FF),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(color: const Color(0xFF00E5FF), blurRadius: 8)],
-                      ),
+                  ),
+                  child: const Text(
+                    'Nhờ AI Luận Giải Tổng Quát Đại Hạn 10 Năm Của Năm Hiện tại',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF00E5FF),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)],
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoadingAi ? null : () {
-                      _confettiController.play();
-                      if (!_isLoggedIn) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: const Color(0xFF1E2640),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            content: const Text(
-                              'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                              style: TextStyle(
-                                color: Color(0xFFD4AF37),
-                                fontWeight: FontWeight.bold,
-                                shadows: [Shadow(color: Color(0xFFD4AF37), blurRadius: 4)],
-                              ),
-                            ),
-                            duration: const Duration(seconds: 4),
-                          ),
-                        );
-                      } else {
-                        _askAi();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC62828),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: const Color(0xFFD4AF37)),
-                      ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoadingAi ? null : () {
+                    _confettiController.play();
+                    if (!_isLoggedIn) {
+                      _showLoginRequiredNotification();
+                    } else {
+                      _askAi();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC62828),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(color: Color(0xFFD4AF37)),
                     ),
-                    child: Text(
-                      'Nhờ AI Luận Giải Hạn Chi Tiết Của Năm Hiện Tại',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFFD4AF37),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: const Text(
+                    'Nhờ AI Luận Giải Hạn Chi Tiết Của Năm Hiện Tại',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFFD4AF37),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoadingAi ? null : () {
-                      _confettiController.play();
-                      if (!_isLoggedIn) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: const Color(0xFF1E2640),
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            content: const Text(
-                              'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                              style: TextStyle(
-                                color: Color(0xFFD4AF37),
-                                fontWeight: FontWeight.bold,
-                                shadows: [Shadow(color: Color(0xFFD4AF37), blurRadius: 4)],
-                              ),
-                            ),
-                            duration: const Duration(seconds: 4),
-                          ),
-                        );
-                      } else {
-                        _askAi();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC62828),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: const Color(0xFFD4AF37)),
-                      ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoadingAi ? null : () {
+                    _confettiController.play();
+                    if (!_isLoggedIn) {
+                      _showLoginRequiredNotification();
+                    } else {
+                      _askAi();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC62828),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(color: Color(0xFFD4AF37)),
                     ),
-                    child: Text(
-                      'Nhờ AI Đề Xuất Giải Pháp Hiệu Quả Cho Từng Tháng Trong Năm Hiện Tại',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFFD4AF37),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: const Text(
+                    'Nhờ AI Đề Xuất Giải Pháp Hiệu Quả Cho Từng Tháng Trong Năm Hiện Tại',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFFD4AF37),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
                     _confettiController.play();
                     if (!_isLoggedIn) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: const Color(0xFF1E2640),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.red, width: 2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          content: const Text(
-                            'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có, Nạp Tiền Coin Và Đặt Lịch Xem. Bạn Sẽ Trực Tiếp Nói Chuyện Với Các Đại Sư Tử Vi, Các Chuyên Gia Tử Vi Lâu Năm. Họ Sẽ Kể Những Câu Truyện Về Cuộc Đời Bạn Và Cho Bạn Những Lời Khuyên Bổ Ích Nhất Cho Tương Lai Sắp Tới...',
-                            style: TextStyle(
-                              color: Color(0xFFD4AF37),
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: Color(0xFFD4AF37), blurRadius: 4)],
-                            ),
-                          ),
-                          duration: const Duration(seconds: 4),
-                        ),
+                      _showLoginRequiredNotification(
+                        'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có, Nạp Tiền Coin Và Đặt Lịch Xem. Bạn Sẽ Trực Tiếp Nói Chuyện Với Các Đại Sư Tử Vi, Các Chuyên Gia Tử Vi Lâu Năm. Họ Sẽ Kể Những Câu Truyện Về Cuộc Đời Bạn Và Cho Bạn Những Lời Khuyên Bổ Ích Nhất Cho Tương Lai Sắp Tới...',
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Tính năng Book Chuyên Gia đang phát triển.')),
-                      );
+                      _showBoxedSnackBar('Tính năng Book Chuyên Gia đang phát triển.');
                     }
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     side: const BorderSide(color: Color(0xFF00E5FF)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10), // Bo góc 10px
@@ -1093,7 +1072,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                   child: const Text(
                     'BOOK CHUYÊN GIA',
-                    style: TextStyle(color: Color(0xFF00E5FF), fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Color(0xFF00E5FF), fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -1101,19 +1080,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ),
         ),
         
-        const SizedBox(height: 40),
+        const SizedBox(height: 28),
         
         // Đạo trưởng Online
         const Text(
           'CHUYÊN GIA TRỰC TUYẾN',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildMasterItem('Đạo Trưởng Huyền Trí', isOnline: true),
         _buildMasterItem('Đại Sư Thiên Mệnh', isOnline: true),
         _buildMasterItem('AI Lượng Tử Tử Vi', isOnline: true, isAi: true),
@@ -1124,13 +1103,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Widget _buildMasterItem(String name, {bool isOnline = false, bool isAi = false}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
+      visualDensity: VisualDensity.compact,
       leading: Stack(
         children: [
           CircleAvatar(
             backgroundColor: isAi ? const Color(0xFF00E5FF).withOpacity(0.2) : Colors.white12,
+            radius: 18,
             child: Icon(
               isAi ? Icons.memory : Icons.person,
               color: isAi ? const Color(0xFF00E5FF) : Colors.white,
+              size: 20,
             ),
           ),
           if (isOnline)
@@ -1138,8 +1120,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               right: 0,
               bottom: 0,
               child: Container(
-                width: 12,
-                height: 12,
+                width: 10,
+                height: 10,
                 decoration: BoxDecoration(
                   color: Colors.greenAccent,
                   shape: BoxShape.circle,
@@ -1154,9 +1136,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         style: TextStyle(
           color: isAi ? const Color(0xFF00E5FF) : Colors.white,
           fontWeight: FontWeight.w500,
+          fontSize: 13,
         ),
       ),
-      trailing: Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 14),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 12),
     );
   }
 
@@ -1164,15 +1147,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Widget _buildFooterSection() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+      decoration: const BoxDecoration(
         color: Colors.black,
         border: Border(top: BorderSide(color: Colors.white10)),
       ),
       child: Column(
         children: [
-          Icon(Icons.ac_unit, color: const Color(0xFFD4AF37), size: 40),
-          const SizedBox(height: 24),
+          const Icon(Icons.ac_unit, color: Color(0xFFD4AF37), size: 32),
+          const SizedBox(height: 18),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: const Text(
@@ -1180,20 +1163,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               style: TextStyle(
                 fontFamily: 'Times New Roman',
                 color: Color(0xFFD4AF37),
-                fontSize: 18,
+                fontSize: 16,
                 fontStyle: FontStyle.italic,
                 height: 1.6,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 28),
           const Divider(color: Colors.white10),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              Text('Copyright © 2026 TuViOnline AI - Thiên thời, Địa lợi, Nhân hòa', style: TextStyle(color: Colors.white54)),
+              Text('Copyright © 2026 TuViOnline AI - Thiên thời, Địa lợi, Nhân hòa', style: TextStyle(color: Colors.white54, fontSize: 12)),
             ],
           ),
         ],

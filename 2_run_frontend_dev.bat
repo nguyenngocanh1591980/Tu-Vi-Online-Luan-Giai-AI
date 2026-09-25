@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+set PATH=E:\flutter\bin;%PATH%
 
 REM Doc bien moi truong tu file .env
 FOR /F "eol=# tokens=1,* delims==" %%A IN (.env) DO set %%A=%%B

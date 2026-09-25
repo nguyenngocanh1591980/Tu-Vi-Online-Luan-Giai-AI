@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
-import 'package:universal_html/html.dart' as html;
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import '../widgets/action_and_comment_widget.dart';
 import '../widgets/tu_vi_chart.dart';
-import '../ai_hoc_tu_vi/an_hon_100_sao_bang_dart_co_the_chinh_sua.dart';
 import '../utils/chart_generator.dart';
 import 'package:provider/provider.dart';
 import '../providers/horoscope_provider.dart';
@@ -19,8 +17,6 @@ import '../utils/web_save_helper.dart';
 import '../models/saved_chart_model.dart';
 import '../models/chart_model.dart';
 import 'chart_screen.dart';
-import 'almanac_screen.dart';
-import '../screens/contract_form_screen.dart';
 import 'create_post_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/pdf_generator.dart';
@@ -466,7 +462,24 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
 
 
 
-  Widget _buildFormRow(String label, Widget content, {String? hint, Color labelColor = Colors.black}) {
+  InputDecoration _buildInputDecoration({String? hintText, String? errorText, int? errorMaxLines}) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white12,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 13, color: Colors.white38),
+      errorText: errorText,
+      errorMaxLines: errorMaxLines,
+      errorStyle: const TextStyle(color: Color(0xFFEF5350)),
+      border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFFFD700))),
+    );
+  }
+
+  Widget _buildFormRow(String label, Widget content, {String? hint, Color labelColor = Colors.white}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
@@ -486,15 +499,15 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
               ),
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 content,
                 if (hint != null) ...[
-                  SizedBox(height: 4),
-                  Text(hint, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                  const SizedBox(height: 4),
+                  Text(hint, style: const TextStyle(color: Colors.white54, fontSize: 12)),
                 ]
               ],
             ),
@@ -509,24 +522,24 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
       padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFFFD700)),
       ),
     );
   }
 
   Widget _buildPageBtn(String text, {bool isActive = false}) {
     return Container(
-      margin: EdgeInsets.only(right: 4),
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      margin: const EdgeInsets.only(right: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: isActive ? Colors.red.shade900 : Colors.grey.shade200,
-        border: Border.all(color: Colors.grey.shade300),
+        color: isActive ? const Color(0xFF8B0000) : const Color(0xFF131A30),
+        border: Border.all(color: Colors.white24),
         borderRadius: BorderRadius.circular(2),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: isActive ? Colors.white : Colors.black87,
+          color: isActive ? Colors.white : Colors.white70,
           fontSize: 12,
           fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
         ),
@@ -587,41 +600,74 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
+      backgroundColor: const Color(0xFFF0F2F5),
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
+              decoration: const BoxDecoration(
+                color: Color(0xFF1E2640),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    spreadRadius: 1,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Tử vi - Xem tử vi - Lá số tử vi - Luận giải, tư vấn tử vi trực tuyến',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.red.shade900),
+                    // Title Bar chuẩn Dark Navy mép-tới-mép 1024px
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF131A30),
+                        border: Border(bottom: BorderSide(color: Colors.white24, width: 1)),
+                      ),
+                      child: const Text(
+                        'Lá Số Tử Vi Online - AI',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFFD700),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 8),
-                    Row(
+                    Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                    const Text(
+                      'Tử vi - Xem tử vi - Lá số tử vi - Luận giải, tư vấn tử vi trực tuyến',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFFFD700)),
+                    ),
+                    const SizedBox(height: 8),
+                    const Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.star_border, color: Colors.red, size: 18),
+                        Icon(Icons.star_border, color: Color(0xFFFFD700), size: 18),
                         SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             'Dịch vụ lấy lá số tử vi nhanh, hiệu quả, đẹp, chính xác và miễn phí. Tư vấn, luận giải tử vi bằng AI chuẩn xác. Đội ngũ Chuyên Gia Tử Vi có uy tín, xem tử vi trọn đời, vận hạn từng năm. Có thể quản lý danh sách lá số của mình và chia sẻ lá số thuận tiện.',
-                            style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+                            style: TextStyle(color: Colors.white70, fontSize: 13),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -629,64 +675,67 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                         Expanded(
                           flex: 1,
                           child: Container(
-                            padding: EdgeInsets.only(right: 24),
+                            padding: const EdgeInsets.only(right: 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Ứng dụng Lý số', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50))),
-                              SizedBox(height: 24),
+                              const Text('Ứng dụng Lý số', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFD700))),
+                              const SizedBox(height: 24),
                               InkWell(
                                 onTap: () {
                                   context.go('/almanac');
                                 },
-                                child: Text('Lịch vạn sự', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                                child: const Text('Lịch vạn sự', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFEF5350))),
                               ),
-                              SizedBox(height: 16),
-                              Text('Lá số Tử vi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
+                              const Text('Lá số Tử vi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFEF5350))),
+                              const SizedBox(height: 16),
                               InkWell(
                                 onTap: () {
                                   context.go('/almanac');
                                 },
-                                child: Text('Đối Lịch Âm Dương', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                                child: const Text('Đối Lịch Âm Dương', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFEF5350))),
                               ),
-                              SizedBox(height: 24),
+                              const SizedBox(height: 24),
                               Row(
                                 children: [
                                   Expanded(
                                     child: SizedBox(
                                       height: 32,
                                       child: TextField(
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                                        )
-                                      )
-                                    )
+                                        style: const TextStyle(fontSize: 13, color: Colors.white),
+                                        decoration: _buildInputDecoration(hintText: 'Tìm kiếm...'),
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   SizedBox(
                                     height: 32,
                                     child: ElevatedButton(
                                       onPressed: (){},
-                                      child: Text('Tìm', style: TextStyle(color: Colors.black)),
-                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300, padding: EdgeInsets.symmetric(horizontal: 12), minimumSize: Size(50, 32))
-                                    )
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFF8B0000),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        minimumSize: const Size(50, 32),
+                                      ),
+                                      child: const Text('Tìm', style: TextStyle(color: Colors.white)),
+                                    ),
                                   ),
-                                ]
+                                ],
                               ),
-                              SizedBox(height: 24),
+                              const SizedBox(height: 24),
                               Consumer<HoroscopeProvider>(
                                 builder: (context, provider, child) {
                                   if (provider.isLoading) {
-                                    return Center(child: CircularProgressIndicator());
+                                    return const Center(child: CircularProgressIndicator());
                                   }
                                   if (provider.horoscopes.isEmpty) {
-                                    return Text('Chưa có lá số nào');
+                                    return const Text('Chưa có lá số nào', style: TextStyle(color: Colors.white70));
                                   }
                                   return ListView.builder(
                                     shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: const NeverScrollableScrollPhysics(),
                                     itemCount: provider.horoscopes.length > 5 ? 5 : provider.horoscopes.length,
                                     itemBuilder: (context, index) {
                                       final chart = provider.horoscopes[index];
@@ -702,9 +751,9 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                   _quickViewData = chart;
                                                 });
                                               },
-                                              child: Text(chart.chartName, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade900, decoration: TextDecoration.underline)),
+                                              child: Text(chart.chartName, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFFD700), decoration: TextDecoration.underline)),
                                             ),
-                                            SizedBox(height: 4),
+                                            const SizedBox(height: 4),
                                             Wrap(
                                               spacing: 4.0,
                                               children: [
@@ -742,19 +791,19 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                       print(e);
                                                     }
                                                   },
-                                                  child: Text('$dateStr [Tử vi]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                  child: Text('$dateStr [Tử vi]', style: const TextStyle(fontSize: 12, color: Colors.white70)),
                                                 ),
                                                 InkWell(
                                                   onTap: () {
                                                     // Placeholder cho Bình Giải AI
                                                   },
-                                                  child: Text('[Bình Giải AI]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                  child: const Text('[Bình Giải AI]', style: TextStyle(fontSize: 12, color: Color(0xFF64B5F6))),
                                                 ),
                                                 InkWell(
                                                   onTap: () {
                                                     // Placeholder cho Đặt Lịch Xem
                                                   },
-                                                  child: Text('[Đặt Lịch Xem]', style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
+                                                  child: const Text('[Đặt Lịch Xem]', style: TextStyle(fontSize: 12, color: Color(0xFF81C784))),
                                                 ),
                                               ],
                                             ),
@@ -765,14 +814,14 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                   );
                                 },
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
                               Row(
                                 children: [
                                   _buildPageBtn('<-'),
                                   _buildPageBtn('1', isActive: true),
                                   _buildPageBtn('2'),
                                   _buildPageBtn('3'),
-                                  Text(' ... ', style: TextStyle(fontSize: 12)),
+                                  const Text(' ... ', style: TextStyle(fontSize: 12, color: Colors.white70)),
                                   _buildPageBtn('7'),
                                   _buildPageBtn('->'),
                                 ]
@@ -792,9 +841,9 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Xem nhanh lá số: ${_quickViewData!.chartName}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
+                                        Text('Xem nhanh lá số: ${_quickViewData!.chartName}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFD700))),
                                         IconButton(
-                                          icon: Icon(Icons.close, color: Colors.red),
+                                          icon: const Icon(Icons.close, color: Color(0xFFEF5350)),
                                           onPressed: () => setState(() => _quickViewData = null),
                                         ),
                                       ]
@@ -916,11 +965,11 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Nhập thông tin đầy đủ rồi bấm vào nút xác nhận. Sau đó có thể chia sẻ thông tin hoặc dịch vụ luận giải. Nếu muốn bạn có thể đặt lịch để xem trực tiếp từ các chuyên gia Tử Vi.',
-                                  style: TextStyle(fontSize: 13, color: Colors.black87),
+                                  style: TextStyle(fontSize: 13, color: Colors.white70),
                                 ),
-                                SizedBox(height: 24),
+                                const SizedBox(height: 24),
                                 
                                 _buildFormRow(
                                   'Họ tên',
@@ -928,6 +977,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 250,
                                     child: TextFormField(
                                       controller: _nameController,
+                                      style: const TextStyle(fontSize: 13, color: Colors.white),
                                       validator: (value) {
                                         if (value == null || value.trim().isEmpty) {
                                           return 'Vui lòng nhập họ tên để lưu và quản lý lá số.';
@@ -939,12 +989,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                           setState(() => _nameErrorText = null);
                                         }
                                       },
-                                      decoration: InputDecoration(
-                                        errorText: _nameErrorText,
-                                        isDense: true, 
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
-                                        border: OutlineInputBorder()
-                                      ),
+                                      decoration: _buildInputDecoration(errorText: _nameErrorText),
                                     ),
                                   ),
                                   hint: '(Có thể ẩn thông tin này)',
@@ -1001,6 +1046,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                         return TextFormField(
                                           controller: textEditingController,
                                           focusNode: focusNode,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           onChanged: (val) {
                                             _isAddressSelected = false;
                                             _addressController.text = val;
@@ -1011,13 +1057,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                             }
                                             return null;
                                           },
-                                          decoration: InputDecoration(
-                                            isDense: true, 
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), 
-                                            border: OutlineInputBorder(),
-                                            hintText: 'Nhập địa chỉ...',
-                                            hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400)
-                                          ),
+                                          decoration: _buildInputDecoration(hintText: 'Nhập địa chỉ...'),
                                         );
                                       },
                                       optionsViewBuilder: (context, onSelected, options) {
@@ -1025,6 +1065,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                           alignment: Alignment.topLeft,
                                           child: Material(
                                             elevation: 4.0,
+                                            color: const Color(0xFF131A30),
+                                            borderRadius: BorderRadius.circular(4),
                                             child: ConstrainedBox(
                                               constraints: const BoxConstraints(maxHeight: 200, maxWidth: 250),
                                               child: ListView.builder(
@@ -1039,7 +1081,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                                     },
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(12.0),
-                                                      child: Text(option['display_name'] ?? '', style: TextStyle(fontSize: 13)),
+                                                      child: Text(option['display_name'] ?? '', style: const TextStyle(fontSize: 13, color: Colors.white)),
                                                     ),
                                                   );
                                                 },
@@ -1059,7 +1101,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 250,
                                     child: TextFormField(
                                       controller: _currentAddressController,
-                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                      style: const TextStyle(fontSize: 13, color: Colors.white),
+                                      decoration: _buildInputDecoration(),
                                     ),
                                   ),
                                   hint: '(Chỉ mình bạn biết)',
@@ -1071,7 +1114,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 250,
                                     child: TextFormField(
                                       controller: _phoneController,
-                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                      style: const TextStyle(fontSize: 13, color: Colors.white),
+                                      decoration: _buildInputDecoration(),
                                     ),
                                   ),
                                   hint: '(Chỉ mình bạn biết)',
@@ -1082,14 +1126,14 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                   Wrap(
                                     crossAxisAlignment: WrapCrossAlignment.center,
                                     children: [
-                                      Text('An Thông Thường', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'An Thông Thường', groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
-                                      SizedBox(width: 8),
-                                      Text('An Đặc Biệt', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'An Đặc Biệt', groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
+                                      const Text('An Thông Thường', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'An Thông Thường', activeColor: const Color(0xFFFFD700), groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('An Đặc Biệt', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'An Đặc Biệt', activeColor: const Color(0xFFFFD700), groupValue: _kieuAnSao, onChanged: (val) => setState(() => _kieuAnSao = val!)),
                                     ],
                                   ),
-                                  labelColor: Colors.red,
+                                  labelColor: const Color(0xFFEF5350),
                                 ),
 
                                 _buildFormRow(
@@ -1097,11 +1141,11 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                   Wrap(
                                     crossAxisAlignment: WrapCrossAlignment.center,
                                     children: [
-                                      Text('Nam', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Nam', groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
-                                      SizedBox(width: 8),
-                                      Text('Nữ', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Nữ', groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
+                                      const Text('Nam', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Nam', activeColor: const Color(0xFFFFD700), groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('Nữ', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Nữ', activeColor: const Color(0xFFFFD700), groupValue: _gender, onChanged: (val) => setState(() => _gender = val!)),
                                     ],
                                   ),
                                 ),
@@ -1111,20 +1155,20 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                   Wrap(
                                     crossAxisAlignment: WrapCrossAlignment.center,
                                     children: [
-                                      Text('Sinh Bình Thường', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Bình Thường', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
-                                      SizedBox(width: 8),
-                                      Text('Sinh Đôi Long Phụng', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Đôi Long Phụng', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
-                                      SizedBox(width: 8),
-                                      Text('Sinh Đôi Cùng Giới Ra Trước', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Trước', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
-                                      SizedBox(width: 8),
-                                      Text('Sinh Đôi Cùng Giới Ra Sau', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Sau', groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      const Text('Sinh Bình Thường', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Sinh Bình Thường', activeColor: const Color(0xFFFFD700), groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('Sinh Đôi Long Phụng', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Sinh Đôi Long Phụng', activeColor: const Color(0xFFFFD700), groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('Sinh Đôi Cùng Giới Ra Trước', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Trước', activeColor: const Color(0xFFFFD700), groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('Sinh Đôi Cùng Giới Ra Sau', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Sinh Đôi Cùng Giới Ra Sau', activeColor: const Color(0xFFFFD700), groupValue: _kieuSinh, onChanged: (val) => setState(() => _kieuSinh = val!)),
                                     ],
                                   ),
-                                  labelColor: Colors.blue,
+                                  labelColor: const Color(0xFF64B5F6),
                                 ),
 
                                 _buildFormRow(
@@ -1132,11 +1176,11 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                   Wrap(
                                     crossAxisAlignment: WrapCrossAlignment.center,
                                     children: [
-                                      Text('Dương lịch:', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Dương lịch', groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
-                                      SizedBox(width: 8),
-                                      Text('Âm lịch:', style: TextStyle(fontSize: 13)),
-                                      Radio<String>(value: 'Âm lịch', groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
+                                      const Text('Dương lịch:', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Dương lịch', activeColor: const Color(0xFFFFD700), groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
+                                      const SizedBox(width: 8),
+                                      const Text('Âm lịch:', style: TextStyle(fontSize: 13, color: Colors.white)),
+                                      Radio<String>(value: 'Âm lịch', activeColor: const Color(0xFFFFD700), groupValue: _calendarType, onChanged: (val) => setState(() => _calendarType = val!)),
                                     ],
                                   ),
                                 ),
@@ -1148,57 +1192,69 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     spacing: 4,
                                     runSpacing: 8,
                                     children: [
-                                      Text('Giờ', style: TextStyle(fontSize: 13)),
+                                      const Text('Giờ', style: TextStyle(fontSize: 13, color: Colors.white)),
                                       SizedBox(
                                         width: 75,
                                         child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                          decoration: _buildInputDecoration(),
+                                          dropdownColor: const Color(0xFF131A30),
+                                          iconEnabledColor: Colors.white70,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           value: _selectedHour,
-                                          items: List.generate(24, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                          items: List.generate(24, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                           onChanged: (val) => setState(() => _selectedHour = val),
                                         ),
                                       ),
-                                      SizedBox(width: 4),
-                                      Text('Phút', style: TextStyle(fontSize: 13)),
+                                      const SizedBox(width: 4),
+                                      const Text('Phút', style: TextStyle(fontSize: 13, color: Colors.white)),
                                       SizedBox(
                                         width: 75,
                                         child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                          decoration: _buildInputDecoration(),
+                                          dropdownColor: const Color(0xFF131A30),
+                                          iconEnabledColor: Colors.white70,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           value: _selectedMinute,
-                                          items: List.generate(60, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                          items: List.generate(60, (index) => index.toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                           onChanged: (val) => setState(() => _selectedMinute = val),
                                         ),
                                       ),
-                                      SizedBox(width: 4),
-                                      Text('Ngày', style: TextStyle(fontSize: 13)),
+                                      const SizedBox(width: 4),
+                                      const Text('Ngày', style: TextStyle(fontSize: 13, color: Colors.white)),
                                       SizedBox(
                                         width: 75,
                                         child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                          decoration: _buildInputDecoration(),
+                                          dropdownColor: const Color(0xFF131A30),
+                                          iconEnabledColor: Colors.white70,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           value: _selectedDay,
-                                          items: List.generate(31, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                          items: List.generate(31, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                           onChanged: (val) => setState(() => _selectedDay = val),
                                         ),
                                       ),
-                                      SizedBox(width: 4),
-                                      Text('Tháng', style: TextStyle(fontSize: 13)),
+                                      const SizedBox(width: 4),
+                                      const Text('Tháng', style: TextStyle(fontSize: 13, color: Colors.white)),
                                       SizedBox(
                                         width: 75,
                                         child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder()),
+                                          decoration: _buildInputDecoration(),
+                                          dropdownColor: const Color(0xFF131A30),
+                                          iconEnabledColor: Colors.white70,
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           value: _selectedMonth,
-                                          items: List.generate(12, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                          items: List.generate(12, (index) => (index + 1).toString().padLeft(2, '0')).map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                           onChanged: (val) => setState(() => _selectedMonth = val),
                                         ),
                                       ),
-                                      SizedBox(width: 4),
-                                      Text('Năm', style: TextStyle(fontSize: 13)),
+                                      const SizedBox(width: 4),
+                                      const Text('Năm', style: TextStyle(fontSize: 13, color: Colors.white)),
                                       SizedBox(
                                         width: 80,
                                         child: TextFormField(
                                           controller: _yearController,
-                                          decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder(), errorMaxLines: 5, errorStyle: TextStyle(color: Colors.red)),
-                                          style: TextStyle(fontSize: 13),
+                                          decoration: _buildInputDecoration(errorMaxLines: 5),
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                           validator: (value) {
                                             if (value == null || value.isEmpty) {
                                               return 'Vui lòng nhập năm sinh là số nguyên dương hợp lệ.';
@@ -1221,8 +1277,8 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     width: 100,
                                     child: TextFormField(
                                       controller: _viewYearController,
-                                      decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8), border: OutlineInputBorder(), errorMaxLines: 5, errorStyle: TextStyle(color: Colors.red)),
-                                      style: TextStyle(fontSize: 13),
+                                      decoration: _buildInputDecoration(errorMaxLines: 5),
+                                      style: const TextStyle(fontSize: 13, color: Colors.white),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Vui lòng nhập năm xem hợp lệ.';
@@ -1250,22 +1306,25 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
 
 
                                 _buildSectionTitle('Mô tả bản thân'),
-                                Text('Thông tin về hình dáng, tính tình, gia cảnh, một số vận hạn đã trải qua. Nêu câu hỏi cần giải đáp', style: TextStyle(fontSize: 13)),
-                                SizedBox(height: 8),
+                                const Text('Thông tin về hình dáng, tính tình, gia cảnh, một số vận hạn đã trải qua. Nêu câu hỏi cần giải đáp', style: TextStyle(fontSize: 13, color: Colors.white70)),
+                                const SizedBox(height: 8),
                                 TextFormField(
                                   controller: _descriptionController,
                                   maxLines: 5,
-                                  decoration: InputDecoration(border: OutlineInputBorder()),
-                                  style: TextStyle(fontSize: 13),
+                                  decoration: _buildInputDecoration(),
+                                  style: const TextStyle(fontSize: 13, color: Colors.white),
                                 ),
 
                                 _buildSectionTitle('Phân quyền xem'),
                                 SizedBox(
                                   width: 200,
                                   child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                    decoration: _buildInputDecoration(),
+                                    dropdownColor: const Color(0xFF131A30),
+                                    iconEnabledColor: Colors.white70,
+                                    style: const TextStyle(fontSize: 13, color: Colors.white),
                                     value: _viewPermission,
-                                    items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                    items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                     onChanged: (val) => setState(() => _viewPermission = val!),
                                   ),
                                 ),
@@ -1274,14 +1333,17 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                 SizedBox(
                                   width: 200,
                                   child: DropdownButtonFormField<String>(
-                                    decoration: InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), border: OutlineInputBorder()),
+                                    decoration: _buildInputDecoration(),
+                                    dropdownColor: const Color(0xFF131A30),
+                                    iconEnabledColor: Colors.white70,
+                                    style: const TextStyle(fontSize: 13, color: Colors.white),
                                     value: _discussPermission,
-                                    items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(fontSize: 13)))).toList(),
+                                    items: ['Tất cả mọi người', 'Chỉ mình tôi'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontSize: 13, color: Colors.white)))).toList(),
                                     onChanged: (val) => setState(() => _discussPermission = val!),
                                   ),
                                 ),
 
-                                SizedBox(height: 32),
+                                const SizedBox(height: 32),
                                 
                                 // Bottom Buttons
                                 Container(
@@ -1292,7 +1354,7 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                                     alignment: WrapAlignment.center,
                                     children: [
                                       ElevatedButton(
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                                        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B0000), foregroundColor: Colors.white),
                                         onPressed: _isSubmitting ? null : () async {
                                           if (!_formKey.currentState!.validate()) {
                                             _validationFailCount++;
@@ -1444,10 +1506,13 @@ class _HoroscopeInfoScreenState extends State<HoroscopeInfoScreen> {
                   ],
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
-    );
+    ),
+  ),
+),
+);
   }
 }

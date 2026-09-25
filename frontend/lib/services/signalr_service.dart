@@ -1,32 +1,56 @@
+import 'dart:async';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:flutter/foundation.dart';
 
 class SignalRService {
   HubConnection? _hubConnection;
+  Timer? _retryTimer;
+  bool _isConnecting = false;
 
   // Lấy port từ biến môi trường, mặc định là 5169 nếu không có (Cổng Data Service)
   final String backendPort = const String.fromEnvironment('BACKEND_PORT', defaultValue: '5169');
 
   // Khởi tạo kết nối
   Future<void> initConnection() async {
+    if (_hubConnection?.state == HubConnectionState.Connected || _isConnecting) {
+      return;
+    }
+    _isConnecting = true;
+    _retryTimer?.cancel();
+
     // Ép cứng kết nối vào Data Service (5169)
     final serverUrl = 'http://localhost:5169/tuvihub';
     
-    _hubConnection = HubConnectionBuilder()
-        .withUrl(serverUrl)
-        .withAutomaticReconnect()
-        .build();
+    if (_hubConnection == null) {
+      _hubConnection = HubConnectionBuilder()
+          .withUrl(serverUrl)
+          .withAutomaticReconnect()
+          .build();
 
-    _hubConnection?.onclose(({error}) {
-      debugPrint("SignalR Connection Closed: $error");
-    });
+      _hubConnection?.onclose(({error}) {
+        debugPrint("SignalR: Kết nối đã đóng ($error), đang chuẩn bị kết nối lại...");
+        _scheduleRetry();
+      });
+    }
 
     try {
       await _hubConnection?.start();
-      debugPrint("SignalR Connected to $serverUrl");
+      debugPrint("✅ SignalR: Đã kết nối thành công tới $serverUrl");
+      _isConnecting = false;
     } catch (e) {
-      debugPrint("Error connecting to SignalR: $e");
+      _isConnecting = false;
+      debugPrint("ℹ️ SignalR: Backend chưa sẵn sàng (đang đợi Backend mở cổng 5169). Sẽ tự động kết nối lại sau 5s...");
+      _scheduleRetry();
     }
+  }
+
+  void _scheduleRetry() {
+    _retryTimer?.cancel();
+    _retryTimer = Timer(const Duration(seconds: 5), () {
+      if (_hubConnection?.state != HubConnectionState.Connected) {
+        initConnection();
+      }
+    });
   }
 
   // 1. Lắng nghe sự kiện thanh toán thành công

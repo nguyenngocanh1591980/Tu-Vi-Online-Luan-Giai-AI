@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../services/auth_service.dart';
-import 'home_screen.dart';
-import 'forgot_password_screen.dart';
-import 'terms_screen.dart';
 import 'waiting_verification_screen.dart';
-import 'resend_activation_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,7 +13,7 @@ import 'zalo_oauth_screen.dart';
 class LoginScreen extends StatefulWidget {
   final bool initialIsLogin;
   
-  const LoginScreen({Key? key, this.initialIsLogin = true}) : super(key: key);
+  const LoginScreen({super.key, this.initialIsLogin = true});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -53,6 +48,16 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _isLogin = widget.initialIsLogin;
     _passwordController.addListener(_updatePasswordStrength);
+  }
+
+  @override
+  void didUpdateWidget(covariant LoginScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialIsLogin != widget.initialIsLogin) {
+      setState(() {
+        _isLogin = widget.initialIsLogin;
+      });
+    }
   }
 
   void _updatePasswordStrength() {
@@ -93,6 +98,45 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  void _showBoxedErrorSnackBar(
+    String message, {
+    Color backgroundColor = const Color(0xFF323232),
+    Duration duration = const Duration(seconds: 4),
+  }) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(bottom: 24),
+        duration: duration,
+        content: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _submit() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
@@ -100,23 +144,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
 
     if (username.isEmpty || password.isEmpty || (!_isLogin && email.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Vui lòng nhập đủ tên đăng nhập, mật khẩu và email bắt buộc')),
-      );
+      _showBoxedErrorSnackBar('Vui lòng nhập đủ tên đăng nhập, mật khẩu và email bắt buộc');
       return;
     }
 
     if (!_isLogin && (_passwordStrength < 3 || !_hasMinLength || !_hasUpper || !_hasLower || !_hasNumber || !_hasSpecial)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mật khẩu chưa đạt tiêu chuẩn bảo mật. Vui lòng kiểm tra lại.')),
-      );
+      _showBoxedErrorSnackBar('Mật khẩu chưa đạt tiêu chuẩn bảo mật. Vui lòng kiểm tra lại.');
       return;
     }
 
     if (!_isLogin && password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mật khẩu xác nhận không khớp.')),
-      );
+      _showBoxedErrorSnackBar('Mật khẩu xác nhận không khớp.');
       return;
     }
 
@@ -125,50 +163,62 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       if (_isLogin) {
         final errorMsg = await _authService.login(username, password, rememberMe: _rememberMe, hideOnlineStatus: _hideOnlineStatus);
+        if (!mounted) return;
         if (errorMsg == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: const Color(0xFFC62828),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(color: Color(0xFFD4AF37), width: 2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              content: Text(
-                'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
-                style: const TextStyle(
-                  color: Color(0xFFD4AF37),
-                  fontWeight: FontWeight.bold,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              padding: EdgeInsets.zero,
+              margin: const EdgeInsets.only(bottom: 24),
+              duration: const Duration(seconds: 4),
+              content: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1024),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC62828),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFD4AF37), width: 2),
+                    ),
+                    child: Text(
+                      'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
+                      style: const TextStyle(
+                        color: Color(0xFFD4AF37),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
+          
+          final redirectUrl = GoRouterState.of(context).uri.queryParameters['redirect'];
+          if (redirectUrl != null && redirectUrl.isNotEmpty) {
+            context.go(redirectUrl);
+          } else {
+            context.go('/');
+          }
         } else {
           _loginFails++;
           if (_loginFails >= 3) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Đăng nhập sai 3 lần. Đang chuyển hướng về diễn đàn chính.')),
-            );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+            _showBoxedErrorSnackBar('Đăng nhập sai 3 lần. Đang chuyển hướng về trang chủ.');
+            _usernameController.clear();
+            _passwordController.clear();
+            _loginFails = 0;
+            context.go('/');
           } else {
             if (errorMsg.contains('chưa kích hoạt')) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(errorMsg),
-                  backgroundColor: Colors.deepOrange.shade600,
-                  duration: const Duration(seconds: 4),
-                ),
+              _showBoxedErrorSnackBar(
+                errorMsg,
+                backgroundColor: Colors.deepOrange.shade600,
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$errorMsg (Lần $_loginFails/3)')),
-              );
+              _showBoxedErrorSnackBar('$errorMsg (Lần $_loginFails/3)');
             }
           }
         }
@@ -182,19 +232,20 @@ class _LoginScreenState extends State<LoginScreen> {
           phoneNumber: _phoneController.text.trim(),
           address: _addressController.text.trim(),
         );
+        if (!mounted) return;
         if (errorMsg == null) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const WaitingVerificationScreen()),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMsg)),
-          );
+          _showBoxedErrorSnackBar(errorMsg);
         }
       }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -215,22 +266,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [const Color(0xFF81D4FA), const Color(0xFF0288D1)], // Xanh da trời
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      backgroundColor: const Color(0xFF1E2640), // Đổi sang Tím Đen đồng bộ toàn bộ màn hình
+      body: SingleChildScrollView(
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Card(
-              color: const Color(0xFF1E2640), // Nền thẻ tối
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1024),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
+              decoration: const BoxDecoration(
+                color: Color(0xFF1E2640), // Nền thẻ tối navy giữ nguyên
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x26000000),
+                    spreadRadius: 1,
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               child: Theme(
                 data: Theme.of(context).copyWith(
@@ -252,11 +306,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
                       'Tử Vi Online-AI',
                       style: TextStyle(
                         fontSize: 28,
@@ -426,14 +480,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                       onPressed: () {
                         if (_isLogin) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const TermsScreen()),
-                          );
+                          context.go('/terms');
                         } else {
                           setState(() {
                             _isLogin = true;
                           });
+                          context.go('/login');
                         }
                       },
                       child: Text(
@@ -447,19 +499,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
-                          );
+                          context.push('/forgot-password');
                         },
                         child: const Text('Quên tên đăng nhập / Mật khẩu?', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ResendActivationScreen()),
-                          );
+                          context.push('/resend-activation');
                         },
                         child: const Text('Gửi lại email kích hoạt tài khoản', style: TextStyle(color: Color(0xFFC62828), fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
@@ -547,7 +593,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: 22,
                               height: 22,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
+                                color: Colors.white.withValues(alpha: 0.18),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               alignment: Alignment.center,
@@ -568,13 +614,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              ),
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   void dispose() {
@@ -628,19 +674,22 @@ class _LoginScreenState extends State<LoginScreen> {
         final error = await _authService.socialLogin('google', idToken);
         if (!mounted) return;
         if (error == null) {
-          context.go('/');
+          final redirectUrl = GoRouterState.of(context).uri.queryParameters['redirect'];
+          if (redirectUrl != null && redirectUrl.isNotEmpty) {
+            context.go(redirectUrl);
+          } else {
+            context.go('/');
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+          _showBoxedErrorSnackBar(error);
         }
       } else {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Không lấy được token từ Google. Vui lòng thử lại.')),
-        );
+        _showBoxedErrorSnackBar('Không lấy được token từ Google. Vui lòng thử lại.');
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi Google Login: $e')));
+      _showBoxedErrorSnackBar('Lỗi Google Login: $e');
     }
   }
 
@@ -663,18 +712,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (await canLaunchUrl(fbUrl)) {
         await launchUrl(fbUrl, mode: LaunchMode.externalApplication);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đang mở đăng nhập Facebook...'),
-            backgroundColor: Colors.blue,
-            duration: Duration(seconds: 3),
-          ),
+        _showBoxedErrorSnackBar(
+          'Đang mở đăng nhập Facebook...',
+          backgroundColor: Colors.blue,
+          duration: const Duration(seconds: 3),
         );
       } else {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Không thể mở trang đăng nhập Facebook')),
-        );
+        _showBoxedErrorSnackBar('Không thể mở trang đăng nhập Facebook');
       }
       return;
     }
@@ -688,22 +733,23 @@ class _LoginScreenState extends State<LoginScreen> {
         final error = await _authService.socialLogin('facebook', result.accessToken!.tokenString);
         if (!mounted) return;
         if (error == null) {
-          context.go('/');
+          final redirectUrl = GoRouterState.of(context).uri.queryParameters['redirect'];
+          if (redirectUrl != null && redirectUrl.isNotEmpty) {
+            context.go(redirectUrl);
+          } else {
+            context.go('/');
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+          _showBoxedErrorSnackBar(error);
         }
       } else if (result.status == LoginStatus.cancelled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đăng nhập Facebook đã bị hủy.')),
-        );
+        _showBoxedErrorSnackBar('Đăng nhập Facebook đã bị hủy.');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Facebook Login thất bại: ${result.message}')),
-        );
+        _showBoxedErrorSnackBar('Facebook Login thất bại: ${result.message}');
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi Facebook Login: $e')));
+      _showBoxedErrorSnackBar('Lỗi Facebook Login: $e');
     }
   }
 
@@ -717,11 +763,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final authUrl = dotenv.env['ZALO_AUTH_URL'] ?? 'https://oauth.zaloapp.com/v4/permission';
       if (appId.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Zalo Login chưa được cấu hình. Vui lòng liên hệ quản trị viên.'),
-            backgroundColor: Colors.orange,
-          ),
+        _showBoxedErrorSnackBar(
+          'Zalo Login chưa được cấu hình. Vui lòng liên hệ quản trị viên.',
+          backgroundColor: Colors.orange,
         );
         return;
       }
@@ -737,18 +781,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đang chuyển đến trang đăng nhập Zalo...'),
-            backgroundColor: Colors.blue,
-            duration: Duration(seconds: 3),
-          ),
+        _showBoxedErrorSnackBar(
+          'Đang chuyển đến trang đăng nhập Zalo...',
+          backgroundColor: Colors.blue,
+          duration: const Duration(seconds: 3),
         );
       } else {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Không thể mở trang đăng nhập Zalo')),
-        );
+        _showBoxedErrorSnackBar('Không thể mở trang đăng nhập Zalo');
       }
       return;
     }
@@ -761,9 +801,14 @@ class _LoginScreenState extends State<LoginScreen> {
       final error = await _authService.socialLogin('zalo', token);
       if (!mounted) return;
       if (error == null) {
-        context.go('/');
+        final redirectUrl = GoRouterState.of(context).uri.queryParameters['redirect'];
+        if (redirectUrl != null && redirectUrl.isNotEmpty) {
+          context.go(redirectUrl);
+        } else {
+          context.go('/');
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        _showBoxedErrorSnackBar(error);
       }
     }
   }
