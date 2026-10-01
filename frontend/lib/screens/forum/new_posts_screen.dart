@@ -272,69 +272,35 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
     });
   }
 
-  // --- Layout Tổng Thể Boxed Layout 1024px ---
+  // --- Layout Tổng Thể — MainLayout đã bọc sẵn 1024px ---
   Widget _buildBody(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF0F2F5), // Nền sáng ngoài giúp nổi khối Card nền tối
-      width: double.infinity,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 0, bottom: 20.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640), // Nền Tím Đen / Dark Navy như Form Đăng Nhập
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // 1. Tiêu đề khối
-                          _buildPageHeader(),
-                          const SizedBox(height: 16),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Tiêu đề khối
+          _buildPageHeader(),
+          const SizedBox(height: 16),
 
-                          // 2. Thanh công cụ tìm kiếm và thông tin kết quả trên
-                          _buildSearchAndPaginationBar(isTop: true),
-                          const SizedBox(height: 12),
+          // 2. Thanh công cụ tìm kiếm và thông tin kết quả trên
+          _buildSearchAndPaginationBar(isTop: true),
+          const SizedBox(height: 12),
 
-                          // 3. Bảng Danh Sách Bài Viết (Tỷ lệ 5:2:3 chuẩn xác)
-                          _buildPostsTable(),
-                          const SizedBox(height: 12),
+          // 3. Bảng Danh Sách Bài Viết (Tỷ lệ 5:2:3 chuẩn xác)
+          _buildPostsTable(),
+          const SizedBox(height: 12),
 
-                          // 4. Thanh công cụ và phân trang dưới
-                          _buildSearchAndPaginationBar(isTop: false),
-                          const SizedBox(height: 28),
+          // 4. Thanh công cụ và phân trang dưới
+          _buildSearchAndPaginationBar(isTop: false),
+          const SizedBox(height: 28),
 
-                          // 5. Khám phá thêm
-                          _buildExploreMore(),
-                          const SizedBox(height: 28),
+          // 5. Khám phá thêm
+          _buildExploreMore(),
+          const SizedBox(height: 28),
 
-                          // 6. Footer diễn đàn
-                          _buildForumFooter(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // 6. Footer diễn đàn
+          _buildForumFooter(),
         ],
       ),
     );
@@ -1087,16 +1053,20 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: Scaffold(
-        body: _buildBody(context),
-        bottomNavigationBar: MobileBottomNavBar(
-          currentIndex: _currentMobileIndex,
-          onTap: _onMobileNavTapped,
+    return Material(color: Colors.transparent, child: 
+      
+      ResponsiveLayout(
+        mobileBody: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
+              currentIndex: _currentMobileIndex,
+              onTap: _onMobileNavTapped,
+            ),
+          ],
         ),
-      ),
-      desktopBody: Scaffold(
-        body: _buildBody(context),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
       ),
     );
   }

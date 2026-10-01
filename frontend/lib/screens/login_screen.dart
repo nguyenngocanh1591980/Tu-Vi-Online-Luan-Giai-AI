@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'zalo_oauth_screen.dart';
+import 'package:frontend/utils/boxed_snack_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool initialIsLogin;
@@ -98,42 +99,19 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  // Delegate sang helper toàn cục (boxed_snack_bar.dart).
+  // ScaffoldMessenger cục bộ trong MainLayout tự neo SnackBar vào đáy khối tím 1024px.
   void _showBoxedErrorSnackBar(
     String message, {
     Color backgroundColor = const Color(0xFF323232),
     Duration duration = const Duration(seconds: 4),
   }) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(bottom: 24),
-        duration: duration,
-        content: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    showBoxedSnackBar(
+      context,
+      message,
+      backgroundColor: backgroundColor,
+      duration: duration,
     );
   }
 
@@ -165,36 +143,14 @@ class _LoginScreenState extends State<LoginScreen> {
         final errorMsg = await _authService.login(username, password, rememberMe: _rememberMe, hideOnlineStatus: _hideOnlineStatus);
         if (!mounted) return;
         if (errorMsg == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              padding: EdgeInsets.zero,
-              margin: const EdgeInsets.only(bottom: 24),
-              duration: const Duration(seconds: 4),
-              content: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1024),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC62828),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFFD4AF37), width: 2),
-                    ),
-                    child: Text(
-                      'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
-                      style: const TextStyle(
-                        color: Color(0xFFD4AF37),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          showBoxedSnackBar(
+            context,
+            'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
+            backgroundColor: const Color(0xFFC62828),
+            textColor: const Color(0xFFD4AF37),
+            border: Border.all(color: const Color(0xFFD4AF37), width: 2),
+            fontWeight: FontWeight.bold,
+            duration: const Duration(seconds: 4),
           );
           
           final redirectUrl = GoRouterState.of(context).uri.queryParameters['redirect'];
@@ -265,28 +221,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1E2640), // Đổi sang Tím Đen đồng bộ toàn bộ màn hình
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E2640), // Nền thẻ tối navy giữ nguyên
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0x26000000),
-                    spreadRadius: 1,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Theme(
+    return Material(color: Colors.transparent, child: 
+       // Đổi sang Tím Đen đồng bộ toàn bộ màn hình
+      SingleChildScrollView(
+        child: Theme(
                 data: Theme.of(context).copyWith(
                   textTheme: Theme.of(context).textTheme.apply(
                     bodyColor: Colors.white,
@@ -615,11 +553,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-          ),
-        ),
       ),
-    ),
-  );
+    );
 }
 
   @override

@@ -334,76 +334,50 @@ class _RecentPostsScreenState extends State<RecentPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 2,
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 1. Tiêu đề khối "Bài gần đây"
-                      _buildHeaderTitle(),
-                      const SizedBox(height: 10),
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Tiêu đề khối "Bài gần đây"
+            _buildHeaderTitle(),
+            const SizedBox(height: 10),
 
-                      // 2. Link "Quay về tìm kiếm nâng cao" trên
-                      _buildBackToAdvancedSearch(),
-                      const SizedBox(height: 10),
+            // 2. Link "Quay về tìm kiếm nâng cao" trên
+            _buildBackToAdvancedSearch(),
+            const SizedBox(height: 10),
 
-                      // 3. Thanh tìm kiếm và phân trang trên
-                      _buildSearchAndPaginationBar(),
-                      const SizedBox(height: 10),
+            // 3. Thanh tìm kiếm và phân trang trên
+            _buildSearchAndPaginationBar(),
+            const SizedBox(height: 10),
 
-                      // 4. Bảng danh sách bài viết
-                      _buildPostsTable(),
-                      const SizedBox(height: 10),
+            // 4. Bảng danh sách bài viết
+            _buildPostsTable(),
+            const SizedBox(height: 10),
 
-                      // 5. Thanh tìm kiếm và phân trang dưới
-                      _buildSearchAndPaginationBar(),
-                      const SizedBox(height: 10),
+            // 5. Thanh tìm kiếm và phân trang dưới
+            _buildSearchAndPaginationBar(),
+            const SizedBox(height: 10),
 
-                      // 6. Link quay về tìm kiếm & Jump dropdown dưới
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildBackToAdvancedSearch(),
-                          _buildJumpDropdown(),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      // 7. Khối Khám phá thêm (3 mục chuẩn xác: Nâng Cấp Gói, Thuật Thư kim, Thẻ Công Cụ)
-                      _buildExploreMoreSection(),
-                      const SizedBox(height: 24),
-
-                      // 8. Footer diễn đàn
-                      _buildForumFooter(),
-                    ],
-                  ),
-                ),
-              ),
+            // 6. Link quay về tìm kiếm & Jump dropdown dưới
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildBackToAdvancedSearch(),
+                _buildJumpDropdown(),
+              ],
             ),
-          ),
+            const SizedBox(height: 24),
+
+            // 7. Khối Khám phá thêm (3 mục chuẩn xác: Nâng Cấp Gói, Thuật Thư kim, Thẻ Công Cụ)
+            _buildExploreMoreSection(),
+            const SizedBox(height: 24),
+
+            // 8. Footer diễn đàn
+            _buildForumFooter(),
+          ],
         ),
       ),
     );

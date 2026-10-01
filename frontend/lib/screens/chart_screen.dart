@@ -162,12 +162,12 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     if (mockData == null) {
-      return Scaffold(
+      return Material(color: Colors.transparent, child: 
         appBar: AppBar(title: const Text('Đang lập lá số...'), backgroundColor: Colors.red.shade900, foregroundColor: Colors.white),
-        body: Center(child: CircularProgressIndicator()),
+        Center(child: CircularProgressIndicator()),
       );
     }
-    return Scaffold(
+    return Material(color: Colors.transparent, child: 
       appBar: AppBar(
         title: const Text('Tử Vi AI - Chuyên Gia Luận Giải'),
         backgroundColor: Colors.red.shade900,
@@ -179,7 +179,7 @@ class _ChartScreenState extends State<ChartScreen> {
           )
         ],
       ),
-      body: SingleChildScrollView(
+      SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Container(

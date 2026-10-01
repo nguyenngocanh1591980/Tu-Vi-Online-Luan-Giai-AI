@@ -365,69 +365,35 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
     });
   }
 
-  // --- Layout Tổng Thể Boxed Layout 1024px ---
+  // --- Layout Tổng Thể — MainLayout đã bọc sẵn 1024px ---
   Widget _buildBody(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF0F2F5),
-      width: double.infinity,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640), // Nền Dark Navy đồng bộ
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // 1. Tiêu đề khối
-                          _buildPageHeader(),
-                          const SizedBox(height: 14),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Tiêu đề khối
+          _buildPageHeader(),
+          const SizedBox(height: 14),
 
-                          // 2. Thanh công cụ tìm kiếm và phân trang trên
-                          _buildSearchAndPaginationBar(isTop: true),
-                          const SizedBox(height: 12),
+          // 2. Thanh công cụ tìm kiếm và phân trang trên
+          _buildSearchAndPaginationBar(isTop: true),
+          const SizedBox(height: 12),
 
-                          // 3. Bảng Danh Sách 25 Bài Viết
-                          _buildPostsTable(),
-                          const SizedBox(height: 12),
+          // 3. Bảng Danh Sách 25 Bài Viết
+          _buildPostsTable(),
+          const SizedBox(height: 12),
 
-                          // 4. Thanh phân trang và điều hướng dưới
-                          _buildSearchAndPaginationBar(isTop: false),
-                          const SizedBox(height: 24),
+          // 4. Thanh phân trang và điều hướng dưới
+          _buildSearchAndPaginationBar(isTop: false),
+          const SizedBox(height: 24),
 
-                          // 5. Khối Khám phá thêm (Hình 2: "Nhà cung cấp dịch vụ diễn đàn và trò chuyện", "Thiết kế và nghệ thuật thị giác", "Thuốc nhuộm & Chất nhuộm")
-                          _buildExploreMore(),
-                          const SizedBox(height: 28),
+          // 5. Khối Khám phá thêm
+          _buildExploreMore(),
+          const SizedBox(height: 28),
 
-                          // 6. Footer diễn đàn
-                          _buildForumFooter(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // 6. Footer diễn đàn
+          _buildForumFooter(),
         ],
       ),
     );
@@ -1074,18 +1040,20 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: Scaffold(
-        backgroundColor: const Color(0xFFF0F2F5),
-        body: _buildBody(context),
-        bottomNavigationBar: MobileBottomNavBar(
-          currentIndex: _currentMobileIndex,
-          onTap: _onMobileNavTapped,
+    return Material(color: Colors.transparent, child: 
+      
+      ResponsiveLayout(
+        mobileBody: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
+              currentIndex: _currentMobileIndex,
+              onTap: _onMobileNavTapped,
+            ),
+          ],
         ),
-      ),
-      desktopBody: Scaffold(
-        backgroundColor: const Color(0xFFF0F2F5),
-        body: _buildBody(context),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
       ),
     );
   }

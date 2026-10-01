@@ -496,57 +496,44 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
     });
   }
 
-  // --- CẤU TRÚC GIAO DIỆN (BOXED LAYOUT MAXWIDTH 1024, ÉP DÍNH ĐÁY HEADER) ---
+  // --- CẤU TRÚC GIAO DIỆN — MainLayout đã bọc sẵn 1024px + bo góc + nền tím ---
   Widget _buildBody(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1024),
-        child: Container(
-          margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E2640), // Nền khối tổng Tím Đen / Xanh đen trầm
-            border: Border.all(color: const Color(0xFF2E3B5F)), // Viền #2E3B5F
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-          ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Tiêu đề và Menu Navigation
-                _buildForumHeader(),
-                const SizedBox(height: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Tiêu đề và Menu Navigation
+          _buildForumHeader(),
+          const SizedBox(height: 16),
 
-                // 2. Bảng 1: Thông báo & Kiến thức
-                _buildForumTable(_group1),
-                const SizedBox(height: 16),
+          // 2. Bảng 1: Thông báo & Kiến thức
+          _buildForumTable(_group1),
+          const SizedBox(height: 16),
 
-                // 3. Bảng 2: Lớp học Lý số
-                _buildForumTable(_group2),
-                const SizedBox(height: 16),
+          // 3. Bảng 2: Lớp học Lý số
+          _buildForumTable(_group2),
+          const SizedBox(height: 16),
 
-                // 4. Bảng 3: Khu vực Luận giải
-                _buildForumTable(_group3),
-                const SizedBox(height: 24),
+          // 4. Bảng 3: Khu vực Luận giải
+          _buildForumTable(_group3),
+          const SizedBox(height: 24),
 
-                // 5. Khối Đang trực tuyến
-                _buildOnlineUsers(),
-                const SizedBox(height: 24),
+          // 5. Khối Đang trực tuyến
+          _buildOnlineUsers(),
+          const SizedBox(height: 24),
 
-                // 6. Khối Thống kê
-                _buildStatistics(),
-                const SizedBox(height: 24),
+          // 6. Khối Thống kê
+          _buildStatistics(),
+          const SizedBox(height: 24),
 
-                // 7. Khối Khám phá thêm
-                _buildExploreMore(),
-                const SizedBox(height: 32),
+          // 7. Khối Khám phá thêm
+          _buildExploreMore(),
+          const SizedBox(height: 32),
 
-                // 8. Footer diễn đàn
-                _buildForumFooter(),
-              ],
-            ),
-          ),
-        ),
+          // 8. Footer diễn đàn
+          _buildForumFooter(),
+        ],
       ),
     );
   }
@@ -1113,18 +1100,20 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: _buildBody(context),
-        bottomNavigationBar: MobileBottomNavBar(
-          currentIndex: _currentMobileIndex,
-          onTap: _onMobileNavTapped,
+    return Material(color: Colors.transparent, child: 
+      
+      ResponsiveLayout(
+        mobileBody: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
+              currentIndex: _currentMobileIndex,
+              onTap: _onMobileNavTapped,
+            ),
+          ],
         ),
-      ),
-      desktopBody: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: _buildBody(context),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
       ),
     );
   }

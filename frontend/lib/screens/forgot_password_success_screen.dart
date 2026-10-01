@@ -6,29 +6,12 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
                   // 1. Thanh tiêu đề nội bộ
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -121,9 +104,6 @@ class ForgotPasswordSuccessScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

@@ -41,53 +41,29 @@ class _AppsScreenState extends State<AppsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640), // Nền Tím Đen / Dark Navy
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 2,
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 1. Banner Tiêu Đề
-                      _buildBanner(),
-                      const SizedBox(height: 16),
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 1. Banner Tiêu Đề
+              _buildBanner(),
+              const SizedBox(height: 16),
 
-                      // 2. Nội dung chính: Phân bổ 3 cột (LayoutBuilder responsive)
-                      _buildMainGrid(context),
-                      const SizedBox(height: 24),
+              // 2. Nội dung chính: Phân bổ 3 cột (LayoutBuilder responsive)
+              _buildMainGrid(context),
+              const SizedBox(height: 24),
 
-                      // 3. Khối Khám phá thêm
-                      _buildExploreMore(),
-                      const SizedBox(height: 24),
+              // 3. Khối Khám phá thêm
+              _buildExploreMore(),
+              const SizedBox(height: 24),
 
-                      // 4. Footer Diễn Đàn
-                      _buildForumFooter(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+              // 4. Footer Diễn Đàn
+              _buildForumFooter(),
+            ],
           ),
         ),
       ),
@@ -133,7 +109,7 @@ class _AppsScreenState extends State<AppsScreen> {
   Widget _buildMainGrid(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final bool isDesktop = constraints.maxWidth >= 850;
+        final bool isDesktop = constraints.maxWidth >= 1024;
 
         if (isDesktop) {
           return Row(

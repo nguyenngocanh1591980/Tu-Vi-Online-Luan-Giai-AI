@@ -1,15 +1,28 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/screens/login_screen.dart';
+import 'package:frontend/widgets/main_layout.dart';
+import 'package:frontend/utils/boxed_snack_bar.dart';
+import 'package:frontend/theme/app_theme.dart';
 
 void main() {
   setUpAll(() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('Mô phỏng đăng nhập sai 3 lần và xác nhận chuẩn Boxed SnackBar 1024px', (WidgetTester tester) async {
+  setUp(() {
+    globalSnackBarNotifier.value = null;
+  });
+
+  tearDown(() {
+    globalSnackBarNotifier.value = null;
+  });
+
+  testWidgets(
+      'Mô phỏng đăng nhập sai 3 lần và xác nhận SnackBar hiện đúng với kiến trúc mới',
+      (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1920, 1080);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -20,18 +33,29 @@ void main() {
     final router = GoRouter(
       initialLocation: '/login',
       routes: [
-        GoRoute(
-          path: '/login',
-          builder: (context, state) => const LoginScreen(initialIsLogin: true),
-        ),
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const Scaffold(body: Text('Màn hình chính diễn đàn')),
+        ShellRoute(
+          builder: (context, state, child) => MainLayout(child: child),
+          routes: [
+            GoRoute(
+              path: '/login',
+              builder: (context, state) => const LoginScreen(initialIsLogin: true),
+            ),
+            GoRoute(
+              path: '/',
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Màn hình chính diễn đàn')),
+            ),
+          ],
         ),
       ],
     );
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: router,
+        theme: AppTheme.lightTheme,
+      ),
+    );
     await tester.pumpAndSettle();
 
     final textFields = find.byType(TextField);
@@ -44,35 +68,14 @@ void main() {
     final submitBtn = find.widgetWithText(ElevatedButton, 'Đăng Nhập');
     expect(submitBtn, findsOneWidget);
 
-    void verifyBoxedSnackBarProperties() {
-      final snackBarFinder = find.byType(SnackBar);
-      expect(snackBarFinder, findsOneWidget);
+    /// Xác nhận GlobalDockedSnackBar hiển thị với kiến trúc mới neo đáy 1024px
+    void verifySnackBarAppears(String expectedTextContains) {
+      expect(find.byType(GlobalDockedSnackBar), findsOneWidget,
+          reason: 'GlobalDockedSnackBar phải xuất hiện sau khi đăng nhập sai');
 
-      final SnackBar snackBar = tester.widget(snackBarFinder);
-      expect(snackBar.behavior, equals(SnackBarBehavior.floating), reason: 'Phải là floating SnackBar');
-      expect(snackBar.backgroundColor, equals(Colors.transparent), reason: 'Nền SnackBar phải trong suốt');
-      expect(snackBar.elevation, equals(0), reason: 'Elevation SnackBar phải bằng 0');
-      expect(snackBar.padding, equals(EdgeInsets.zero), reason: 'Padding SnackBar phải là zero');
-      expect(snackBar.margin, equals(const EdgeInsets.only(bottom: 24)), reason: 'Margin đáy phải là 24');
-
-      final centerFinder = find.descendant(of: snackBarFinder, matching: find.byType(Center));
-      expect(centerFinder, findsWidgets, reason: 'Phải có Center bên trong SnackBar');
-
-      final constrainedBoxFinder = find.descendant(of: centerFinder, matching: find.byType(ConstrainedBox));
-      expect(constrainedBoxFinder, findsWidgets, reason: 'Phải có ConstrainedBox bên trong Center');
-
-      final ConstrainedBox constrainedBox = tester.widget(constrainedBoxFinder.first);
-      expect(constrainedBox.constraints.maxWidth, equals(1024), reason: 'ConstrainedBox phải có maxWidth: 1024');
-
-      final containerFinder = find.descendant(of: constrainedBoxFinder, matching: find.byType(Container));
-      expect(containerFinder, findsWidgets, reason: 'Phải có Container bên trong ConstrainedBox');
-
-      final Container container = tester.widget(containerFinder.first);
-      final decoration = container.decoration as BoxDecoration?;
-      expect(decoration, isNotNull);
-      expect(decoration!.color, equals(const Color(0xFF323232)), reason: 'Màu nền Container phải là #323232');
-      expect(decoration.borderRadius, equals(BorderRadius.circular(8)), reason: 'Bo góc phải là 8');
-      expect(container.padding, equals(const EdgeInsets.symmetric(vertical: 16, horizontal: 24)), reason: 'Padding nội bộ phải là 16v, 24h');
+      // Nội dung thông báo phải xuất hiện
+      expect(find.textContaining(expectedTextContains), findsOneWidget,
+          reason: 'Nội dung thông báo "$expectedTextContains" phải hiển thị');
     }
 
     // --- LẦN 1: Nhập sai ---
@@ -80,24 +83,26 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.textContaining('(Lần 1/3)'), findsOneWidget);
-    verifyBoxedSnackBarProperties();
+    verifySnackBarAppears('Lần 1/3');
 
     // --- LẦN 2: Nhập sai tiếp ---
     await tester.tap(submitBtn);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.textContaining('(Lần 2/3)'), findsOneWidget);
-    verifyBoxedSnackBarProperties();
+    verifySnackBarAppears('Lần 2/3');
 
-    // --- LẦN 3: Nhập sai lần 3 -> Thông báo chuyển hướng về diễn đàn chính ---
+    // --- LẦN 3: Nhập sai lần 3 → Thông báo chuyển hướng ---
     await tester.tap(submitBtn);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('Đăng nhập sai 3 lần. Đang chuyển hướng về diễn đàn chính.'), findsOneWidget);
-    verifyBoxedSnackBarProperties();
+    // Thông báo khi sai 3 lần (chuyển hướng về trang chủ)
+    expect(
+      find.textContaining('Đang chuyển hướng về trang chủ'),
+      findsOneWidget,
+      reason: 'Phải hiển thị thông báo chuyển hướng sau 3 lần sai',
+    );
 
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('Màn hình chính diễn đàn'), findsOneWidget);

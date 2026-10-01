@@ -49,12 +49,12 @@ class _ZaloOAuthScreenState extends State<ZaloOAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Material(color: Colors.transparent, child: 
       appBar: AppBar(
         title: const Text('Đăng nhập Zalo'),
         backgroundColor: const Color(0xFF0068FF),
       ),
-      body: WebViewWidget(controller: _controller),
+      WebViewWidget(controller: _controller),
     );
   }
 }

@@ -261,59 +261,33 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 2,
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 1. Tiêu đề khối Chúng tôi
-                      _buildHeaderTitle(),
-                      const SizedBox(height: 14),
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Tiêu đề khối Chúng tôi
+            _buildHeaderTitle(),
+            const SizedBox(height: 14),
 
-                      // 2. Danh sách 5 Bảng Cấu Trúc Nhóm
-                      for (int i = 0; i < _groups.length; i++) ...[
-                        _buildGroupTable(_groups[i]),
-                        const SizedBox(height: 14),
-                      ],
+            // 2. Danh sách 5 Bảng Cấu Trúc Nhóm
+            for (int i = 0; i < _groups.length; i++) ...[
+              _buildGroupTable(_groups[i]),
+              const SizedBox(height: 14),
+            ],
 
-                      // 3. Jump Dropdown "Chuyển đến"
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: _buildJumpDropdown(),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // 4. Footer diễn đàn
-                      _buildForumFooter(),
-                    ],
-                  ),
-                ),
-              ),
+            // 3. Jump Dropdown "Chuyển đến"
+            Align(
+              alignment: Alignment.centerRight,
+              child: _buildJumpDropdown(),
             ),
-          ),
+            const SizedBox(height: 24),
+
+            // 4. Footer diễn đàn
+            _buildForumFooter(),
+          ],
         ),
       ),
     );

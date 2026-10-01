@@ -142,7 +142,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
         final response = await http.post(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
+          jsonEncode({
             'date': dateStr,
             'time': timeStr,
           }),
@@ -181,32 +181,12 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E2640),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0x14000000),
-                    spreadRadius: 1,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
                     // Title Bar chuẩn Dark Navy mép-tới-mép 1024px
                     Container(
                       width: double.infinity,
@@ -258,12 +238,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                   ],
                 ),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+            );
+          }
 
   Widget _buildFormInputRow() {
     return Wrap(

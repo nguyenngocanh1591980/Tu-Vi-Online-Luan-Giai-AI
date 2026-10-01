@@ -10,6 +10,7 @@ import 'package:confetti/confetti.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/features/ai_report/views/ai_report_screen.dart';
 import 'package:frontend/providers/horoscope_provider.dart';
+import 'package:frontend/utils/boxed_snack_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -224,7 +225,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  // Hàm hiển thị thanh thông báo nổi chuẩn Boxed Layout 1024px (Khử tràn viền vô cực)
+  // Delegate sang helper toàn cục (boxed_snack_bar.dart).
+  // ScaffoldMessenger cục bộ trong MainLayout tự neo SnackBar vào đáy khối tím 1024px.
   void _showBoxedSnackBar(
     String message, {
     Color backgroundColor = const Color(0xFF323232),
@@ -232,95 +234,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     Border? border,
     Duration duration = const Duration(seconds: 4),
   }) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(bottom: 24),
-        duration: duration,
-        content: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(8),
-                border: border,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                message,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    showBoxedSnackBar(
+      context,
+      message,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
+      border: border,
+      duration: duration,
     );
   }
 
-  // Hiển thị thanh thông báo yêu cầu đăng ký/đăng nhập (Boxed Layout 1024px, Nền Đỏ Chữ Vàng)
   void _showLoginRequiredNotification([String? message]) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(bottom: 24),
-        duration: const Duration(seconds: 4),
-        content: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              decoration: BoxDecoration(
-                color: const Color(0xFFC62828),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                message ??
-                    'Đăng Ký hoặc Đăng Nhập Tài Khoản Ngay Nếu Có và Nạp Tiền Coin . Bạn Sẽ Tìm Hiểu Cuộc Đời Mình Qua Những Năm Tháng Từ Quá Khứ, Hiện Tại Và Dự Doán Cho Tương Lai Sắp Tới...',
-                style: const TextStyle(
-                  color: Color(0xFFD4AF37),
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(color: Color(0xFFD4AF37), blurRadius: 4),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    showLoginRequiredSnackBar(context, message);
   }
 
   // Hàm gọi API Sinh Tử (E2E Test)
@@ -353,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
+        jsonEncode({
           "ActionType": 6,
           "LaSo": {
             "chart_id": "CHART_TEST_999",
@@ -401,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
+          
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -468,42 +393,33 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
+    return Material(color: Colors.transparent, child: 
+      
+      Stack(
         children: [
-          // Nội dung chính có cuộn (Đóng Hộp Boxed Layout 1024px Nền Tím Đen căn giữa)
-          SingleChildScrollView(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF0B1021), // Nền Tím Đen của khối nội dung 1024px
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildHeroSection(),
-                      _buildBodySection(context),
-                      _buildFooterSection(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          // Nội dung chính
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeroSection(),
+              _buildBodySection(context),
+              _buildFooterSection(),
+            ],
           ),
           
           // Pháo hoa (Confetti)
-          Align(
-            alignment: Alignment.center,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive, // Phun khắp nơi
-              shouldLoop: false,
-              colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple, Colors.yellow], // Nhiều màu sắc pháo hoa
+          Positioned(
+            top: 260,
+            left: 0,
+            right: 0,
+            child: Align(
+              alignment: Alignment.center,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive, // Phun khắp nơi
+                shouldLoop: false,
+                colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple, Colors.yellow], // Nhiều màu sắc pháo hoa
+              ),
             ),
           ),
         ],

@@ -29,59 +29,25 @@ class _SearchScreenState extends State<SearchScreen> {
 
   // --- Layout Tổng Thể Boxed Layout 1024px ---
   Widget _buildBody(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF0F2F5),
-      width: double.infinity,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640), // Nền Dark Navy đồng bộ
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // 1. Tiêu đề khối & 2 Tab nội bộ (Hình 4)
-                          _buildSearchHeaderAndTabs(),
-                          const SizedBox(height: 16),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Tiêu đề khối & 2 Tab nội bộ (Hình 4)
+          _buildSearchHeaderAndTabs(),
+          const SizedBox(height: 16),
 
-                          // 2. Khung Tìm Kiếm Google Cải Tiến
-                          _buildGoogleSearchSection(),
-                          const SizedBox(height: 28),
+          // 2. Khung Tìm Kiếm Google Cải Tiến
+          _buildGoogleSearchSection(),
+          const SizedBox(height: 28),
 
-                          // 3. Khối Khám phá thêm (Hình 4: "Tạo Thiết Kế", "Phối Màu Nhuộm", "Nâng Cấp OS")
-                          _buildExploreMore(),
-                          const SizedBox(height: 28),
+          // 3. Khối Khám phá thêm
+          _buildExploreMore(),
+          const SizedBox(height: 28),
 
-                          // 4. Footer diễn đàn
-                          _buildForumFooter(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // 4. Footer diễn đàn
+          _buildForumFooter(),
         ],
       ),
     );
@@ -420,18 +386,20 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: Scaffold(
-        backgroundColor: const Color(0xFFF0F2F5),
-        body: _buildBody(context),
-        bottomNavigationBar: MobileBottomNavBar(
-          currentIndex: _currentMobileIndex,
-          onTap: _onMobileNavTapped,
+    return Material(color: Colors.transparent, child: 
+      
+      ResponsiveLayout(
+        mobileBody: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
+              currentIndex: _currentMobileIndex,
+              onTap: _onMobileNavTapped,
+            ),
+          ],
         ),
-      ),
-      desktopBody: Scaffold(
-        backgroundColor: const Color(0xFFF0F2F5),
-        body: _buildBody(context),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
       ),
     );
   }

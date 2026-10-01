@@ -1091,47 +1091,22 @@ class UcpSuccessMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardContent = Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1024),
-        child: Container(
-          width: double.infinity,
-          margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E2640),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-            border: Border.all(color: const Color(0xFF2E3B5F)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                spreadRadius: 2,
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // 1. Khối Khám phá thêm (Hình 5: Nằm trên, 3 mục: Xem Phong thủy, Thiên văn học, Kiến thức Phong thủy)
-                  _buildExploreSection(),
-                  const SizedBox(height: 16),
+    final cardContent = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Khối Khám phá thêm (Hình 5: Nằm trên, 3 mục: Xem Phong thủy, Thiên văn học, Kiến thức Phong thủy)
+          _buildExploreSection(),
+          const SizedBox(height: 16),
 
-                  // 2. Khối Thông tin (Hình 5: Nền #131A30, viền #2E3B5F, bo góc 6px)
-                  _buildInfoBox(context),
-                  const SizedBox(height: 28),
+          // 2. Khối Thông tin (Hình 5: Nền #131A30, viền #2E3B5F, bo góc 6px)
+          _buildInfoBox(context),
+          const SizedBox(height: 28),
 
-                  // 3. Footer Diễn đàn
-                  _buildForumFooter(context),
-                ],
-              ),
-            ),
-          ),
-        ),
+          // 3. Footer Diễn đàn
+          _buildForumFooter(context),
+        ],
       ),
     );
 
@@ -1140,9 +1115,9 @@ class UcpSuccessMessage extends StatelessWidget {
       return cardContent;
     }
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
         child: cardContent,
       ),
     );

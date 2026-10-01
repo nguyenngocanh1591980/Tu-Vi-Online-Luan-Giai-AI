@@ -2789,16 +2789,11 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
         break;
     }
 
-    return SizedBox(
-      width: double.infinity,
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
                           if (_isRestrictedCategory) ...[
                             // 1. Tiêu đề & mô tả chuyên mục
                             _buildCategoryHeader(),
@@ -2874,14 +2869,10 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                             // 11. Footer diễn đàn
                             _buildForumFooter(),
                           ],
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
+        ],
+      ),
+    );
+  }
 
   // --- 1. Tiêu đề chuyên mục ---
   Widget _buildCategoryHeader() {
@@ -4307,18 +4298,19 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: _buildBody(context),
-        bottomNavigationBar: MobileBottomNavBar(
-          currentIndex: _currentMobileIndex,
-          onTap: _onMobileNavTapped,
+    return Material(color: Colors.transparent, child: 
+      
+      ResponsiveLayout(
+        mobileBody: Column(
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
+              currentIndex: _currentMobileIndex,
+              onTap: _onMobileNavTapped,
+            ),
+          ],
         ),
-      ),
-      desktopBody: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: _buildBody(context),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
       ),
     );
   }

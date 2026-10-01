@@ -39,13 +39,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Material(color: Colors.transparent, child: 
       appBar: AppBar(
         title: const Text('Xác Thực Email'),
         backgroundColor: Colors.red.shade900,
         foregroundColor: Colors.white,
       ),
-      body: Center(
+      Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: _isLoading

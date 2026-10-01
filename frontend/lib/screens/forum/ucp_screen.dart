@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/ucp_state_service.dart';
+import '../../utils/boxed_snack_bar.dart';
 import 'ucp_subscriptions_screen.dart';
 import 'ucp_favorites_screen.dart';
 import 'ucp_drafts_screen.dart';
@@ -154,77 +155,47 @@ class _UcpScreenState extends State<UcpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640),
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // 1. Title Bar (Đóng hộp riêng y hệt Hình 5)
-                          _buildTitleBar(),
-                          const SizedBox(height: 16),
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Title Bar
+            _buildTitleBar(),
+            const SizedBox(height: 16),
 
-                          // 2. Nội dung chính: Tabs + Sidebar + Main Area
-                          _buildUcpTabs(),
-                          if (_selectedTabIndex == 0)
-                            _buildMainLayout(context)
-                          else if (_selectedTabIndex == 1)
-                            UcpPersonalContent(
-                              initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
-                            )
-                          else if (_selectedTabIndex == 2)
-                            UcpSystemContent(
-                              initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
-                            )
-                          else if (_selectedTabIndex == 3)
-                            UcpMessagesContent(
-                              initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
-                            )
-                          else if (_selectedTabIndex == 4)
-                            UcpGroupsContent(
-                              initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
-                            )
-                          else if (_selectedTabIndex == 5)
-                            UcpFriendsContent(
-                              initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
-                            )
-                          else
-                            _buildUnderDevelopmentLayout(context, _tabs[_selectedTabIndex]),
-                          const SizedBox(height: 28),
-                          _buildForumFooter(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+            // 2. Nội dung chính: Tabs + Sidebar + Main Area
+            _buildUcpTabs(),
+            if (_selectedTabIndex == 0)
+              _buildMainLayout(context)
+            else if (_selectedTabIndex == 1)
+              UcpPersonalContent(
+                initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
+              )
+            else if (_selectedTabIndex == 2)
+              UcpSystemContent(
+                initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
+              )
+            else if (_selectedTabIndex == 3)
+              UcpMessagesContent(
+                initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
+              )
+            else if (_selectedTabIndex == 4)
+              UcpGroupsContent(
+                initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
+              )
+            else if (_selectedTabIndex == 5)
+              UcpFriendsContent(
+                initialSidebarIndex: _selectedSidebarIndex >= 0 ? _selectedSidebarIndex : 0,
+              )
+            else
+              _buildUnderDevelopmentLayout(context, _tabs[_selectedTabIndex]),
+            const SizedBox(height: 28),
+            _buildForumFooter(),
+          ],
+        ),
       ),
     );
   }
@@ -1077,56 +1048,8 @@ class _UcpScreenState extends State<UcpScreen> {
     );
   }
 
-  // Thanh thông báo nổi chuẩn Boxed 1024px
+  // Thanh thông báo nổi chuẩn Boxed — dùng helper toàn cục
   void _showBoxedSnackBar(String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(bottom: 24),
-        duration: const Duration(seconds: 3),
-        content: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.5)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.info_outline, color: Color(0xFFFFD700), size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      message,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    showBoxedSnackBar(context, message);
   }
 }

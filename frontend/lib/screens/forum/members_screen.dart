@@ -317,69 +317,43 @@ class _MembersScreenState extends State<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E2640),
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    spreadRadius: 2,
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 1. Tiêu đề khối Thành viên
-                      _buildHeaderTitle(),
-                      const SizedBox(height: 12),
+    return Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Tiêu đề khối Thành viên
+            _buildHeaderTitle(),
+            const SizedBox(height: 12),
 
-                      // 2. Thanh Tìm kiếm & Lọc chữ cái (Khóa chặt Hình 2)
-                      _buildFilterAndAlphabetBar(),
-                      const SizedBox(height: 12),
+            // 2. Thanh Tìm kiếm & Lọc chữ cái (Khóa chặt Hình 2)
+            _buildFilterAndAlphabetBar(),
+            const SizedBox(height: 12),
 
-                      // 3. Thanh thông tin kết quả & Phân trang trên
-                      _buildPaginationRow(),
-                      const SizedBox(height: 8),
+            // 3. Thanh thông tin kết quả & Phân trang trên
+            _buildPaginationRow(),
+            const SizedBox(height: 8),
 
-                      // 4. Bảng Dữ Liệu Thành Viên 5 cột (Khóa chặt Hình 2)
-                      _buildMembersTable(),
-                      const SizedBox(height: 12),
+            // 4. Bảng Dữ Liệu Thành Viên 5 cột (Khóa chặt Hình 2)
+            _buildMembersTable(),
+            const SizedBox(height: 12),
 
-                      // 5. Thanh thông tin kết quả & Phân trang dưới
-                      _buildPaginationRow(),
-                      const SizedBox(height: 16),
+            // 5. Thanh thông tin kết quả & Phân trang dưới
+            _buildPaginationRow(),
+            const SizedBox(height: 16),
 
-                      // 6. Jump Dropdown "Chuyển đến"
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: _buildJumpDropdown(),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // 7. Footer diễn đàn
-                      _buildForumFooter(),
-                    ],
-                  ),
-                ),
-              ),
+            // 6. Jump Dropdown "Chuyển đến"
+            Align(
+              alignment: Alignment.centerRight,
+              child: _buildJumpDropdown(),
             ),
-          ),
+            const SizedBox(height: 24),
+
+            // 7. Footer diễn đàn
+            _buildForumFooter(),
+          ],
         ),
       ),
     );

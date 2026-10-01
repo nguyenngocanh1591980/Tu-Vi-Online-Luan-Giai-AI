@@ -24,3 +24,65 @@
    - **Metadata bắt buộc**: Khi tạo hoặc cập nhật `implementation_plan.md`, luôn luôn đặt `RequestFeedback: true` và `UserFacing: true` để giao diện hiển thị nút "Proceed" cho người dùng xác nhận.
 
 6. **Quy tắc nguồn dữ liệu An Sao Thần Sát**: Khi an bất kỳ sao Thần Sát nào (Cát Tinh hoặc Hung Tinh) từ tài liệu chuẩn hóa, mặc định AI **CHỈ ĐƯỢC DÙNG bảng biểu** (dạng bảng kẻ ô/ma trận) làm dữ liệu chính và **DUY NHẤT** để mã hóa và an sao. Nghiêm cấm tuyệt đối không được sử dụng các đoạn văn bản Lịch lệ / Khẩu quyết / Thi ca (dữ liệu dạng chữ mô tả) để tham khảo, làm kim chỉ nam hoặc suy diễn thay thế cho bảng biểu. Nếu phát hiện có bất kỳ vấn đề, điểm khó hiểu hoặc lỗi định dạng nào trong bảng biểu, AI phải **treo cờ hỏi trực tiếp người dùng** để nhận chỉ dẫn.
+
+7. **Quy tắc Tối Cao về Chuẩn Layout Flutter Web (BẤT DI BẤT DỊCH — KHÔNG CẦN NHẮC LẠI)**:
+   Mọi screen mới xây dựng trong project `E:\Tu vi online\frontend` BẮT BUỘC phải tuân thủ kiến trúc layout sau, KHÔNG ĐƯỢC vi phạm dù bất kỳ lý do nào:
+
+   **Kiến trúc chuẩn của `MainLayout` (file `lib/widgets/main_layout.dart`):**
+   ```
+   Scaffold(backgroundColor: 0xFFF0F2F5)   ← nền xám toàn viewport, TOP=0
+     └─ Padding(padding: EdgeInsets.only(bottom: 24))  ← hở đáy 24px cố định
+          └─ Align(alignment: topCenter)
+               └─ ConstrainedBox(maxWidth: 1024)
+                    └─ Container(borderRadius: vertical(bottom: 8), boxShadow)
+                         └─ ClipRRect(bottom: Radius.circular(8))  ← cắt xén vật lý bo góc đáy
+                              └─ Stack(alignment: bottomCenter)    ← Stack bao ngoài Scaffold nội bộ
+                                   ├─ Scaffold(backgroundColor: 0xFF1E2640)  ← Scaffold nội bộ nền tím
+                                   │    └─ Column
+                                   │         ├─ MainNavigationBar()
+                                   │         ├─ BreadcrumbWidget()
+                                   │         └─ Expanded(child: **SCREEN CON**)  ← Dập tắt lỗi infinite size
+                                   └─ Align(alignment: bottomCenter)
+                                        └─ GlobalDockedSnackBar()  ← Widget thông báo tùy chỉnh neo chặt đáy 1024px
+   ```
+
+   **Quy tắc bắt buộc khi tạo screen mới:**
+   - Screen con **CHỈ TRẢ VỀ NỘI DUNG THUẦN** — không bao giờ tự bọc `Center → ConstrainedBox(1024) → Container(margin/borderRadius)`.
+   - `backgroundColor` của bất kỳ `Scaffold` nào trong screen con **BẮT BUỘC** là `Colors.transparent`.
+   - **NGHIÊM CẤM** dùng `margin: EdgeInsets.only(bottom: 24)` trên Container wrapper — đã có ở MainLayout.
+   - **NGHIÊM CẤM** dùng `borderRadius: BorderRadius.vertical(bottom: Radius.circular(8))` trên Container wrapper — đã có ClipRRect ở MainLayout.
+   - **NGHIÊM CẤM** dùng `backgroundColor: Color(0xFFF0F2F5)` trong screen con — đây là màu của Scaffold ngoài cùng, nếu dùng sẽ đè lên nền và phá vỡ khoảng hở 24px đáy.
+   - Thông báo PHẢI gọi qua helper `showBoxedSnackBar()`, `showErrorSnackBar()`, `showSuccessSnackBar()` từ `lib/utils/boxed_snack_bar.dart` — KHÔNG dùng ScaffoldMessenger hay SnackBar mặc định.
+
+   **Template chuẩn cho screen mới (cuộn được):**
+   ```dart
+   class MyNewScreen extends StatelessWidget {
+     @override
+     Widget build(BuildContext context) {
+       return Scaffold(
+         backgroundColor: Colors.transparent,  // BẮT BUỘC
+         body: SingleChildScrollView(
+           child: Column(
+             crossAxisAlignment: CrossAxisAlignment.stretch,
+             children: [
+               // Nội dung screen ở đây
+             ],
+           ),
+         ),
+       );
+     }
+   }
+   ```
+
+   **Template chuẩn cho screen mới (không cuộn):**
+   ```dart
+   class MyNewScreen extends StatelessWidget {
+     @override
+     Widget build(BuildContext context) {
+       return const Scaffold(
+         backgroundColor: Colors.transparent,  // BẮT BUỘC
+         body: Center(child: Text('Nội dung')),
+       );
+     }
+   }
+   ```

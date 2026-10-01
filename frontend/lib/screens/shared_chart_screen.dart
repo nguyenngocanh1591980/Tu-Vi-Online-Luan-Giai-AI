@@ -80,24 +80,24 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
+      return Material(color: Colors.transparent, child: 
         appBar: AppBar(
           title: const Text('Đang tải lá số...'),
           backgroundColor: Colors.red.shade900,
           foregroundColor: Colors.white,
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_errorMessage != null) {
-      return Scaffold(
+      return Material(color: Colors.transparent, child: 
         appBar: AppBar(
           title: const Text('Lỗi tải lá số'),
           backgroundColor: Colors.red.shade900,
           foregroundColor: Colors.white,
         ),
-        body: Center(
+        Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -124,7 +124,7 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
       );
     }
 
-    return Scaffold(
+    return Material(color: Colors.transparent, child: 
       appBar: AppBar(
         title: const Text('Lá Số Tử Vi'),
         backgroundColor: Colors.red.shade900,
@@ -139,7 +139,7 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
           )
         ],
       ),
-      body: Center(
+      Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(

@@ -433,9 +433,9 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     final isDesktop = ResponsiveLayout.isDesktop(context);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: _buildBody(context),
+    return Material(color: Colors.transparent, child: 
+      
+      _buildBody(context),
       bottomNavigationBar: !isDesktop
           ? MobileBottomNavBar(
               currentIndex: _currentMobileIndex,
@@ -445,62 +445,28 @@ class _FaqScreenState extends State<FaqScreen> {
     );
   }
 
-  // --- Layout Tổng Thể Boxed Layout 1024px ---
+  // --- Layout Tổng Thể ---
   Widget _buildBody(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF0F2F5),
-      width: double.infinity,
-      child: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 0, bottom: 24.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640), // Nền Tím Đen / Dark Navy đồng bộ
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(8)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // 1. Tiêu đề khối Hỏi Đáp
-                          _buildPageHeader(),
-                          const SizedBox(height: 16),
+    return SingleChildScrollView(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 1. Tiêu đề khối Hỏi Đáp
+          _buildPageHeader(),
+          const SizedBox(height: 16),
 
-                          // 2. Mục Lục FAQ (Index) dạng 2 cột đồng bộ phpBB gốc
-                          _buildFaqIndex(context),
-                          const SizedBox(height: 24),
+          // 2. Mục Lục FAQ (Index) dạng 2 cột đồng bộ phpBB gốc
+          _buildFaqIndex(context),
+          const SizedBox(height: 24),
 
-                          // 3. Danh sách Chi Tiết 11 Nhóm Câu Hỏi & Trả Lời
-                          _buildFaqContent(),
-                          const SizedBox(height: 24),
+          // 3. Danh sách Chi Tiết 11 Nhóm Câu Hỏi & Trả Lời
+          _buildFaqContent(),
+          const SizedBox(height: 24),
 
-                          // 4. Footer diễn đàn đồng bộ phpBB
-                          _buildForumFooter(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // 4. Footer diễn đàn đồng bộ phpBB
+          _buildForumFooter(),
         ],
       ),
     );

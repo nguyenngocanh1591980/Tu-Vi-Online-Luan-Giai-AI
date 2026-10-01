@@ -10,7 +10,7 @@ Future<String?> showMemberSearchDialog(
   return showDialog<String>(
     context: context,
     builder: (context) => Dialog(
-      backgroundColor: Colors.transparent,
+      
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1024, maxHeight: 900),
@@ -18,7 +18,7 @@ Future<String?> showMemberSearchDialog(
           borderRadius: BorderRadius.circular(8),
           child: Scaffold(
             backgroundColor: const Color(0xFF1E2640),
-            body: MemberSearchContent(
+            MemberSearchContent(
               isDialog: true,
               onSelectMember: (username) {
                 if (onSelectMember != null) {
@@ -40,40 +40,11 @@ class MemberSearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 24, bottom: 24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E2640),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: MemberSearchContent(isDialog: false),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+    return const Material(color: Colors.transparent, child: 
+      
+      SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: MemberSearchContent(isDialog: false),
       ),
     );
   }
