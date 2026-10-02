@@ -31,13 +31,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Tạo Bài Viết'),
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
       ),
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [

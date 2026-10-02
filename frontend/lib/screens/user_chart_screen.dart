@@ -55,7 +55,6 @@ class _UserChartScreenState extends State<UserChartScreen> {
   bool _isHideName = false;
   bool _isHideDob = false;
   bool _isUploading = false;
-  bool _isLoading = true;
   String _generatedUrl = kIsWeb ? Uri.base.origin : 'http://localhost:5000';
 
   @override
@@ -87,8 +86,8 @@ class _UserChartScreenState extends State<UserChartScreen> {
     super.dispose();
   }
 
-  Future<void> _generateChartData() async {
-    final data = await ChartGenerator.generateAsync(
+  void _generateChartData() {
+    mockData = ChartGenerator.generate(
       isFullMode: false,
       name: widget.name,
       gender: widget.gender,
@@ -100,12 +99,6 @@ class _UserChartScreenState extends State<UserChartScreen> {
       year: widget.year,
       viewYear: widget.viewYear,
     );
-    if (mounted) {
-      setState(() {
-        mockData = data;
-        _isLoading = false;
-      });
-    }
   }
 
   Future<void> _launchSocialUrl(String urlString) async {
@@ -427,15 +420,7 @@ class _UserChartScreenState extends State<UserChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Material(color: Colors.transparent, child: 
-        backgroundColor: Color(0xFF1E2640),
-        Center(
-          child: CircularProgressIndicator(color: Color(0xFFD4AF37)),
-        ),
-      );
-    }
-    return Material(color: Colors.transparent, child: 
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Tử Vi AI - Chuyên Gia Luận Giải'),
         backgroundColor: Colors.red.shade900,
@@ -447,7 +432,7 @@ class _UserChartScreenState extends State<UserChartScreen> {
           )
         ],
       ),
-      Row(
+      body: Row(
         children: [
           // Left Pane (History List)
           Container(

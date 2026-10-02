@@ -104,7 +104,7 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
       final response = await http.post(
         Uri.parse('http://localhost:5169/api/contracts'),
         headers: {'Content-Type': 'application/json'},
-        json.encode(payload),
+        body: json.encode(payload),
       );
 
       if (response.statusCode == 200) {
@@ -151,13 +151,13 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Hợp Đồng Dịch Vụ'),
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
       ),
-      Container(
+      body: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [

@@ -433,15 +433,21 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     final isDesktop = ResponsiveLayout.isDesktop(context);
 
-    return Material(color: Colors.transparent, child: 
-      
-      _buildBody(context),
-      bottomNavigationBar: !isDesktop
-          ? MobileBottomNavBar(
+    return Material(
+      color: Colors.transparent,
+      child: ResponsiveLayout(
+        mobileBody: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildBody(context),
+            MobileBottomNavBar(
               currentIndex: _currentMobileIndex,
               onTap: _onMobileNavTapped,
-            )
-          : null,
+            ),
+          ],
+        ),
+        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+      ),
     );
   }
 

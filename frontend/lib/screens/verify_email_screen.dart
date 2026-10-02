@@ -39,13 +39,16 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Xác Thực Email'),
         backgroundColor: Colors.red.shade900,
         foregroundColor: Colors.white,
       ),
-      Center(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: _isLoading
@@ -97,8 +100,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     ),
                   ],
                 ),
-        ),
       ),
-    );
+    ));
   }
 }

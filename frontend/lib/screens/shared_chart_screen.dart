@@ -80,24 +80,24 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Material(color: Colors.transparent, child: 
+      return Scaffold(
         appBar: AppBar(
           title: const Text('Đang tải lá số...'),
           backgroundColor: Colors.red.shade900,
           foregroundColor: Colors.white,
         ),
-        const Center(child: CircularProgressIndicator()),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_errorMessage != null) {
-      return Material(color: Colors.transparent, child: 
+      return Scaffold(
         appBar: AppBar(
           title: const Text('Lỗi tải lá số'),
           backgroundColor: Colors.red.shade900,
           foregroundColor: Colors.white,
         ),
-        Center(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -124,22 +124,25 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
       );
     }
 
-    return Material(color: Colors.transparent, child: 
-      appBar: AppBar(
-        title: const Text('Lá Số Tử Vi'),
-        backgroundColor: Colors.red.shade900,
-        foregroundColor: Colors.white,
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/');
-            },
-            icon: const Icon(Icons.home, color: Colors.white),
-            label: const Text('Tạo lá số của riêng bạn', style: TextStyle(color: Colors.white)),
-          )
-        ],
-      ),
-      Center(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text('Lá Số Tử Vi'),
+          backgroundColor: Colors.red.shade900,
+          foregroundColor: Colors.white,
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              icon: const Icon(Icons.home, color: Colors.white),
+              label: const Text('Tạo lá số của riêng bạn', style: TextStyle(color: Colors.white)),
+            )
+          ],
+        ),
+        body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -167,6 +170,6 @@ class _SharedChartScreenState extends State<SharedChartScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
