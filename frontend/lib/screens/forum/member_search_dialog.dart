@@ -18,7 +18,7 @@ Future<String?> showMemberSearchDialog(
           borderRadius: BorderRadius.circular(8),
           child: Scaffold(
             backgroundColor: const Color(0xFF1E2640),
-            MemberSearchContent(
+            body: MemberSearchContent(
               isDialog: true,
               onSelectMember: (username) {
                 if (onSelectMember != null) {

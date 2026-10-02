@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        jsonEncode({
+        body: jsonEncode({
           "ActionType": 6,
           "LaSo": {
             "chart_id": "CHART_TEST_999",

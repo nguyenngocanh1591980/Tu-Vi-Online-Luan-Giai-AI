@@ -142,7 +142,7 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
         final response = await http.post(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
-          jsonEncode({
+          body: jsonEncode({
             'date': dateStr,
             'time': timeStr,
           }),
