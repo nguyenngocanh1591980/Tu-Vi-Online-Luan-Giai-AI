@@ -41,12 +41,11 @@ class _AppsScreenState extends State<AppsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 1. Banner Tiêu Đề
@@ -66,7 +65,6 @@ class _AppsScreenState extends State<AppsScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 

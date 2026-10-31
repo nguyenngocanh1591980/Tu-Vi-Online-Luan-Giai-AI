@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/breadcrumb_state_service.dart';
 import '../services/ucp_state_service.dart';
+import '../utils/uri_safe_extension.dart';
+import '../utils/forum_text_helper.dart';
 
 class BreadcrumbWidget extends StatefulWidget {
   const BreadcrumbWidget({super.key});
@@ -18,11 +21,13 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
     super.initState();
     _checkLoginStatus();
     UcpStateService.navigationState.addListener(_onUcpStateChanged);
+    BreadcrumbStateService.currentTopic.addListener(_onUcpStateChanged);
   }
 
   @override
   void dispose() {
     UcpStateService.navigationState.removeListener(_onUcpStateChanged);
+    BreadcrumbStateService.currentTopic.removeListener(_onUcpStateChanged);
     super.dispose();
   }
 
@@ -55,14 +60,20 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Lấy uri hiện tại từ go_router
-    final uri = GoRouterState.of(context).uri;
+    // Lấy uri và state hiện tại từ go_router
+    final routerState = GoRouterState.of(context);
+    final uri = routerState.uri;
     final path = uri.path;
 
     // Không hiển thị thanh Breadcrumb và SubNavigation khi đang ở Trang chủ ('/')
     if (path == '/') {
       return const SizedBox.shrink();
     }
+
+    final rawExtra = routerState.extra;
+    final Map<String, dynamic>? extra = rawExtra is Map<String, dynamic>
+        ? rawExtra
+        : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
 
     // Phân tích và gán chuỗi breadcrumb dựa trên path
     List<Widget> breadcrumbs = [
@@ -94,6 +105,91 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
       breadcrumbs.addAll([
         _buildDivider(),
         _buildCrumbText('Diễn đàn'),
+      ]);
+    } else if (path == '/forum/create-category') {
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText('Tạo thêm Chuyên mục và Lớp học Lý số mới (Admin)'),
+      ]);
+    } else if (path == '/forum/create-topic') {
+      final qParams = uri.queryParameters;
+        String slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? 'thong-bao-su-kien';
+      String? customTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+      String title = _resolveCategoryTitle(slug, customTitle);
+
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText(title, onTap: () => context.go('/forum/category/$slug')),
+        _buildDivider(),
+        _buildCrumbText(ForumTextHelper.getCreatePageTitle(slug)),
+      ]);
+    } else if (path == '/forum/edit-topics' ||
+               path.endsWith('/edit-topics') ||
+               path == '/forum/edit-topic-form' ||
+               path.endsWith('/edit-topic-form')) {
+      final qParams = uri.queryParameters;
+  
+      String slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? '';
+      if (slug.isEmpty && uri.pathSegments.contains('category')) {
+        final catIdx = uri.pathSegments.indexOf('category');
+        if (catIdx + 1 < uri.pathSegments.length) {
+          slug = uri.pathSegments[catIdx + 1];
+        }
+      }
+      if (slug.isEmpty) slug = 'thong-bao-su-kien';
+
+      String? customTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+      String title = _resolveCategoryTitle(slug, customTitle);
+
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText(title, onTap: () => context.go('/forum/category/$slug')),
+        _buildDivider(),
+        _buildCrumbText(ForumTextHelper.getCreatePageTitle(slug, isEditMode: true)),
+      ]);
+    } else if (path == '/forum/delete-topics' ||
+               path.endsWith('/delete-topics')) {
+      final qParams = uri.queryParameters;
+
+      String slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? '';
+      if (slug.isEmpty && uri.pathSegments.contains('category')) {
+        final catIdx = uri.pathSegments.indexOf('category');
+        if (catIdx + 1 < uri.pathSegments.length) {
+          slug = uri.pathSegments[catIdx + 1];
+        }
+      }
+      if (slug.isEmpty) slug = 'thong-bao-su-kien';
+
+      String? customTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+      String title = _resolveCategoryTitle(slug, customTitle);
+
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText(title, onTap: () => context.go('/forum/category/')),
+        _buildDivider(),
+        _buildCrumbText(ForumTextHelper.getDeletePageTitle(slug)),
+      ]);
+    } else if (path == '/forum/delete-categories' || path == '/forum/admin-delete-categories') {
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText('Xóa các Chuyên mục và Lớp học Lý số (Admin)'),
+      ]);
+    } else if (path == '/forum/edit-categories' || path == '/forum/admin-edit-categories' || path == '/forum/edit-category-form') {
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText('Sửa Chuyên mục và Lớp học Lý số (Admin)'),
       ]);
     } else if (path == '/forum/new-posts') {
       breadcrumbs.addAll([
@@ -384,6 +480,46 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
         _buildDivider(),
         _buildCrumbText('Lá số chia sẻ'),
       ]);
+    } else if (path.startsWith('/forum/post/') || path.startsWith('/forum/topic/')) {
+      final qParams = uri.queryParameters;
+      String topicId = '';
+      if (uri.pathSegments.isNotEmpty) {
+        final lastSeg = uri.pathSegments.last;
+        if (lastSeg == 'reply' && uri.pathSegments.length >= 2) {
+          topicId = uri.pathSegments[uri.pathSegments.length - 2];
+        } else {
+          topicId = lastSeg;
+        }
+      }
+
+      // Navigation State Guard (Chuẩn 2026): Lấy từ extra hoặc fallback sang StateProvider toàn cục
+      final cached = BreadcrumbStateService.getCachedTopic(topicId);
+      final rawSlug = extra?['categorySlug'] as String? ?? qParams['categorySlug'] ?? cached?.categorySlug ?? '';
+      final slug = rawSlug.isNotEmpty ? rawSlug : 'thong-bao-su-kien';
+      final customTitle = extra?['categoryTitle'] as String? ?? qParams['categoryTitle'] ?? cached?.categoryTitle;
+      final catTitle = (customTitle != null && customTitle.trim().isNotEmpty)
+          ? customTitle.trim()
+          : _resolveCategoryTitle(slug, null);
+
+      final rawTopicTitle = extra?['topicTitle'] as String? ?? extra?['title'] as String? ?? qParams['title'] ?? cached?.topicTitle;
+      final topicTitle = (rawTopicTitle != null && rawTopicTitle.trim().isNotEmpty)
+          ? rawTopicTitle.trim()
+          : 'Chi tiết bài viết';
+
+      breadcrumbs.addAll([
+        _buildDivider(),
+        _buildCrumbText('Diễn đàn', onTap: () => context.go('/forum')),
+        _buildDivider(),
+        _buildCrumbText(catTitle, onTap: () {
+          if (slug.isNotEmpty && slug != 'null') {
+            context.go('/forum/category/$slug');
+          } else {
+            context.go('/forum');
+          }
+        }),
+        _buildDivider(),
+        _buildCrumbText(topicTitle),
+      ]);
     }
 
     return SizedBox(
@@ -545,9 +681,53 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
   }
 
   Widget _buildQuickLinksMenu(String currentPath) {
-    final isMembersActive = currentPath == '/forum/members';
-    final isTeamActive = currentPath == '/forum/team' || currentPath == '/forum/about-us';
-    final isAnyActive = isMembersActive || isTeamActive;
+    final activeMap = {
+      'dien_dan': currentPath == '/forum',
+      'new_posts': currentPath == '/forum/new-posts',
+      'recent_posts': currentPath == '/forum/recent-posts',
+      'your_posts': currentPath == '/forum/your-posts' || currentPath == '/forum/user-posts',
+      'unread_posts': currentPath == '/forum/unread-posts',
+      'unanswered_posts': currentPath == '/forum/unanswered-posts',
+      'search': currentPath == '/forum/search',
+      'faq': currentPath == '/forum/faq',
+      'members': currentPath == '/forum/members',
+      'team': currentPath == '/forum/team' || currentPath == '/forum/about-us',
+    };
+    final isAnyActive = activeMap.values.any((v) => v);
+
+    PopupMenuItem<String> buildMenuItem({
+      required String value,
+      required IconData icon,
+      required String label,
+      required bool isActive,
+    }) {
+      return PopupMenuItem<String>(
+        value: value,
+        height: 38,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: isActive ? const Color(0xFFFFD700) : Colors.white,
+                  fontSize: 13.5,
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -555,86 +735,143 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
       ),
       child: PopupMenuButton<String>(
         tooltip: 'Liên kết',
+        constraints: const BoxConstraints(minWidth: 200, maxWidth: 280),
         offset: const Offset(0, 32),
         color: const Color(0xFF131A30),
+        popUpAnimationStyle: AnimationStyle(
+          duration: const Duration(milliseconds: 150),
+          reverseDuration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: const BorderSide(color: Color(0xFF2E3B5F), width: 1),
         ),
         onSelected: (value) {
-          if (value == 'members') {
-            context.go('/forum/members');
-          } else if (value == 'team') {
-            context.go('/forum/team');
+          switch (value) {
+            case 'dien_dan':
+              context.go('/forum');
+              break;
+            case 'new_posts':
+              context.go('/forum/new-posts');
+              break;
+            case 'recent_posts':
+              context.go('/forum/recent-posts');
+              break;
+            case 'your_posts':
+              context.go('/forum/your-posts');
+              break;
+            case 'unread_posts':
+              context.go('/forum/unread-posts');
+              break;
+            case 'unanswered_posts':
+              context.go('/forum/unanswered-posts');
+              break;
+            case 'search':
+              context.go('/forum/search');
+              break;
+            case 'faq':
+              context.go('/forum/faq');
+              break;
+            case 'members':
+              context.go('/forum/members');
+              break;
+            case 'team':
+              context.go('/forum/team');
+              break;
           }
         },
         itemBuilder: (context) => [
-          PopupMenuItem<String>(
-            value: 'members',
-            height: 40,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.group,
-                  color: isMembersActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
-                  size: 16,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Thành viên',
-                  style: TextStyle(
-                    color: isMembersActive ? const Color(0xFFFFD700) : Colors.white,
-                    fontSize: 13.5,
-                    fontWeight: isMembersActive ? FontWeight.bold : FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+          buildMenuItem(
+            value: 'dien_dan',
+            icon: Icons.forum,
+            label: 'Trang chủ Diễn đàn',
+            isActive: activeMap['dien_dan'] ?? false,
           ),
           const PopupMenuDivider(height: 1),
-          PopupMenuItem<String>(
+          buildMenuItem(
+            value: 'new_posts',
+            icon: Icons.description,
+            label: 'Bài viết mới',
+            isActive: activeMap['new_posts'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'recent_posts',
+            icon: Icons.description_outlined,
+            label: 'Bài gần đây',
+            isActive: activeMap['recent_posts'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'your_posts',
+            icon: Icons.file_present,
+            label: 'Bài của bạn',
+            isActive: activeMap['your_posts'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'unread_posts',
+            icon: Icons.mark_as_unread,
+            label: 'Bài chưa xem',
+            isActive: activeMap['unread_posts'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'unanswered_posts',
+            icon: Icons.assignment_late,
+            label: 'Bài chưa được trả lời',
+            isActive: activeMap['unanswered_posts'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'search',
+            icon: Icons.search,
+            label: 'Tìm kiếm',
+            isActive: activeMap['search'] ?? false,
+          ),
+          buildMenuItem(
+            value: 'faq',
+            icon: Icons.help_outline,
+            label: 'Hỏi đáp',
+            isActive: activeMap['faq'] ?? false,
+          ),
+          const PopupMenuDivider(height: 1),
+          buildMenuItem(
+            value: 'members',
+            icon: Icons.group,
+            label: 'Thành viên',
+            isActive: activeMap['members'] ?? false,
+          ),
+          buildMenuItem(
             value: 'team',
-            height: 40,
+            icon: Icons.security,
+            label: 'Chúng tôi',
+            isActive: activeMap['team'] ?? false,
+          ),
+        ],
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.security,
-                  color: isTeamActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
+                  Icons.menu,
+                  color: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
                   size: 16,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 Text(
-                  'Chúng tôi',
+                  'Liên kết',
                   style: TextStyle(
-                    color: isTeamActive ? const Color(0xFFFFD700) : Colors.white,
-                    fontSize: 13.5,
-                    fontWeight: isTeamActive ? FontWeight.bold : FontWeight.w500,
+                    color: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    decorationColor: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
                   ),
                 ),
               ],
             ),
           ),
-        ],
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.menu,
-              color: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
-              size: 16,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Liên kết',
-              style: TextStyle(
-                color: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                decorationColor: isAnyActive ? const Color(0xFFFFD700) : const Color(0xFFEF5350),
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -675,6 +912,40 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
     );
   }
 
+  String _resolveCategoryTitle(String slug, String? customTitle) {
+    if (customTitle != null && customTitle.trim().isNotEmpty) {
+      return customTitle.safeUriDecode();
+    }
+    if (slug.contains('huong-nghiep')) return 'Hướng nghiệp';
+    if (slug.contains('cuoc-song-muon-mau') || slug.contains('cuoc-song')) return 'Cuộc sống muôn màu';
+    if (slug.contains('cau-lac-bo') || slug.contains('giao-luu-ket-ban')) return 'Câu lạc bộ - Giao lưu - Kết bạn';
+    if (slug.contains('xem-bang-cac-mon-khac') || slug.contains('cac-mon-khac')) return 'Xem bằng các môn khác';
+    if (slug.contains('co-hoc') || slug.contains('van-hoa') || slug.contains('tin-nguong')) return 'Cổ học - Văn hóa - Tín ngưỡng';
+    if (slug.contains('xem-ly-so-phuong-tay') || slug == 'xem-phuong-tay') return 'Xem Lý số Phương tây';
+    if (slug.contains('xem-tuong') || slug.contains('dat-ten') || slug.contains('xem-tuong-dat-ten-sinh-trac')) return 'Xem tướng, đặt tên, sinh trắc';
+    if (slug.contains('xem-tu-vi') || slug == 'tu-vi-xem') return 'Xem Tử vi';
+    if (slug.contains('xem-tu-tru') || slug == 'tu-tru-xem') return 'Xem Tứ trụ';
+    if (slug.contains('xem-que') || slug == 'que-xem') return 'Xem quẻ';
+    if (slug.contains('xem-phong-thuy') || slug == 'phong-thuy-xem') return 'Xem Phong thủy';
+    if (slug.contains('xem-ngay') || slug.contains('luan-tuoi') || slug == 'xem-ngay-luan-tuoi') return 'Xem ngày, luận tuổi';
+    if (slug.contains('lop-hoc-tu-vi') || slug == 'lop-tu-vi') return 'Lớp học Tử vi';
+    if (slug.contains('lop-hoc-tu-tru') || slug == 'lop-tu-tru') return 'Lớp học tứ trụ';
+    if (slug.contains('lop-hoc-chiem-tinh') || slug == 'lop-chiem-tinh' || slug.contains('chiem-tinh')) return 'Lớp học chiêm tinh';
+    if (slug.contains('lop-hoc-phong-thuy') || slug == 'lop-phong-thuy') return 'Lớp học Phong thủy';
+    if (slug.contains('lop-hoc-tong-hop') || slug == 'lop-tong-hop' || slug.contains('tong-hop')) return 'Lớp học tổng hợp';
+    if (slug.contains('lop-hoc-dich-ly') || slug == 'lop-dich-ly' || slug.contains('dich-ly')) return 'Lớp học Dịch lý';
+    if (slug.contains('sinh-trac')) return 'Kiến thức Sinh trắc';
+    if (slug.contains('phuong-tay')) return 'Lý số Phương Tây';
+    if (slug.contains('ly-so-khac')) return 'Kiến thức Lý số khác';
+    if (slug.contains('thu-ngo') || slug.contains('y-kien')) return 'Thư ngỏ - Ý kiến';
+    if (slug.contains('don-toan')) return 'Kiến thức Độn toán';
+    if (slug.contains('phong-thuy')) return 'Kiến thức Phong thủy';
+    if (slug.contains('tu-vi')) return 'Kiến thức Tử vi';
+    if (slug.contains('tu-tru')) return 'Kiến thức Tứ trụ';
+    if (slug.contains('co-ban') || slug == 'kien-thuc' || slug.contains('kien-thuc')) return 'Kiến thức Cơ bản';
+    return 'Thông báo - Sự kiện';
+  }
+
   Widget _buildDivider() {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 6),
@@ -684,14 +955,17 @@ class _BreadcrumbWidgetState extends State<BreadcrumbWidget> {
 
   Widget _buildCrumbText(String text, {VoidCallback? onTap}) {
     final isClickable = onTap != null;
-    return InkWell(
-      onTap: onTap,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: isClickable ? const Color(0xFFFFD700) : Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 14.5,
+    return MouseRegion(
+      cursor: isClickable ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: InkWell(
+        onTap: onTap,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: isClickable ? const Color(0xFFFFD700) : Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 14.5,
+          ),
         ),
       ),
     );

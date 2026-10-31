@@ -399,7 +399,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
       ),
     );
   }

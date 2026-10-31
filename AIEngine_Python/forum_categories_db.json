@@ -1,0 +1,275 @@
+[
+  {
+    "title": "Thông báo - Sự kiện",
+    "description": "Thông báo chính thức của Ban quản trị diễn đàn Lý Số Việt Nam",
+    "icon": "description_outlined",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Cơ bản",
+    "description": "Trao đổi kiến thức cơ bản về Lý số: thiên văn, lịch pháp, âm dương, ngũ hành, can chi, bát quái, hà đồ, lạc thư, ...👍⭐",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1",
+    "icon": "description_outlined",
+    "isLocked": false
+  },
+  {
+    "title": "Kiến thức Tử vi",
+    "description": "Trao đổi kiến thức về bộ môn tử vi",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Tứ trụ",
+    "description": "Trao đổi kiến thức về tứ trụ (tử bình, bát tự)",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Độn toán",
+    "description": "Trao đổi kiến thức về các môn độn toán: mai hoa, lục hào, thái ất, kỳ môn...",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Phong thủy",
+    "description": "Trao đổi kiến thức về Phong thủy, địa lý",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Sinh trắc",
+    "description": "Trao đổi kiến thức về sinh trắc, tướng pháp, chi tay, danh tính, chữ viết, tâm lý, điềm mộng",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Lý số Phương Tây",
+    "description": "Trao đổi kiến thức về các môn Lý số của Phương Tây: Tử vi, Thần số, ...",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Kiến thức Lý số khác",
+    "description": "Kiến thức chung về Lý số hoặc chưa được phân loại😊",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1",
+    "icon": "none"
+  },
+  {
+    "title": "Thư ngỏ - Ý kiến",
+    "description": "Gửi lời tri ân, thư ngỏ và đóng góp ý kiến về diễn đàn",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 1"
+  },
+  {
+    "title": "Lớp học tử vi",
+    "description": "Chuyên mục dành cho lớp học tử vi",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Lớp học tứ trụ",
+    "description": "Lớp học tứ trụ cơ bản, dành cho người mới bắt đầu",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Lớp học chiêm tinh",
+    "description": "Khu vực dành riêng cho lớp học V.",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": true,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Lớp học Phong thủy",
+    "description": "Khu vực dành riêng cho lớp học IV",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Lớp học tổng hợp",
+    "description": "Khu vực thực hành luận đoán của các học viên. Các thành viên có thể giao lưu.",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Lớp học Dịch lý",
+    "description": "Chuyên mục dành cho lớp học quẻ dịch",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Lớp học Lý số"
+  },
+  {
+    "title": "Hướng nghiệp",
+    "description": "Tư vấn hướng nghiệp: chọn ngành, chọn nghề, chọn trường.",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": true,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem Tử vi",
+    "description": "Xem, hỏi đáp, luận giải về tử vi",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem Tứ trụ",
+    "description": "Hỏi đáp, luận giải, trao đổi về tử bình (tứ trụ, bát tự)",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem quẻ",
+    "description": "Hỏi đáp, luận giải về các môn gieo quẻ: Lục nhâm, Thái Ất, Lục hào, Mai hoa ...",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem Phong thủy",
+    "description": "Hỏi đáp, tư vấn về phong thủy, địa lý",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem ngày, luận tuổi",
+    "description": "Xem ngày tốt, luận tuổi theo âm dương, ngũ hành, can chi, bát quái, cửu cung",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem Lý số Phương tây",
+    "description": "Hỏi đáp về tử vi tây phương, thần số học",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2",
+    "icon": "none"
+  },
+  {
+    "title": "Xem tướng, đặt tên, sinh trắc",
+    "description": "Các bài viết trao đổi học thuật về môn tướng pháp, chỉ tay...",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Xem bằng các môn khác",
+    "description": "Xem và luận đoán bằng các môn Lý số khác, chưa phân loại",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Cổ học - Văn hóa - Tín ngưỡng",
+    "description": "Trao đổi về y học, võ thuật, văn hóa, phong tục, tín ngưỡng",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Cuộc sống muôn màu",
+    "description": "Chia sẻ thơ ca, nhạc họa, các trải nghiệm của cuộc sống",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "title": "Câu lạc bộ - Giao lưu - Kết bạn",
+    "description": "Dành cho thành viên giao lưu, kết bạn, buôn chuyện",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": null,
+    "groupType": "Chuyên mục 2"
+  },
+  {
+    "icon": "description_outlined",
+    "title": "Cuộc sống Vui vẻ",
+    "description": "Chuyên mục bàn luận về cuộc sống",
+    "topics": 0,
+    "posts": 0,
+    "isHighlighted": false,
+    "lastPost": {
+      "title": "Chưa có bài viết",
+      "author": "Admin",
+      "authorColor": "#EF5350",
+      "time": "Vừa xong"
+    },
+    "groupType": "ChuyenMuc1",
+    "isLocked": false
+  }
+]

@@ -69,15 +69,26 @@ void main() {
       expect(find.byType(GlobalDockedSnackBar), findsOneWidget,
           reason: 'GlobalDockedSnackBar phải tồn tại trong Stack để neo đáy');
 
-      // 3b. ClipRRect bo góc đáy phải tồn tại (Khuôn đúc cắt xén vật lý)
+      // 3b. ClipRRect bo góc đáy 8px phải tồn tại ở cả 2 tầng (Khối tím chính & Thanh SnackBar neo đáy)
       final clipFinder = find.byWidgetPredicate(
         (widget) =>
             widget is ClipRRect &&
             widget.borderRadius ==
                 const BorderRadius.vertical(bottom: Radius.circular(8)),
       );
-      expect(clipFinder, findsOneWidget,
-          reason: 'ClipRRect bo góc đáy 8px phải tồn tại trong MainLayout');
+      expect(clipFinder, findsNWidgets(2),
+          reason: 'ClipRRect bo góc đáy 8px phải tồn tại ở cả 2 tầng trong MainLayout');
+
+      // 3c. SingleChildScrollView tồn tại ở Tầng 1 và Column có mainAxisSize.min để ôm khít nội dung
+      expect(find.byType(SingleChildScrollView), findsWidgets,
+          reason: 'SingleChildScrollView phải tồn tại trong MainLayout để cuộn toàn trang');
+      final columnFinder = find.byWidgetPredicate(
+        (widget) =>
+            widget is Column &&
+            widget.mainAxisSize == MainAxisSize.min,
+      );
+      expect(columnFinder, findsWidgets,
+          reason: 'Column trong MainLayout phải có mainAxisSize.min để ôm khít nội dung, không kéo dài vô tận');
 
       // 3c. Padding(bottom: 24) phải tồn tại (Bức tường chặn đáy)
       final paddingFinder = find.byWidgetPredicate(

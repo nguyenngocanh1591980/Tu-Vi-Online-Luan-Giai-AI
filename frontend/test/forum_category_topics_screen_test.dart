@@ -4,13 +4,39 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/screens/forum/category_topics_screen.dart';
 import 'package:frontend/screens/forum/forum_home_screen.dart';
+import 'package:frontend/services/forum_category_data_helper.dart';
 
 void main() {
+  tearDown(() {
+    ForumCategoryDataHelper.useMockData = false;
+  });
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    ForumCategoryDataHelper.useMockData = true;
   });
 
   group('CategoryTopicsScreen Tests - 6 Chuyên Mục Diễn Đàn Chuẩn Boxed 1024px & Dark Navy', () {
+    testWidgets('Màn hình Thông báo - Sự kiện: Chế độ Production (useMockData = false) hiển thị sạch 0 bài viết mẫu', (tester) async {
+      tester.view.physicalSize = const Size(1280, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: CategoryTopicsScreen(slug: 'thong-bao-su-kien', useMockData: false),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Khong con bat ky bai viet mau nao tren giao dien
+      expect(find.text('Talkshow hướng nghiệp tháng 7/2026'), findsNothing);
+      expect(find.text('Tư vấn có ủng hộ phí để duy trì diễn đàn'), findsNothing);
+      expect(find.text('Hướng dẫn sử dụng diễn đàn'), findsNothing);
+      expect(find.text('Bảng giá dịch vụ tư vấn tại Lý số Hội quán'), findsNothing);
+      expect(find.text('Nội quy diễn đàn Lý số Việt Nam'), findsNothing);
+      expect(find.text('Nhân dịp KN 15 năm thành lập diễn đàn, tặng 50% giá trị gói tư vấn lý số khảo trắc'), findsNothing);
+    });
+
     testWidgets('Màn hình Thông báo - Sự kiện: Boxed Layout 1024px, Dark Navy và bảo toàn 100% nội dung Hình 1', (tester) async {
       tester.view.physicalSize = const Size(1280, 1200);
       tester.view.devicePixelRatio = 1.0;

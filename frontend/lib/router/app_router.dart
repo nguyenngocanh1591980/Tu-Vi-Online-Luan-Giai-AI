@@ -1,11 +1,14 @@
+import '../services/forum_category_data_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home_screen.dart';
 import '../screens/apps_screen.dart';
 import '../screens/almanac_screen.dart';
 import '../screens/horoscope_info_screen.dart';
 import '../screens/forum/forum_home_screen.dart';
+import '../screens/forum/post_detail_screen.dart';
 import '../screens/forum/new_posts_screen.dart';
 import '../screens/forum/unread_posts_screen.dart';
 import '../screens/forum/user_posts_screen.dart';
@@ -25,10 +28,22 @@ import '../screens/forum/ucp_groups_screen.dart';
 import '../screens/forum/ucp_friends_screen.dart';
 import '../screens/forum/member_search_dialog.dart';
 import '../screens/forum/member_profile_screen.dart';
+import '../screens/forum/member_email_screen.dart';
 import '../screens/forum/members_screen.dart';
 import '../screens/forum/about_us_screen.dart';
 import '../screens/forum/recent_posts_screen.dart';
 import '../screens/forum/category_topics_screen.dart';
+import '../screens/forum/admin_create_category_screen.dart';
+import '../screens/forum/admin_create_topic_screen.dart';
+import '../screens/forum/admin_edit_topics_screen.dart';
+import '../screens/forum/admin_delete_categories_screen.dart';
+import '../screens/forum/admin_delete_topics_screen.dart';
+import '../models/forum_category_model.dart';
+import '../screens/forum/admin_edit_categories_screen.dart';
+import '../screens/forum/admin_edit_category_form_screen.dart';
+import '../screens/forum/post_reply_screen.dart';
+import '../models/forum_draft_model.dart';
+import '../utils/uri_safe_extension.dart';
 import '../screens/login_screen.dart';
 import '../screens/forgot_password_screen.dart';
 import '../screens/resend_activation_screen.dart';
@@ -37,6 +52,30 @@ import '../screens/contact_screen.dart';
 import '../screens/verify_email_screen.dart';
 import '../screens/shared_chart_screen.dart';
 import '../widgets/main_layout.dart';
+
+
+/// Route Guard bảo vệ các tuyến đường Admin (Topic & Category Management)
+Future<String?> _requireAdminRouteGuard(BuildContext context, GoRouterState state) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('role');
+    final username = prefs.getString('username');
+    final token = prefs.getString('auth_token') ?? prefs.getString('jwt_token');
+
+    final bool isAdmin = (role != null && role.trim().toLowerCase() == 'admin') ||
+        (username != null &&
+            (username.trim().toLowerCase() == 'admin' ||
+                username.trim().toLowerCase() == 'admin_user')) ||
+        (token != null && token.toLowerCase().contains('admin'));
+
+    if (!isAdmin) {
+      return '/forum';
+    }
+  } catch (_) {
+    return '/forum';
+  }
+  return null;
+}
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
@@ -85,11 +124,15 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/forum/your-posts',
-          builder: (context, state) => const UserPostsScreen(),
+          builder: (context, state) => UserPostsScreen(
+            username: state.uri.queryParameters['username'],
+          ),
         ),
         GoRoute(
           path: '/forum/user-posts',
-          builder: (context, state) => const UserPostsScreen(),
+          builder: (context, state) => UserPostsScreen(
+            username: state.uri.queryParameters['username'],
+          ),
         ),
         GoRoute(
           path: '/forum/unanswered-posts',
@@ -140,12 +183,171 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const MembersScreen(),
         ),
         GoRoute(
+          path: '/members',
+          builder: (context, state) => const MembersScreen(),
+        ),
+        GoRoute(
           path: '/forum/team',
           builder: (context, state) => const AboutUsScreen(),
         ),
         GoRoute(
           path: '/forum/about-us',
           builder: (context, state) => const AboutUsScreen(),
+        ),
+        GoRoute(
+          path: '/forum/create-category',
+          builder: (context, state) => const AdminCreateCategoryScreen(),
+        ),
+        GoRoute(
+          path: '/forum/create-topic',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final slug = extra?['categorySlug'] as String? ?? 'thong-bao-su-kien';
+            final title = extra?['categoryTitle'] as String? ?? 'Thông báo - Sự kiện';
+            return AdminCreateTopicScreen(categorySlug: slug, categoryTitle: title);
+          },
+        ),
+        GoRoute(
+          path: '/forum/edit-topics',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? 'thong-bao-su-kien';
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            return AdminEditTopicsScreen(categorySlug: slug, categoryTitle: title);
+          },
+        ),
+        GoRoute(
+          path: '/forum/category/:slug/edit-topics',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final slug = state.pathParameters['slug'] ?? 'thong-bao-su-kien';
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            return AdminEditTopicsScreen(categorySlug: slug, categoryTitle: title);
+          },
+        ),
+        GoRoute(
+          path: '/forum/delete-topics',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? 'thong-bao-su-kien';
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            return AdminDeleteTopicsScreen(categorySlug: slug, categoryTitle: title);
+          },
+        ),
+        GoRoute(
+          path: '/forum/category/:slug/delete-topics',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final slug = state.pathParameters['slug'] ?? 'thong-bao-su-kien';
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            return AdminDeleteTopicsScreen(categorySlug: slug, categoryTitle: title);
+          },
+        ),
+        GoRoute(
+          path: '/forum/edit-topic-form',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final slug = qParams['categorySlug'] ?? extra?['categorySlug'] as String? ?? 'thong-bao-su-kien';
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            final editTopicData = extra?['editTopicData'] as Map<String, dynamic>?;
+            final isEditMode = extra?['isEditMode'] as bool? ?? (qParams['isEditMode'] == 'true' || qParams['topicId'] != null);
+            final topicId = qParams['topicId'] ?? extra?['topicId'];
+            return AdminCreateTopicScreen(
+              categorySlug: slug,
+              categoryTitle: title,
+              initialTopicData: editTopicData ?? (topicId != null ? {'id': topicId} : null),
+              isEditMode: isEditMode,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/forum/category/:slug/edit-topic-form',
+          redirect: _requireAdminRouteGuard,
+          builder: (context, state) {
+            final slug = state.pathParameters['slug'] ?? 'thong-bao-su-kien';
+            final rawExtra = state.extra;
+            final extra = rawExtra is Map<String, dynamic>
+                ? rawExtra
+                : (rawExtra is Map ? Map<String, dynamic>.from(rawExtra) : null);
+            final qParams = state.uri.queryParameters;
+            final rawTitle = qParams['categoryTitle'] ?? extra?['categoryTitle'] as String?;
+            final defaultTitle = ForumCategoryDataHelper.getCategoryTitle(slug);
+            final title = rawTitle.safeUriDecode(defaultTitle);
+            final editTopicData = extra?['editTopicData'] as Map<String, dynamic>?;
+            final isEditMode = extra?['isEditMode'] as bool? ?? (qParams['isEditMode'] == 'true' || qParams['topicId'] != null);
+            final topicId = qParams['topicId'] ?? extra?['topicId'];
+            return AdminCreateTopicScreen(
+              categorySlug: slug,
+              categoryTitle: title,
+              initialTopicData: editTopicData ?? (topicId != null ? {'id': topicId} : null),
+              isEditMode: isEditMode,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/forum/delete-categories',
+          builder: (context, state) => const AdminDeleteCategoriesScreen(),
+        ),
+        GoRoute(
+          path: '/forum/admin-delete-categories',
+          builder: (context, state) => const AdminDeleteCategoriesScreen(),
+        ),
+        GoRoute(
+          path: '/forum/edit-categories',
+          builder: (context, state) => const AdminEditCategoriesScreen(),
+        ),
+        GoRoute(
+          path: '/forum/admin-edit-categories',
+          builder: (context, state) => const AdminEditCategoriesScreen(),
+        ),
+        GoRoute(
+          path: '/forum/edit-category-form',
+          builder: (context, state) {
+            final category = state.extra as ForumCategoryItem?;
+            if (category == null) {
+              return const AdminEditCategoriesScreen();
+            }
+            return AdminEditCategoryFormScreen(category: category);
+          },
         ),
         GoRoute(
           path: '/forum/recent-posts',
@@ -177,24 +379,138 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/forum/profile',
-          builder: (context, state) => const MemberProfileScreen(username: 'Gacon1980'),
+          builder: (context, state) => const MemberProfileScreen(),
         ),
         GoRoute(
-          path: '/forum/member/:username',
+          path: '/forum/post/:id',
+          builder: (context, state) => PostDetailScreen(id: state.pathParameters['id'] ?? '1'),
+        ),
+        GoRoute(
+          path: '/forum/topic/:id',
+          builder: (context, state) => PostDetailScreen(id: state.pathParameters['id'] ?? '1'),
+        ),
+        GoRoute(
+          path: '/forum/post/:id/reply',
           builder: (context, state) {
-            final username = state.pathParameters['username'] ?? 'Gacon1980';
-            return MemberProfileScreen(username: username);
+            final id = state.pathParameters['id'] ?? '1';
+            final extra = state.extra as Map<String, dynamic>?;
+            final queryQuote = state.uri.queryParameters['quote'];
+            final queryIndexStr = state.uri.queryParameters['index'];
+            final queryIndex = queryIndexStr != null ? int.tryParse(queryIndexStr) : null;
+            final rawIndex = extra?['quotedPostIndex'];
+            final quotedPostIndex = rawIndex is int ? rawIndex : (rawIndex != null ? int.tryParse(rawIndex.toString()) : queryIndex);
+
+            final queryIsQuoteStr = state.uri.queryParameters['isQuote'];
+            final rawIsQuote = extra?['isQuoteAction'];
+            bool isQuoteAction = false;
+            if (rawIsQuote is bool) {
+              isQuoteAction = rawIsQuote;
+            } else if (rawIsQuote != null) {
+              isQuoteAction = rawIsQuote.toString().toLowerCase() == 'true' || rawIsQuote.toString() == '1';
+            } else if (queryIsQuoteStr != null) {
+              isQuoteAction = queryIsQuoteStr.toLowerCase() == 'true' || queryIsQuoteStr == '1';
+            } else if (extra?['quoteContent'] != null && quotedPostIndex != null) {
+              isQuoteAction = true;
+            }
+
+            // Type-Safe Query Guard: Nếu isQuoteAction = true nhưng quotedPostIndex bị null hoặc âm, tự động fallback về false
+            if (isQuoteAction && (quotedPostIndex == null || quotedPostIndex < 0)) {
+              isQuoteAction = false;
+            }
+
+            final quotedPostId = extra?['quotedPostId']?.toString() ?? queryQuote;
+
+            return PostReplyScreen(
+              topicId: id,
+              initialQuoteAuthor: extra?['quoteAuthor'] as String?,
+              initialQuoteContent: extra?['quoteContent'] as String?,
+              initialTitle: extra?['initialTitle'] as String?,
+              initialContent: extra?['initialContent'] as String?,
+              rehydrateDraft: extra?['rehydrateDraft'] as ForumDraftItem?,
+              quotedPostId: quotedPostId,
+              quotedPostIndex: quotedPostIndex,
+              isQuoteAction: isQuoteAction,
+            );
           },
         ),
         GoRoute(
-          path: '/forum/user/:username',
+          path: '/forum/topic/:id/reply',
           builder: (context, state) {
-            final username = state.pathParameters['username'] ?? 'Gacon1980';
-            return MemberProfileScreen(username: username);
+            final id = state.pathParameters['id'] ?? '1';
+            final extra = state.extra as Map<String, dynamic>?;
+            final queryQuote = state.uri.queryParameters['quote'];
+            final queryIndexStr = state.uri.queryParameters['index'];
+            final queryIndex = queryIndexStr != null ? int.tryParse(queryIndexStr) : null;
+            final rawIndex = extra?['quotedPostIndex'];
+            final quotedPostIndex = rawIndex is int ? rawIndex : (rawIndex != null ? int.tryParse(rawIndex.toString()) : queryIndex);
+
+            final queryIsQuoteStr = state.uri.queryParameters['isQuote'];
+            final rawIsQuote = extra?['isQuoteAction'];
+            bool isQuoteAction = false;
+            if (rawIsQuote is bool) {
+              isQuoteAction = rawIsQuote;
+            } else if (rawIsQuote != null) {
+              isQuoteAction = rawIsQuote.toString().toLowerCase() == 'true' || rawIsQuote.toString() == '1';
+            } else if (queryIsQuoteStr != null) {
+              isQuoteAction = queryIsQuoteStr.toLowerCase() == 'true' || queryIsQuoteStr == '1';
+            } else if (extra?['quoteContent'] != null && quotedPostIndex != null) {
+              isQuoteAction = true;
+            }
+
+            // Type-Safe Query Guard: Nếu isQuoteAction = true nhưng quotedPostIndex bị null hoặc âm, tự động fallback về false
+            if (isQuoteAction && (quotedPostIndex == null || quotedPostIndex < 0)) {
+              isQuoteAction = false;
+            }
+
+            final quotedPostId = extra?['quotedPostId']?.toString() ?? queryQuote;
+
+            return PostReplyScreen(
+              topicId: id,
+              initialQuoteAuthor: extra?['quoteAuthor'] as String?,
+              initialQuoteContent: extra?['quoteContent'] as String?,
+              initialTitle: extra?['initialTitle'] as String?,
+              initialContent: extra?['initialContent'] as String?,
+              rehydrateDraft: extra?['rehydrateDraft'] as ForumDraftItem?,
+              quotedPostId: quotedPostId,
+              quotedPostIndex: quotedPostIndex,
+              isQuoteAction: isQuoteAction,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/forum/member/:username/email',
+          builder: (context, state) => MemberEmailScreen(
+            targetUsername: state.pathParameters['username'] ?? '',
+          ),
+        ),
+        GoRoute(
+          path: '/forum/member/:username',
+          builder: (context, state) => MemberProfileScreen(
+            username: state.pathParameters['username'] ?? '',
+          ),
+        ),
+        GoRoute(
+          path: '/forum/user/:username',
+          builder: (context, state) => MemberProfileScreen(
+            username: state.pathParameters['username'] ?? '',
+          ),
+        ),
+        GoRoute(
+          path: '/forum/category',
+          redirect: (context, state) {
+            debugPrint('⚠️ [GuardRoute] Phát hiện truy cập thiếu slug: /forum/category. Tự động chuyển hướng an toàn về /forum');
+            return '/forum';
           },
         ),
         GoRoute(
           path: '/forum/category/:slug',
+          redirect: (context, state) {
+            final slug = state.pathParameters['slug'];
+            if (slug == null || slug.isEmpty || slug == 'null') {
+              return '/forum';
+            }
+            return null;
+          },
           builder: (context, state) {
             final slug = state.pathParameters['slug'] ?? 'thong-bao-su-kien';
             return CategoryTopicsScreen(slug: slug);

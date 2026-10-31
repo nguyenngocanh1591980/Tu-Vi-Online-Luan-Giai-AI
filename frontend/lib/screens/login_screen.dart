@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../services/auth_service.dart';
-import 'waiting_verification_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../providers/auth_provider.dart';
+import '../providers/forum_stats_provider.dart';
 import 'zalo_oauth_screen.dart';
 import 'package:frontend/utils/boxed_snack_bar.dart';
 
@@ -136,6 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    if (!_isLogin && _selectedDate == null) {
+      _showBoxedErrorSnackBar('Vui lòng chọn ngày, tháng, năm sinh (*)');
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
@@ -143,6 +151,25 @@ class _LoginScreenState extends State<LoginScreen> {
         final errorMsg = await _authService.login(username, password, rememberMe: _rememberMe, hideOnlineStatus: _hideOnlineStatus);
         if (!mounted) return;
         if (errorMsg == null) {
+          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString('jwt_token') ?? '';
+          final role = prefs.getString('role') ?? 'User';
+          final prevVisit = prefs.getString('previous_visit_time');
+          
+          if (mounted) {
+            context.read<AuthProvider>().setLoggedIn(
+              username: username,
+              token: token,
+              role: role,
+              previousVisitTime: prevVisit,
+            );
+            context.read<ForumStatsProvider>().notifyUserLogin(
+              username,
+              isInvisible: _hideOnlineStatus,
+            );
+          }
+
+          if (!mounted) return;
           showBoxedSnackBar(
             context,
             'Xin Chào "$username"! Hãy Tham Gia Và Chia Sẻ Các Tính Năng Ưu Việt Của Diễn Đàn Tử Vi Online-AI Tới Mọi Người.',
@@ -190,10 +217,33 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         if (!mounted) return;
         if (errorMsg == null) {
-          Navigator.pushReplacement(
+          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString('jwt_token') ?? '';
+          final role = prefs.getString('role') ?? 'User';
+          
+          if (mounted) {
+            context.read<AuthProvider>().setLoggedIn(
+              username: username,
+              token: token,
+              role: role,
+            );
+            context.read<ForumStatsProvider>().notifyUserLogin(
+              username,
+            );
+          }
+
+          if (!mounted) return;
+          showBoxedSnackBar(
             context,
-            MaterialPageRoute(builder: (context) => const WaitingVerificationScreen()),
+            'Đăng ký thành công! Xin Chào "$username"! Tài khoản đã sẵn sàng hoạt động.',
+            backgroundColor: const Color(0xFF2E7D32),
+            textColor: Colors.white,
+            border: Border.all(color: const Color(0xFFD4AF37), width: 2),
+            fontWeight: FontWeight.bold,
+            duration: const Duration(seconds: 4),
           );
+
+          context.go('/');
         } else {
           _showBoxedErrorSnackBar(errorMsg);
         }
@@ -221,10 +271,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-       // Đổi sang Tím Đen đồng bộ toàn bộ màn hình
-      SingleChildScrollView(
-        child: Theme(
+    return Material(
+      color: Colors.transparent,
+      child: Theme(
                 data: Theme.of(context).copyWith(
                   textTheme: Theme.of(context).textTheme.apply(
                     bodyColor: Colors.white,
@@ -378,7 +427,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () => _selectDate(context),
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            labelText: 'Ngày sinh (Không bắt buộc)',
+                            labelText: 'Ngày sinh (*)',
                             prefixIcon: Icon(Icons.calendar_today),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -553,8 +602,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-      ),
-    );
+      );
 }
 
   @override

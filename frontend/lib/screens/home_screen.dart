@@ -393,9 +393,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      Stack(
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
         children: [
           // Nội dung chính
           Column(
@@ -512,17 +512,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           : const [
                               Icon(Icons.auto_awesome, color: Colors.purple, size: 20, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
                               SizedBox(width: 10),
-                              Text(
-                                'Đăng Ký Ngay & Nhiều Ưu Đãi Cho Thành Viên Mới',
-                                style: TextStyle(
-                                  color: Colors.red, // Chữ màu đỏ
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
+                              Flexible(
+                                child: Text(
+                                  'Đăng Ký Ngay & Nhiều Ưu Đãi Cho Thành Viên Mới',
+                                  style: const TextStyle(
+                                    color: Colors.red, // Chữ màu đỏ
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              Icon(Icons.auto_awesome, color: Colors.purple, size: 20, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.auto_awesome, color: Colors.purple, size: 20, shadows: [Shadow(color: Colors.purpleAccent, blurRadius: 8)]),
                             ],
                       ),
                     ),

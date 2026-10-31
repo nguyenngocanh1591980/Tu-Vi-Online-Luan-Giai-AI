@@ -181,11 +181,10 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
                     // Title Bar chuẩn Dark Navy mép-tới-mép 1024px
                     Container(
@@ -237,9 +236,8 @@ class _AlmanacScreenState extends State<AlmanacScreen> {
                     ),
                   ],
                 ),
-              ),
-            );
-          }
+    );
+  }
 
   Widget _buildFormInputRow() {
     return Wrap(

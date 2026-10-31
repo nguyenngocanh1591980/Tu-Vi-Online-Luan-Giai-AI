@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../utils/boxed_snack_bar.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
 
@@ -15,6 +16,40 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
   int _currentPage = 1;
   final int _totalPages = 6;
   final TextEditingController _searchController = TextEditingController();
+  bool _isNavigating = false;
+  DateTime? _lastNavigationTime;
+
+  void _navigateToTopic(BuildContext context, Map<String, dynamic> topic) {
+    final now = DateTime.now();
+    if (_isNavigating ||
+        (_lastNavigationTime != null &&
+            now.difference(_lastNavigationTime!).inMilliseconds < 500)) {
+      return;
+    }
+
+    final dynamic rawId = topic['id'] ?? topic['topicId'] ?? topic['Id'];
+    final String? id = (rawId != null && rawId.toString().trim().isNotEmpty)
+        ? rawId.toString().trim()
+        : null;
+
+    if (id == null || id.isEmpty) {
+      showErrorSnackBar(context, 'Dữ liệu chủ đề bị lỗi');
+      return;
+    }
+
+    _isNavigating = true;
+    _lastNavigationTime = now;
+
+    context.push('/forum/post/').then((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    }).catchError((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    });
+  }
 
   // Dữ liệu chuẩn xác 20 bài viết mới nhất từ Hình 3
   final List<Map<String, dynamic>> _posts = [
@@ -724,12 +759,18 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Icon trạng thái bài viết
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0, right: 10.0),
-                  child: Icon(
-                    Icons.description,
-                    color: const Color(0xFFEF5350), // Đỏ tươi nổi bật
-                    size: 20,
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => _navigateToTopic(context, post),
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 2.0, right: 10.0),
+                      child: Icon(
+                        Icons.description,
+                        color: Color(0xFFEF5350), // Đỏ tươi nổi bật
+                        size: 20,
+                      ),
+                    ),
                   ),
                 ),
                 // Nội dung text tiêu đề & metadata
@@ -739,19 +780,9 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Tiêu đề bài viết (Trắng sáng, tối đa 2 dòng kèm dấu ...)
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          post['title'],
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3,
-                          ),
-                        ),
+                      _HoverablePostTitle(
+                        title: post['title'] ?? '',
+                        onTap: () => _navigateToTopic(context, post),
                       ),
                       const SizedBox(height: 4),
                       // Dòng thông tin người gửi » thời gian » chuyên mục
@@ -885,7 +916,7 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
                       ),
                       const SizedBox(width: 4),
                       InkWell(
-                        onTap: () {},
+                        onTap: () => _navigateToTopic(context, post),
                         child: const Icon(Icons.open_in_new, color: Color(0xFF00E5FF), size: 13),
                       ),
                     ],
@@ -1066,7 +1097,51 @@ class _NewPostsScreenState extends State<NewPostsScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
+      ),
+    );
+  }
+}
+
+class _HoverablePostTitle extends StatefulWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  const _HoverablePostTitle({
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverablePostTitle> createState() => _HoverablePostTitleState();
+}
+
+class _HoverablePostTitleState extends State<_HoverablePostTitle> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final displayColor = _isHovered ? const Color(0xFF1E88E5) : Colors.white;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: displayColor,
+            fontSize: 14.5,
+            fontWeight: FontWeight.w600,
+            height: 1.3,
+            decoration: _isHovered ? TextDecoration.underline : null,
+            decorationColor: displayColor,
+          ),
+        ),
       ),
     );
   }

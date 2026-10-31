@@ -1,0 +1,7 @@
+Fix 2 (Quan Ly) OK
+RoleId=3 idx: 5927
+"          targetUser.RoleId = 3;\n                targetUser.Badge = \"\u0110I\u1ec0U H\u00c0NH\";\n                targetUser.BadgeType = \"badge_green\";\n                targetUser.RankTitle = \"\u0110i\u1ec1u H\u00e0nh\";\n            }\n         "
+Fix 3 (Dieu Hanh) OK
+Fix 4 (Tu Van) OK
+Fix 5 (Dai Su) OK
+File saved.

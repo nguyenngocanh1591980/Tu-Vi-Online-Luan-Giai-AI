@@ -446,7 +446,7 @@ class _FaqScreenState extends State<FaqScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
       ),
     );
   }

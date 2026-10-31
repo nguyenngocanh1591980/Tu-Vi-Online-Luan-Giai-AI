@@ -1,8 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../models/forum_stats_model.dart';
+import '../../models/forum_category_model.dart';
+import '../../providers/forum_stats_provider.dart';
+import '../../providers/forum_category_provider.dart';
+import '../../services/signalr_service.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
+import '../../widgets/share_dialog.dart';
 
 class ForumHomeScreen extends StatefulWidget {
   const ForumHomeScreen({super.key});
@@ -14,21 +22,103 @@ class ForumHomeScreen extends StatefulWidget {
 class _ForumHomeScreenState extends State<ForumHomeScreen> {
   int _currentMobileIndex = 2; // Diễn đàn
   bool _isLoggedIn = false;
+  late final ValueNotifier<String> _currentTimeNotifier;
+  String _lastVisitTimeString = 'Lần ghé thăm trước: Chưa có';
+  Timer? _clockTimer;
+
+  static String _formatDateTime(DateTime dt) {
+    final hh = dt.hour.toString().padLeft(2, '0');
+    final mm = dt.minute.toString().padLeft(2, '0');
+    final d = dt.day.toString().padLeft(2, '0');
+    final m = dt.month.toString().padLeft(2, '0');
+    final y = (dt.year % 100).toString().padLeft(2, '0');
+    return '$hh:$mm, $d/$m/$y';
+  }
 
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _currentTimeNotifier = ValueNotifier<String>('Hôm nay, ${_formatDateTime(DateTime.now())}');
+    _startClockTimer();
+    _initVisitAndLoginStatus();
+    _setupSignalR();
   }
 
-  Future<void> _checkLoginStatus() async {
+  StreamSubscription<String?>? _reconnectSub;
+
+  void _onCategoryUpdatedSignalR(List<Object?>? args) {
+    if (mounted) {
+      try {
+        Provider.of<ForumCategoryProvider>(context, listen: false).initData();
+      } catch (_) {}
+    }
+  }
+
+  void _setupSignalR() {
+    signalRService.listenToCategoryUpdated(_onCategoryUpdatedSignalR);
+    _reconnectSub?.cancel();
+    _reconnectSub = signalRService.onReconnected.listen((_) {
+      if (mounted) {
+        try {
+          Provider.of<ForumCategoryProvider>(context, listen: false).initData();
+        } catch (_) {}
+      }
+    });
+  }
+
+  void _startClockTimer() {
+    _clockTimer?.cancel();
+    if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
+      return;
+    }
+    _clockTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      final nowFormatted = 'Hôm nay, ${_formatDateTime(DateTime.now())}';
+      if (_currentTimeNotifier.value != nowFormatted) {
+        _currentTimeNotifier.value = nowFormatted;
+      }
+    });
+  }
+
+  Future<void> _initVisitAndLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token') ?? prefs.getString('jwt_token');
+
+    final currentCustom = prefs.getString('current_login_time');
+    final prevVisitFromDb = prefs.getString('previous_visit_time');
+    final lastVisitCustom = (prevVisitFromDb != null && prevVisitFromDb.isNotEmpty)
+        ? prevVisitFromDb
+        : prefs.getString('last_visit_time');
+
+    if (currentCustom != null && currentCustom.isNotEmpty) {
+      _currentTimeNotifier.value = 'Hôm nay, $currentCustom';
+    }
+
+    String lastVisitStr;
+    if (lastVisitCustom != null && lastVisitCustom.isNotEmpty) {
+      lastVisitStr = 'Lần ghé thăm trước: $lastVisitCustom';
+    } else {
+      lastVisitStr = 'Lần ghé thăm trước: Chưa có';
+    }
+
+    // Cập nhật mốc ghé thăm cho các phiên sau
+    final currentVisitFormatted = _formatDateTime(DateTime.now());
+    await prefs.setString('last_visit_time', currentVisitFormatted);
+
     if (mounted) {
       setState(() {
         _isLoggedIn = token != null && token.isNotEmpty;
+        _lastVisitTimeString = lastVisitStr;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _reconnectSub?.cancel();
+    signalRService.removeCategoryUpdatedListener(_onCategoryUpdatedSignalR);
+    _clockTimer?.cancel();
+    _currentTimeNotifier.dispose();
+    super.dispose();
   }
 
   // ===========================================================================
@@ -37,138 +127,88 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
 
   // Bảng 1: Thông báo & Kiến thức (Chuẩn xác 100% theo Hình 1 media_1790350843499.png)
   final Map<String, dynamic> _group1 = {
-    'headerTitle': 'Chuyên mục',
+    'headerTitle': 'Chuyên mục 1',
     'column4Header': 'Bài cuối',
     'forums': [
       {
         'icon': Icons.description_outlined,
         'title': 'Thông báo - Sự kiện',
         'description': 'Thông báo chính thức của Ban quản trị diễn đàn Lý Số Việt Nam',
-        'topics': 251,
-        'posts': 846,
-        'lastPost': {
-          'title': 'TL: Thay đổi về nâng cấp trìn...',
-          'author': 'nncuong',
-          'authorColor': const Color(0xFFEF5350),
-          'time': '14:03, 28/11/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Cơ bản',
         'description': 'Trao đổi kiến thức cơ bản về Lý số: thiên văn, lịch pháp, âm dương, ngũ hành, can chi, bát quái, hà đồ, lạc thư, ...',
-        'topics': 47,
-        'posts': 454,
-        'lastPost': {
-          'title': 'Cảnh báo năm 2026 với người c...',
-          'author': 'tutru',
-          'authorColor': const Color(0xFFFFA726),
-          'time': '19:08, 24/12/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Tử vi',
         'description': 'Trao đổi kiến thức về bộ môn tử vi',
-        'topics': 689,
-        'posts': 15905,
-        'lastPost': {
-          'title': 'TL: Lá số vua Gia- Long',
-          'author': 'Rommel',
-          'authorColor': Colors.white,
-          'time': '07:09, 24/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Tứ trụ',
         'description': 'Trao đổi kiến thức về tứ trụ (tử bình, bát tự)',
-        'topics': 72,
-        'posts': 1332,
-        'lastPost': {
-          'title': 'TL: "Thuyết Vũ Trụ Cổ Xưa" (b...',
-          'author': 'VULONG',
-          'authorColor': const Color(0xFF4CAF50),
-          'time': '14:51, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Độn toán',
         'description': 'Trao đổi kiến thức về các môn độn toán: mai hoa, lục hào, thái ất, kỳ môn...',
-        'topics': 59,
-        'posts': 1437,
-        'lastPost': {
-          'title': 'Hà Đồ - Lạc Thư',
-          'author': 'wwwbinh179',
-          'authorColor': Colors.white,
-          'time': '20:48, 16/04/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Phong thủy',
         'description': 'Trao đổi kiến thức về Phong thủy, địa lý',
-        'topics': 189,
-        'posts': 1392,
-        'lastPost': {
-          'title': 'TL: Hình ảnh nhà thờ tổ của N...',
-          'author': 'ĐỗVạnThông',
-          'authorColor': Colors.white,
-          'time': '18:31, 12/04/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Sinh trắc',
         'description': 'Trao đổi kiến thức về sinh trắc, tướng pháp, chi tay, danh tính, chữ viết, tâm lý, điềm mộng',
-        'topics': 170,
-        'posts': 3554,
-        'lastPost': {
-          'title': 'TL: XEM TƯỚNG MŨI',
-          'author': 'Thiên Khôi Khai Hoa',
-          'authorColor': Colors.white,
-          'time': '23:02, 31/10/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lý số Phương Tây',
         'description': 'Trao đổi kiến thức về các môn Lý số của Phương Tây: Tử vi, Thần số, ...',
-        'topics': 19,
-        'posts': 1167,
-        'lastPost': {
-          'title': 'TL: Ý nghĩa cung hoàng đạo Th...',
-          'author': 'begauhn',
-          'authorColor': Colors.white,
-          'time': '18:53, 17/01/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Kiến thức Lý số khác',
         'description': 'Kiến thức chung về Lý số hoặc chưa được phân loại',
-        'topics': 85,
-        'posts': 858,
-        'lastPost': {
-          'title': 'TL: CÔNG KHAI NHỮNG NGUY THỤY...',
-          'author': 'Mộc huynh',
-          'authorColor': Colors.white,
-          'time': '04:46, 17/12/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Thư ngỏ - Ý kiến',
         'description': 'Gửi lời tri ân, thư ngỏ và đóng góp ý kiến về diễn đàn',
-        'topics': 723,
-        'posts': 8237,
-        'lastPost': {
-          'title': 'TL: Mời anh chị em tới dự Caf...',
-          'author': 'hellokitty2026',
-          'authorColor': Colors.white,
-          'time': '23:21, 22/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
     ]
   };
@@ -183,245 +223,155 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
         'icon': Icons.description_outlined,
         'title': 'Lớp học tử vi',
         'description': 'Chuyên mục dành cho lớp học tử vi',
-        'topics': 13,
-        'posts': 123,
-        'lastPost': {
-          'title': null,
-          'author': 'harrychasson',
-          'authorColor': Colors.white,
-          'time': '14:53, 14/11/23',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lớp học tứ trụ',
         'description': 'Lớp học tứ trụ cơ bản, dành cho người mới bắt đầu',
-        'topics': 4,
-        'posts': 27,
-        'lastPost': {
-          'title': null,
-          'author': 'nncuong',
-          'authorColor': const Color(0xFFEF5350),
-          'time': '23:46, 15/10/23',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lớp học chiêm tinh',
         'description': 'Khu vực dành riêng cho lớp học V.',
-        'topics': 13,
-        'posts': 200,
+        'topics': 0,
+        'posts': 0,
         'isHighlighted': true, // Dòng nổi bật nền be/vàng
-        'lastPost': {
-          'title': null,
-          'author': 'phonglan',
-          'authorColor': const Color(0xFFFFA726),
-          'time': '23:50, 27/12/10',
-        }
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lớp học Phong thủy',
         'description': 'Khu vực dành riêng cho lớp học IV',
-        'topics': 96,
-        'posts': 1136,
-        'lastPost': {
-          'title': null,
-          'author': 'Nhất Hạnh',
-          'authorColor': const Color(0xFFEF5350),
-          'time': '21:26, 02/02/12',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lớp học tổng hợp',
         'description': 'Khu vực thực hành luận đoán của các học viên. Các thành viên có thể giao lưu.',
-        'topics': 3,
-        'posts': 82,
-        'lastPost': {
-          'title': null,
-          'author': '19saobangkhoc96',
-          'authorColor': Colors.white,
-          'time': '22:19, 12/02/14',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Lớp học Dịch lý',
         'description': 'Chuyên mục dành cho lớp học quẻ dịch',
-        'topics': 1,
-        'posts': 1,
-        'lastPost': {
-          'title': null,
-          'author': 'Ban tư vấn',
-          'authorColor': const Color(0xFFFFA726),
-          'time': '15:46, 31/05/13',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
     ]
   };
 
   // Bảng 3: Khu vực Luận giải (Chuẩn xác 100% theo Hình 2 media_1790350885836.png)
   final Map<String, dynamic> _group3 = {
-    'headerTitle': 'Chuyên mục',
+    'headerTitle': 'Chuyên mục 2',
     'column4Header': 'Bài cuối',
     'forums': [
       {
         'icon': Icons.description_outlined,
         'title': 'Hướng nghiệp',
         'description': 'Tư vấn hướng nghiệp: chọn ngành, chọn nghề, chọn trường.',
-        'topics': 25,
-        'posts': 304,
+        'topics': 0,
+        'posts': 0,
         'isHighlighted': true, // Dòng nổi bật nền be sẫm
-        'lastPost': {
-          'title': 'Cầu các thầy xem giúp em',
-          'author': 'nhoclibadao',
-          'authorColor': Colors.white,
-          'time': '11:49, 25/09/26',
-        }
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem Tử vi',
         'description': 'Xem, hỏi đáp, luận giải về tử vi',
-        'topics': 78729,
-        'posts': 1165559,
-        'lastPost': {
-          'title': 'Sang năm muốn xuất ngoại mà s...',
-          'author': 'Rommel',
-          'authorColor': Colors.white,
-          'time': '20:11, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem Tứ trụ',
         'description': 'Hỏi đáp, luận giải, trao đổi về tử bình (tứ trụ, bát tự)',
-        'topics': 10986,
-        'posts': 107563,
-        'lastPost': {
-          'title': 'TL: Nợ 1 tỷ. Khi nào trả hết ...',
-          'author': 'Rommel',
-          'authorColor': Colors.white,
-          'time': '13:51, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem quẻ',
         'description': 'Hỏi đáp, luận giải về các môn gieo quẻ: Lục nhâm, Thái Ất, Lục hào, Mai hoa ...',
-        'topics': 2706,
-        'posts': 42211,
-        'lastPost': {
-          'title': 'TL: QUÉ BÓI & KẾT QUẢ BẦU CỬ ...',
-          'author': 'MaiThienThu',
-          'authorColor': Colors.white,
-          'time': '13:01, 07/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem Phong thủy',
         'description': 'Hỏi đáp, tư vấn về phong thủy, địa lý',
-        'topics': 767,
-        'posts': 5471,
-        'lastPost': {
-          'title': 'TL: Nữ - Kỷ mùi kính mong các...',
-          'author': 'EinEMC2',
-          'authorColor': const Color(0xFF4DD0E1), // Cyan / Xanh ngọc
-          'time': '10:29, 11/04/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem ngày, luận tuổi',
         'description': 'Xem ngày tốt, luận tuổi theo âm dương, ngũ hành, can chi, bát quái, cửu cung',
-        'topics': 2504,
-        'posts': 17351,
-        'lastPost': {
-          'title': 'TL: Nhờ các bác xem ngày giờ ...',
-          'author': 'hieutqm',
-          'authorColor': Colors.white,
-          'time': '12:05, 18/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem Lý số Phương tây',
         'description': 'Hỏi đáp về tử vi tây phương, thần số học',
-        'topics': 3,
-        'posts': 263,
-        'lastPost': {
-          'title': 'Xem Hạn Tử vi cho đại chúng',
-          'author': 'Rajneeshbible',
-          'authorColor': Colors.white,
-          'time': '19:38, 07/11/25',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem tướng, đặt tên, sinh trắc',
         'description': 'Các bài viết trao đổi học thuật về môn tướng pháp, chỉ tay...',
-        'topics': 2824,
-        'posts': 39502,
-        'lastPost': {
-          'title': 'TL: Xem hôn nhân của nữ giới ...',
-          'author': 'siunhan92dn',
-          'authorColor': Colors.white,
-          'time': '22:34, 15/07/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Xem bằng các môn khác',
         'description': 'Xem và luận đoán bằng các môn Lý số khác, chưa phân loại',
-        'topics': 764,
-        'posts': 12306,
-        'lastPost': {
-          'title': 'TL: Dự đoán tương lai qua giấ...',
-          'author': 'Zalo O',
-          'authorColor': Colors.white,
-          'time': '10:15, 01/07/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Cổ học - Văn hóa - Tín ngưỡng',
         'description': 'Trao đổi về y học, võ thuật, văn hóa, phong tục, tín ngưỡng',
-        'topics': 809,
-        'posts': 22407,
-        'lastPost': {
-          'title': 'Thiện Căn',
-          'author': 'KMD',
-          'authorColor': Colors.white,
-          'time': '08:07, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Cuộc sống muôn màu',
         'description': 'Chia sẻ thơ ca, nhạc họa, các trải nghiệm của cuộc sống',
-        'topics': 2631,
-        'posts': 102708,
-        'lastPost': {
-          'title': 'TL: Vụn vặt linh tinh',
-          'author': 'Rommel',
-          'authorColor': Colors.white,
-          'time': '19:42, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
       {
         'icon': Icons.description_outlined,
         'title': 'Câu lạc bộ - Giao lưu - Kết bạn',
         'description': 'Dành cho thành viên giao lưu, kết bạn, buôn chuyện',
-        'topics': 1704,
-        'posts': 190190,
-        'lastPost': {
-          'title': 'TL: Cần tìm Hà ca',
-          'author': 'lavernder',
-          'authorColor': Colors.white,
-          'time': '19:58, 25/09/26',
-        }
+        'topics': 0,
+        'posts': 0,
+        'lastPost': null
       },
     ]
   };
@@ -496,8 +446,44 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
     });
   }
 
+  Map<String, dynamic> _getMergedGroup(
+    Map<String, dynamic> baseGroup,
+    List<ForumCategoryItem> dynamicItems,
+  ) {
+    if (dynamicItems.isEmpty) return baseGroup;
+    final merged = Map<String, dynamic>.from(baseGroup);
+    final List baseForums = (baseGroup['forums'] as List? ?? []);
+    final forums = dynamicItems.map((item) {
+      final existing = baseForums.cast<Map<String, dynamic>?>().firstWhere(
+        (f) => f?['title'] == item.title,
+        orElse: () => null,
+      );
+      return {
+        'icon': item.icon,
+        'title': item.title,
+        'description': item.description,
+        'topics': item.topics,
+        'posts': item.posts,
+        'isHighlighted': item.isHighlighted || (existing?['isHighlighted'] == true),
+        'lastPost': item.lastPost ?? existing?['lastPost'],
+        'onlineUsers': existing?['onlineUsers'],
+      };
+    }).toList();
+    merged['forums'] = forums;
+    return merged;
+  }
+
   // --- CẤU TRÚC GIAO DIỆN — MainLayout đã bọc sẵn 1024px + bo góc + nền tím ---
   Widget _buildBody(BuildContext context) {
+    ForumCategoryProvider? catProvider;
+    try {
+      catProvider = Provider.of<ForumCategoryProvider>(context);
+    } catch (_) {}
+
+    final g1 = _getMergedGroup(_group1, catProvider?.group1Categories ?? []);
+    final g2 = _getMergedGroup(_group2, catProvider?.group2Categories ?? []);
+    final g3 = _getMergedGroup(_group3, catProvider?.group3Categories ?? []);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
@@ -508,15 +494,15 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           const SizedBox(height: 16),
 
           // 2. Bảng 1: Thông báo & Kiến thức
-          _buildForumTable(_group1),
+          _buildForumTable(g1),
           const SizedBox(height: 16),
 
           // 3. Bảng 2: Lớp học Lý số
-          _buildForumTable(_group2),
+          _buildForumTable(g2),
           const SizedBox(height: 16),
 
           // 4. Bảng 3: Khu vực Luận giải
-          _buildForumTable(_group3),
+          _buildForumTable(g3),
           const SizedBox(height: 24),
 
           // 5. Khối Đang trực tuyến
@@ -575,59 +561,124 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
         ),
         const SizedBox(height: 14),
 
-        // Dòng thời gian
-        Wrap(
-          alignment: WrapAlignment.spaceBetween,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 12,
-          runSpacing: 8,
+        // Dòng thời gian và thao tác người dùng (2 Row trong 1 Column)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Row 1: Trái ("Hôm nay, HH:mm, dd/MM/yy") - Phải ("Lần ghé thăm trước: ...")
             Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text('Hôm nay, 21:32, 23/09/24', style: TextStyle(color: Colors.white70, fontSize: 13)),
-                SizedBox(width: 8),
-                Text('|', style: TextStyle(color: Colors.white30, fontSize: 13)),
-                SizedBox(width: 8),
-                Text('Lần ghé thăm trước: 16:22, 23/09/24', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ValueListenableBuilder<String>(
+                  valueListenable: _currentTimeNotifier,
+                  builder: (context, currentTime, _) {
+                    return Text(currentTime, style: const TextStyle(color: Colors.white70, fontSize: 13));
+                  },
+                ),
+                Text(_lastVisitTimeString, style: const TextStyle(color: Colors.white70, fontSize: 13)),
               ],
             ),
-            // Đánh dấu đã xem tất cả chuyên mục
-            InkWell(
-              onTap: () {},
-              child: const Text(
-                'Đánh dấu đã xem tất cả các chuyên mục',
-                style: TextStyle(color: Color(0xFFEF5350), fontSize: 13, fontWeight: FontWeight.w500),
-              ),
+            const SizedBox(height: 8),
+            // Row kết hợp: Bên trái là 3 nút chức năng Admin (chụm sát lề trái), Bên phải là text Đánh dấu đã xem
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.push('/forum/create-category');
+                      },
+                      icon: const Icon(Icons.add_circle_outline, color: Colors.white, size: 16),
+                      label: const Text(
+                        'Chuyên Mục và Lớp Học Mới',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        shape: const StadiumBorder(),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.push('/forum/edit-categories');
+                      },
+                      icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 16),
+                      label: const Text(
+                        'Sửa Chuyên Mục Và Lớp học',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.brown,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        shape: const StadiumBorder(),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.push('/forum/delete-categories');
+                      },
+                      icon: const Icon(Icons.delete_outline, color: Colors.white, size: 16),
+                      label: const Text(
+                        'Xóa Chuyên mục và Lớp học',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE53935),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        shape: const StadiumBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: InkWell(
+                    onTap: () {},
+                    child: const Text(
+                      'Đánh dấu đã xem tất cả các chuyên mục',
+                      style: TextStyle(color: Color(0xFFEF5350), fontSize: 12.5, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-
-        // Nút Tạo Chủ Đề(Admin) chỉ xuất hiện khi đã đăng nhập
-        if (_isLoggedIn) ...[
-          const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit, size: 16, color: Colors.white),
-              label: const Text('Tạo Chủ Đề(Admin)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE53935),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                elevation: 2,
-              ),
-            ),
-          ),
-        ],
-      ],
+],
     );
   }
 
   // --- BẢNG CHUYÊN MỤC (Nền #161F36, Viền #2E3B5F, Tiêu đề #8B0000) ---
   Widget _buildForumIcon(Map<String, dynamic> forum) {
+    final iconVal = forum['icon'];
+    if (iconVal is String && iconVal.isNotEmpty) {
+      return Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFF8E9BAE), width: 1.5),
+          color: Colors.white.withValues(alpha: 0.04),
+        ),
+        child: Center(
+          child: Text(
+            iconVal,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    }
+
     final isRed = forum['title'] == 'Kiến thức Tứ trụ';
     final circleBorder = isRed ? const Color(0xFFEF5350) : const Color(0xFF8E9BAE);
     final iconColor = isRed ? const Color(0xFFEF5350) : const Color(0xFF8E9BAE);
@@ -721,13 +772,10 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  forum['title'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: isHighlighted ? const Color(0xFFFFD54F) : Colors.white,
-                                  ),
+                                CategoryTitleLink(
+                                  title: forum['title']?.toString() ?? '',
+                                  isHighlighted: isHighlighted,
+                                  onTap: () => _navigateToCategory(context, forum['title']),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -838,8 +886,98 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
     );
   }
 
-  // --- Khối Đang trực tuyến (Chuẩn xác 100% theo Hình 3 media_1790350919428.png) ---
+  // --- Khối Đang trực tuyến (Cập nhật động theo thời gian thực từ Backend/Provider) ---
   Widget _buildOnlineUsers() {
+    ForumStatsProvider? provider;
+    try {
+      provider = Provider.of<ForumStatsProvider>(context, listen: false);
+    } catch (_) {
+      provider = null;
+    }
+
+    if (provider == null) {
+      return _buildOnlineUsersContent(ForumOnlineStats.defaults());
+    }
+
+    return Consumer<ForumStatsProvider>(
+      builder: (context, statsProvider, _) {
+        return _buildOnlineUsersContent(statsProvider.onlineStats);
+      },
+    );
+  }
+
+  Widget _buildOnlineUsersContent(ForumOnlineStats online) {
+    final List<InlineSpan> userSpans = [];
+    if (online.users.isNotEmpty) {
+      for (int i = 0; i < online.users.length; i++) {
+        final u = online.users[i];
+        userSpans.add(
+          TextSpan(
+            text: u.name,
+            style: TextStyle(
+              color: u.color ?? Colors.white70,
+              fontWeight: u.isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        );
+        if (i < online.users.length - 1) {
+          userSpans.add(const TextSpan(text: ', '));
+        }
+      }
+    } else {
+      userSpans.add(
+        const TextSpan(
+          text: 'Chưa có thành viên đăng ký nào trực tuyến',
+          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white38),
+        ),
+      );
+    }
+
+    final List<InlineSpan> legendSpans = [
+      const TextSpan(text: 'Chú thích: ', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+    ];
+    if (online.rolesLegend.isNotEmpty) {
+      for (int i = 0; i < online.rolesLegend.length; i++) {
+        final r = online.rolesLegend[i];
+        legendSpans.add(
+          TextSpan(
+            text: r.name,
+            style: TextStyle(
+              color: r.color,
+              fontStyle: r.isItalic ? FontStyle.italic : FontStyle.normal,
+            ),
+          ),
+        );
+        if (i < online.rolesLegend.length - 1) {
+          legendSpans.add(const TextSpan(text: ', '));
+        }
+      }
+    } else {
+      legendSpans.addAll([
+        const TextSpan(text: 'Ban tư vấn', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', CLB Lý số Hà Nội, CLB Lý số Sài Gòn, '),
+        const TextSpan(text: 'CLB Phong thủy TL', style: TextStyle(color: Color(0xFFFFD54F), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Cặp đôi Lý số', style: TextStyle(color: Color(0xFFE57373), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Ban quản trị', style: TextStyle(color: Color(0xFFEF5350), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', Học Phong thủy online, Học Tử vi online, '),
+        const TextSpan(text: 'Hội viên Kim cương', style: TextStyle(color: Color(0xFFF06292), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', LSHQ: Quẻ dịch, LSHQ: Tứ trụ nâng cao, LSHQ: Phong thủy, LSHQ: Tứ trụ, LSHQ: Tử vi, '),
+        const TextSpan(text: 'LSHQ: Am tường Lý số', style: TextStyle(color: Color(0xFFEF5350), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Quản lý', style: TextStyle(color: Color(0xFF42A5F5), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Trao đổi học thuật', style: TextStyle(color: Color(0xFF66BB6A), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Tư vấn Phong Thủy', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Tư vấn Tứ trụ', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
+        const TextSpan(text: ', '),
+        const TextSpan(text: 'Điều hành', style: TextStyle(color: Color(0xFF42A5F5), fontStyle: FontStyle.italic)),
+      ]);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -848,79 +986,69 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFEF5350)),
         ),
         const SizedBox(height: 8),
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
+        Text.rich(
+          TextSpan(
+            style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
             children: [
-              TextSpan(text: 'Có tổng số '),
-              TextSpan(text: '11275', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' thành viên trực tuyến : '),
-              TextSpan(text: '100', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' đã đăng ký, '),
-              TextSpan(text: '14', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' ẩn và '),
-              TextSpan(text: '11161', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' khách (dựa trên số người hoạt động trong 60 phút vừa qua)'),
+              const TextSpan(text: 'Có tổng số '),
+              TextSpan(text: '${online.totalOnline}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' thành viên trực tuyến : '),
+              TextSpan(text: '${online.registeredCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' đã đăng ký, '),
+              TextSpan(text: '${online.hiddenCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' ẩn và '),
+              TextSpan(text: '${online.guestCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              TextSpan(text: ' khách (dựa trên số người hoạt động trong ${online.activeWindowMinutes} phút vừa qua)'),
             ],
           ),
         ),
         const SizedBox(height: 6),
-        const Text(
-          'Lượt người ghé thăm đông nhất là 56194 vào lúc 00:13, 18/05/26',
-          style: TextStyle(fontSize: 13, color: Colors.white60),
+        Text(
+          'Lượt người ghé thăm đông nhất là ${online.mostOnlineCount} vào lúc ${online.mostOnlineTime}',
+          style: const TextStyle(fontSize: 13, color: Colors.white60),
         ),
         const SizedBox(height: 12),
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
+        Text.rich(
+          TextSpan(
+            style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
             children: [
-              TextSpan(text: 'Các thành viên trực tuyến: '),
-              TextSpan(text: 'Ahrefs [Bot], alice112988, Amazon [Bot], an1234, Apple [Bot], Baidu [Spider], bee_linhtinh, Bing [Bot], Bonbill, casper555, changtraidatinh, ChatGPT User, chipbeoday1802, chiyotran, Chrome PPPP, Coc Coc [Bot], Cogimoisangnay, copperhead, Cris007, Criteo [Bot], dieulinh2212, dokien90, Dot [Bot], DTZ, DuckDuckGo [Bot], '),
-              TextSpan(text: 'dung1', style: TextStyle(color: Color(0xFF00C853), fontWeight: FontWeight.bold)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Điều hành 8', style: TextStyle(color: Color(0xFF29B6F6), fontWeight: FontWeight.bold)),
-              TextSpan(text: ', Facebook [Bot], Fengnguyen256, flora21, fx6789, Gacon1980, Google [Bot], Google Adsense [Bot], Google Read Aloud, GoogleAssociationService, hainguyenhoang0704, Hannah Nguyen, Hehe123hehe, Helloworld97, hoaizx1, HoangLong269, huyenvy, Huyền sona, IAS Crawler, IAS IE, Jame Bond 16, ladanggiap, lancuc, lephuongtu, Light26, LittleBiscuit, Loka, Majestic-12 [Bot], Meta ext [Bot], Meta web [Bot], mimi91, minhhien99vl, minhtrangnguyen102, mrwhitecarp, my711, Nam Đỗ, nemo102, NetworkingExtension, '),
-              TextSpan(text: 'nganha85', style: TextStyle(color: Color(0xFF00C853), fontWeight: FontWeight.bold)),
-              TextSpan(text: ', ngoc.tran902, Nguyenha3795, nguyenhuy, nguyenvienhau, nhoclibadao, nhuminh87, ntd123@, OAI-Search [Bot], Perplexity [[Bot], Petal [Bot], Phunglieu, ppham, q123456789, Quý Mão 12345, RubiNguyen, saocungduoc, Semrush [Bot], siunhan92dn, SkylerNguyen, smokey, soncao, Sumoon, Superlang, theseret, thuphuongnguyen, tngotango, tranleanhminh1994, Trendiction [Bot], tuilamay, tuoimuoitam, TỰ THÁI ĐỨC, vanbeo1998, viquanle, white-eyes, Yandex [Bot], youmaster741'),
+              const TextSpan(text: 'Các thành viên trực tuyến: '),
+              ...userSpans,
             ],
           ),
         ),
         const SizedBox(height: 12),
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 12, color: Colors.white70, height: 1.5),
-            children: [
-              TextSpan(text: 'Chú thích: ', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-              TextSpan(text: 'Ban tư vấn', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', CLB Lý số Hà Nội, CLB Lý số Sài Gòn, '),
-              TextSpan(text: 'CLB Phong thủy TL', style: TextStyle(color: Color(0xFFFFD54F), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Cặp đôi Lý số', style: TextStyle(color: Color(0xFFE57373), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Ban quản trị', style: TextStyle(color: Color(0xFFEF5350), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', Học Phong thủy online, Học Tử vi online, '),
-              TextSpan(text: 'Hội viên Kim cương', style: TextStyle(color: Color(0xFFF06292), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', LSHQ: Quẻ dịch, LSHQ: Tứ trụ nâng cao, LSHQ: Phong thủy, LSHQ: Tứ trụ, LSHQ: Tử vi, '),
-              TextSpan(text: 'LSHQ: Am tường Lý số', style: TextStyle(color: Color(0xFFEF5350), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Quản lý', style: TextStyle(color: Color(0xFF42A5F5), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Trao đổi học thuật', style: TextStyle(color: Color(0xFF66BB6A), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Tư vấn Phong Thủy', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Tư vấn Tứ trụ', style: TextStyle(color: Color(0xFFFFA726), fontStyle: FontStyle.italic)),
-              TextSpan(text: ', '),
-              TextSpan(text: 'Điều hành', style: TextStyle(color: Color(0xFF42A5F5), fontStyle: FontStyle.italic)),
-            ],
+        Text.rich(
+          TextSpan(
+            style: const TextStyle(fontSize: 12, color: Colors.white70, height: 1.5),
+            children: legendSpans,
           ),
         ),
       ],
     );
   }
 
-  // --- Khối Thống kê (Chuẩn xác 100% theo Hình 3 media_1790350919428.png) ---
+  // --- Khối Thống kê (Cập nhật động theo thời gian thực từ Backend/Provider) ---
   Widget _buildStatistics() {
+    ForumStatsProvider? provider;
+    try {
+      provider = Provider.of<ForumStatsProvider>(context, listen: false);
+    } catch (_) {
+      provider = null;
+    }
+
+    if (provider == null) {
+      return _buildStatisticsContent(ForumGeneralStats.defaults());
+    }
+
+    return Consumer<ForumStatsProvider>(
+      builder: (context, statsProvider, _) {
+        return _buildStatisticsContent(statsProvider.generalStats);
+      },
+    );
+  }
+
+  Widget _buildStatisticsContent(ForumGeneralStats stats) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -929,18 +1057,18 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFFEF5350)),
         ),
         const SizedBox(height: 8),
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
+        Text.rich(
+          TextSpan(
+            style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5),
             children: [
-              TextSpan(text: 'Số bài viết: '),
-              TextSpan(text: '1859337', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' • Số chủ đề: '),
-              TextSpan(text: '113896', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' • Số thành viên: '),
-              TextSpan(text: '206040', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-              TextSpan(text: ' • Thành viên mới nhất: '),
-              TextSpan(text: 'Arthur Khôi', style: TextStyle(color: Color(0xFFEF5350), fontWeight: FontWeight.bold)),
+              const TextSpan(text: 'Số bài viết: '),
+              TextSpan(text: '${stats.postsCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' • Số chủ đề: '),
+              TextSpan(text: '${stats.topicsCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' • Số thành viên: '),
+              TextSpan(text: '${stats.membersCount}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              const TextSpan(text: ' • Thành viên mới nhất: '),
+              TextSpan(text: stats.newestMember, style: const TextStyle(color: Color(0xFFEF5350), fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -1033,17 +1161,6 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                     onTap: () => context.go('/forum'),
                     child: const Text('Diễn đàn', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF5350))),
                   ),
-                  if (_isLoggedIn) ...[
-                    const SizedBox(width: 12),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.check_box_outlined, color: Color(0xFFEF5350), size: 16),
-                        SizedBox(width: 4),
-                        Text('Theo dõi chuyên mục', style: TextStyle(color: Color(0xFFEF5350), fontSize: 13)),
-                      ],
-                    ),
-                  ],
                 ],
               ),
               // Cột phải: Menu liên kết theo đúng ảnh gốc: Liên hệ, Chia sẻ, Chúng tôi, Thành viên, Xóa hết cookie, Múi giờ UTC+07:00
@@ -1053,9 +1170,9 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   _buildFooterLink(Icons.mail_outline, 'Liên hệ', () {}),
-                  _buildFooterLink(Icons.share, 'Chia sẻ', () {}),
+                  _buildFooterLink(Icons.share, 'Chia sẻ', () => ShareHelper.share(context)),
                   _buildFooterLink(Icons.shield_outlined, 'Chúng tôi', () {}),
-                  _buildFooterLink(Icons.group, 'Thành viên', () => context.go('/forum/members')),
+                  _buildFooterLink(Icons.group, 'Thành viên', () => context.go('/members')),
                   _buildFooterLink(Icons.delete_outline, 'Xóa hết cookie', () {}),
                   const Text('Múi giờ UTC+07:00', style: TextStyle(fontSize: 12, color: Colors.white54)),
                 ],
@@ -1114,6 +1231,58 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           ],
         ),
         desktopBody: SingleChildScrollView(child: _buildBody(context)),
+      ),
+    );
+  }
+}
+
+/// Widget Tiêu đề Chuyên mục dạng Link theo Hình 5
+/// Bọc bằng InkWell + RichText, có đường gạch chân khi hover, con trỏ bàn tay
+class CategoryTitleLink extends StatefulWidget {
+  final String title;
+  final bool isHighlighted;
+  final VoidCallback onTap;
+
+  const CategoryTitleLink({
+    super.key,
+    required this.title,
+    required this.isHighlighted,
+    required this.onTap,
+  });
+
+  @override
+  State<CategoryTitleLink> createState() => _CategoryTitleLinkState();
+}
+
+class _CategoryTitleLinkState extends State<CategoryTitleLink> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final baseColor = widget.isHighlighted ? const Color(0xFFFFD54F) : Colors.white;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: widget.onTap,
+        hoverColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            text: widget.title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: baseColor,
+              decoration: _isHovered ? TextDecoration.underline : TextDecoration.none,
+              decorationColor: baseColor,
+            ),
+          ),
+        ),
       ),
     );
   }

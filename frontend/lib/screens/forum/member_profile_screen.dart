@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../services/auth_service.dart';
+import '../../services/forum_user_repository.dart';
+import '../../services/signalr_service.dart';
+import '../../widgets/user_rank_badge_widget.dart';
 
 typedef UserProfileScreen = MemberProfileScreen;
 
 /// Màn hình Thông tin thành viên / User Profile chuẩn Boxed Layout 1024px & Theme Dark Navy
 class MemberProfileScreen extends StatefulWidget {
   final String username;
+  final ForumUserRepository? repository;
 
   const MemberProfileScreen({
     super.key,
-    this.username = 'Gacon1980',
+    this.username = '',
+    this.repository,
   });
 
   @override
@@ -19,22 +25,11 @@ class MemberProfileScreen extends StatefulWidget {
 class _MemberProfileScreenState extends State<MemberProfileScreen> {
   String _selectedGroup = 'Thành viên';
   String _selectedJumpCategory = 'Chuyển đến';
-
-  final List<String> _groupOptions = [
-    'Thành viên',
-    'Ban quản trị',
-    'BQL Trung Châu',
-    'CLB Lý số Hà Nội',
-    'LSHQ: Quẻ dịch',
-    'LSHQ: Tứ trụ',
-    'LSHQ: Tử vi',
-    'Quản trị viên',
-    'Trao đổi học thuật',
-    'Trung Châu Lý Số',
-    'Tư vấn Phong Thủy',
-  ];
-
-  final List<String> _jumpCategories = [
+  late final ForumUserRepository _userRepository;
+  UserProfileStats? _stats;
+  bool _isLoading = false;
+  late String _effectiveUsername;
+  List<String> _jumpCategories = [
     'Chuyển đến',
     'Thông báo - Sự kiện',
     'Kiến thức Cơ bản',
@@ -68,45 +63,247 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _effectiveUsername = widget.username;
+    _userRepository = widget.repository ?? HttpForumUserRepository();
+    _loadUserStats();
+    _loadJumpCategories();
+
+    // Lắng nghe SignalR sự kiện thay đổi Role và Rank theo thời gian thực
+    signalRService.listenToUserRoleChanged(_onUserRoleChangedSignalR);
+    signalRService.listenToUserRankChanged(_onUserRankChangedSignalR);
+    signalRService.listenToUserRoleRevoked(_onUserRoleRevokedSignalR);
+  }
+
+  @override
+  void dispose() {
+    signalRService.removeUserRoleChangedListener();
+    signalRService.removeUserRankChangedListener();
+    signalRService.removeUserRoleRevokedListener();
+    super.dispose();
+  }
+
+  void _onUserRoleChangedSignalR(List<Object?>? args) {
+    if (mounted) {
+      _loadUserStats();
+    }
+  }
+
+  void _onUserRankChangedSignalR(List<Object?>? args) {
+    if (mounted) {
+      _loadUserStats();
+    }
+  }
+
+  void _onUserRoleRevokedSignalR(List<Object?>? args) {
+    if (mounted) {
+      _loadUserStats();
+    }
+  }
+
+  Future<void> _loadJumpCategories() async {
+    try {
+      final cats = await _userRepository.fetchJumpCategories();
+      if (mounted && cats.isNotEmpty) {
+        setState(() {
+          _jumpCategories = cats;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _loadUserStats() async {
+    String username = widget.username;
+    if (username.isEmpty) {
+      try {
+        final loggedIn = await AuthService().getUsername();
+        if (loggedIn != null && loggedIn.isNotEmpty) {
+          username = loggedIn;
+        }
+      } catch (_) {}
+    }
+    if (mounted) {
+      setState(() {
+        _effectiveUsername = username;
+        _isLoading = true;
+      });
+    }
+    if (username.isNotEmpty) {
+      try {
+        final stats = await _userRepository.fetchUserProfileStats(username);
+        if (mounted && stats != null) {
+          setState(() {
+            _stats = stats;
+            _selectedGroup = stats.group;
+          });
+        }
+      } catch (_) {}
+    }
+    if (mounted) setState(() => _isLoading = false);
+  }
+
+  List<String> get _groupOptions {
+    final groups = <String>{'Thành viên'};
+    if (_stats != null) {
+      for (final g in _stats!.userGroups) {
+        if (g.trim().isNotEmpty) groups.add(g.trim());
+      }
+      final rankLower = _stats!.rank.toLowerCase();
+      final groupLower = _stats!.group.toLowerCase();
+      if (rankLower.contains('quản lý') ||
+          groupLower.contains('quản trị') ||
+          groupLower.contains('admin')) {
+        groups.add('Ban quản trị');
+      }
+    }
+    return groups.toList();
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 1. Khung hộp thông tin cá nhân
-            _buildProfileHeaderCard(),
-            const SizedBox(height: 16),
-
-            // 2. Hai cột: LIÊN HỆ & THỐNG KÊ THÀNH VIÊN
-            _buildDetailsCard(),
-            const SizedBox(height: 16),
-
-            // 3. Khối Chữ ký cá nhân (Hình 5)
-            _buildSignatureCard(),
-            const SizedBox(height: 16),
-
-            // 4. Dropdown Chuyển đến
-            _buildJumpDropdown(),
-            const SizedBox(height: 28),
-
-            // 5. Footer Diễn đàn
-            _buildForumFooter(),
-          ],
+    if (_isLoading) {
+      return const Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40),
+            child: CircularProgressIndicator(color: Color(0xFFEF5350)),
+          ),
         ),
+      );
+    }
+    // Tuân thủ Boxed Layout Rule 7: Trả về nội dung thuần, nền trong suốt để màu MainLayout hiện ra
+    return Material(color: Colors.transparent, child: 
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Gộp các khối lại, bỏ SizedBox/Margin thừa
+          _buildProfileHeaderCard(),
+          _buildDetailsCard(),
+          _buildSignatureCard(),
+          const SizedBox(height: 16), // Khoảng cách nhỏ trước Dropdown
+          _buildJumpDropdown(),
+          const SizedBox(height: 16), // Khoảng cách nhỏ trước Footer
+          _buildForumFooter(),
+        ],
       ),
     );
   }
 
-  // --- 1. Khung hộp thông tin cá nhân (Hình 5) ---
+  Widget _buildProfileLogoWidget() {
+    final rank = (_stats?.rank ?? '').toLowerCase();
+    final group = (_stats?.group ?? '').toLowerCase();
+    final role = (_stats?.role ?? '').toLowerCase();
+    final badge = (_stats?.badge ?? '').toLowerCase();
+    final int safeStars = (_stats?.stars != null && _stats!.stars > 0) ? _stats!.stars : 1;
+
+    // 1. Ban Quản Trị
+    if (role == 'super_admin' || role == 'superadmin' || rank.contains('superadmin') || group.contains('superadmin') || badge.contains('superadmin')) {
+      return Image.asset(
+        'assets/images/logo_super_admin.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_super_admin_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (rank.contains('sáng lập') || group.contains('sáng lập') || badge.contains('sáng lập')) {
+      return Image.asset(
+        'assets/images/logo_sang_lap.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_sang_lap_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (role == 'admin' || rank.contains('admin') || group.contains('admin') || group.contains('quản trị')) {
+      return Image.asset(
+        'assets/images/logo_admin.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_admin_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (rank.contains('quản lý') || group.contains('quản lý') || badge.contains('quản lý')) {
+      return Image.asset(
+        'assets/images/logo_quan_ly.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_quan_ly_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (rank.contains('hội viên') || group.contains('hội viên') || badge.contains('hội viên')) {
+      return Image.asset(
+        'assets/images/logo_hoi_vien.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_hoi_vien_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (role == 'moderator' || rank.contains('điều hành') || group.contains('điều hành') || badge.contains('điều hành')) {
+      return Image.asset(
+        'assets/images/logo_dieu_hanh.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_dieu_hanh_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+    if (rank.contains('tư vấn') || group.contains('tư vấn') || badge.contains('tư vấn')) {
+      return Image.asset(
+        'assets/images/logo_tu_van.png',
+        key: ValueKey('logo_bqt_${_effectiveUsername}_tu_van_v5'),
+        width: 160,
+        height: 210,
+        fit: BoxFit.contain,
+      );
+    }
+
+    // 2. Đại Sư (Chuyên gia) - Chuẩn động Hình 9
+    if (rank.contains('đẳng') || badge.contains('đại sư')) {
+      return MasterTitleLogoWidget(
+        userId: _effectiveUsername,
+        starLevel: safeStars,
+        rankTitle: _getProfileRankTitle(),
+        width: 160,
+        height: 210,
+      );
+    }
+
+    // 3. Thành viên - Chuẩn động Hình 7
+    return MemberTitleLogoWidget(
+      userId: _effectiveUsername,
+      starLevel: safeStars,
+      rankTitle: 'Thành viên',
+      width: 160,
+      height: 210,
+    );
+  }
+
+  String _getProfileRankTitle() {
+    final rank = _stats?.rank ?? 'Thành viên';
+    final role = (_stats?.role ?? '').toLowerCase();
+    final badge = (_stats?.badge ?? '').toLowerCase();
+
+    if (role == 'super_admin' || badge.contains('sáng lập') || rank.toLowerCase().contains('sáng lập')) {
+      return 'Quản lý'; // Theo đúng yêu cầu Hình 8
+    }
+    return rank;
+  }
+
+  // --- 1. Khung hộp thông tin cá nhân (Hình 5 / Hình 8) ---
   Widget _buildProfileHeaderCard() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF161F36),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFF2E3B5F)),
+        border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -120,7 +317,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               border: Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
             ),
             child: Text(
-              'Đang xem thông tin cá nhân về ${widget.username}',
+              'Đang xem thông tin cá nhân về $_effectiveUsername',
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -136,6 +333,14 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Logo thành viên (Hình 7) hoặc Đại Sư (Hình 9) hoặc BQT
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Center(
+                    child: _buildProfileLogoWidget(),
+                  ),
+                ),
+
                 // Tên đăng nhập
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -145,7 +350,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
                     ),
                     Text(
-                      widget.username,
+                      _effectiveUsername,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
@@ -165,9 +370,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
 
-                // Xếp hạng
+                // Xếp hạng (Chuẩn động Hình 6 cho Thành viên, Hình 8 cho Đại Sư)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -175,36 +380,18 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       'Xếp hạng: ',
                       style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
                     ),
-                    const Text(
-                      'Chính thức',
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    const SizedBox(width: 8),
+                    UserRankBadgeWidget(
+                      userId: _effectiveUsername,
+                      rankTitle: _getProfileRankTitle(),
+                      starLevel: (_stats?.stars != null && _stats!.stars > 0) ? _stats!.stars : 1,
+                      badgeType: _stats?.badge,
+                      width: 120,
+                      height: 42,
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
-
-                // 2 Icon sao vàng
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Color(0xFFFFD700),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Color(0xFFFFD700),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
 
                 // Tuổi
                 Row(
@@ -214,9 +401,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       'Tuổi: ',
                       style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
                     ),
-                    const Text(
-                      '45',
-                      style: TextStyle(
+                    Text(
+                      _stats != null ? '${_stats!.age}' : '45',
+                      style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -227,94 +414,104 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                 const SizedBox(height: 10),
 
                 // Nhóm [Dropdown] [Nút Chuyển]
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Nhóm: ',
-                      style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
-                    ),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        hoverColor: const Color(0xFF2A324D),
-                        focusColor: const Color(0xFF2A324D),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF131A30),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: const Color(0xFF2E3B5F)),
+                Builder(
+                  builder: (context) {
+                    final currentOptions = _groupOptions;
+                    final currentVal = currentOptions.contains(_selectedGroup)
+                        ? _selectedGroup
+                        : currentOptions.first;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Nhóm: ',
+                          style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _selectedGroup,
-                            dropdownColor: const Color(0xFF131A30),
-                            menuMaxHeight: 350,
-                            isDense: true,
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
-                            icon: const Icon(Icons.arrow_drop_down, color: Colors.white70, size: 18),
-                            items: _groupOptions.map((group) {
-                              return DropdownMenuItem<String>(
-                                value: group,
-                                child: Text(
-                                  group,
-                                  style: const TextStyle(color: Colors.white, fontSize: 13),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() {
-                                  _selectedGroup = val;
-                                });
-                              }
-                            },
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            hoverColor: const Color(0xFF2A324D),
+                            focusColor: const Color(0xFF2A324D),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF131A30),
+                              borderRadius: BorderRadius.circular(4),
+                              border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: currentVal,
+                                dropdownColor: const Color(0xFF131A30),
+                                menuMaxHeight: 350,
+                                isDense: true,
+                                style: const TextStyle(color: Colors.white, fontSize: 13),
+                                icon: const Icon(Icons.arrow_drop_down, color: Colors.white70, size: 18),
+                                items: currentOptions.map((group) {
+                                  return DropdownMenuItem<String>(
+                                    value: group,
+                                    child: Text(
+                                      group,
+                                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() {
+                                      _selectedGroup = val;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF131A30),
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Color(0xFF2E3B5F)),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF131A30),
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Color(0xFF2E3B5F)),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          child: const Text(
+                            'Chuyển',
+                            style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Chuyển',
-                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
-                const SizedBox(height: 10),
 
-                // Đến từ
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Đến từ: ',
-                      style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
-                    ),
-                    const Flexible(
-                      child: Text(
-                        'Linh quy thiên tuế thần khí vượng.Báo ngọc vạn niên quý minh trường.',
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
+                // Đến từ (chỉ hiển thị khi có ký tự trong hồ sơ)
+                if (_stats?.fromLocation != null && _stats!.fromLocation.trim().isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Đến từ: ',
+                        style: TextStyle(fontSize: 13.5, color: Colors.grey[400]),
                       ),
-                    ),
-                  ],
-                ),
+                      Flexible(
+                        child: Text(
+                          _stats!.fromLocation.trim(),
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -328,9 +525,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF161F36),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFF2E3B5F)),
+        border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -340,7 +537,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'LIÊN HỆ ${widget.username.toUpperCase()}',
+                'LIÊN HỆ ${_effectiveUsername.toUpperCase()}',
                 style: const TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.bold,
@@ -351,42 +548,48 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               const SizedBox(height: 8),
               const Divider(color: Color(0xFF2E3B5F), height: 1),
               const SizedBox(height: 12),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
                     'Địa chỉ email: ',
                     style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                   ),
                   InkWell(
-                    onTap: () {},
-                    child: const Text(
-                      'Gửi email cho',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFEF5350),
-                        decoration: TextDecoration.underline,
-                        decorationColor: Color(0xFFEF5350),
+                    onTap: () => context.go('/forum/member/$_effectiveUsername/email'),
+                    child: RichText(
+                      text: const TextSpan(
+                        text: 'Gửi email cho',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFFEF5350),
+                          decoration: TextDecoration.underline,
+                          decorationColor: Color(0xFFEF5350),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
                     'Tin nhắn: ',
                     style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                   ),
                   InkWell(
-                    onTap: () => context.go('/forum/inbox'),
-                    child: const Text(
-                      'Gửi tin nhắn',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFFEF5350),
-                        decoration: TextDecoration.underline,
-                        decorationColor: Color(0xFFEF5350),
+                    onTap: () => context.go('/forum/messages'),
+                    child: RichText(
+                      text: const TextSpan(
+                        text: 'Gửi tin nhắn',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFFEF5350),
+                          decoration: TextDecoration.underline,
+                          decorationColor: Color(0xFFEF5350),
+                        ),
                       ),
                     ),
                   ),
@@ -410,28 +613,30 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               const SizedBox(height: 8),
               const Divider(color: Color(0xFF2E3B5F), height: 1),
               const SizedBox(height: 12),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
                     'Tham gia: ',
                     style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                   ),
-                  const Text(
-                    '12:03, 04/07/12',
-                    style: TextStyle(fontSize: 13, color: Colors.white),
+                  Text(
+                    _stats?.joinDate ?? '12:03, 04/07/12',
+                    style: const TextStyle(fontSize: 13, color: Colors.white),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
                     'Lần hoạt động trước: ',
                     style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                   ),
-                  const Text(
-                    '-',
-                    style: TextStyle(fontSize: 13, color: Colors.white),
+                  Text(
+                    _stats?.lastActive ?? '-',
+                    style: const TextStyle(fontSize: 13, color: Colors.white),
                   ),
                 ],
               ),
@@ -443,9 +648,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                     'Số bài viết: ',
                     style: TextStyle(fontSize: 13, color: Colors.grey[400]),
                   ),
-                  const Text(
-                    '35',
-                    style: TextStyle(
+                  Text(
+                    _stats != null ? '${_stats!.postCount}' : '0',
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -456,7 +661,10 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                     style: TextStyle(fontSize: 13, color: Colors.grey[500]),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      final targetUser = _effectiveUsername;
+                      context.push('/forum/user-posts?username=$targetUser');
+                    },
                     child: const Text(
                       'Tìm tất cả bài viết của thành viên này',
                       style: TextStyle(
@@ -471,7 +679,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                '(0.00% trong tổng số bài viết / 0.01 bài viết/ngày)',
+                '(${(_stats?.postPercentage ?? 0.00).toStringAsFixed(2)}% trong tổng số bài viết / ${(_stats?.postsPerDay ?? 0.01).toStringAsFixed(2)} bài viết/ngày)',
                 style: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               const SizedBox(height: 8),
@@ -538,9 +746,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF161F36),
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: const Color(0xFF2E3B5F)),
+              border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -592,9 +800,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   Widget _buildSignatureCard() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF161F36),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFF2E3B5F)),
+        border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -646,8 +854,8 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: const Color(0xFF161F36),
-            border: Border.all(color: const Color(0xFF2E3B5F)),
+            color: Colors.transparent,
+            border: const Border(bottom: BorderSide(color: Color(0xFF2E3B5F))),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Wrap(
@@ -680,7 +888,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                   const Text('<', style: TextStyle(color: Colors.white38, fontSize: 12)),
                   const SizedBox(width: 6),
                   Text(
-                    widget.username,
+                    _effectiveUsername,
                     style: const TextStyle(color: Colors.white70),
                   ),
                 ],

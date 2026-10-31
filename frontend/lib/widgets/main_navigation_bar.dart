@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
 import '../providers/wallet_provider.dart';
+import '../providers/auth_provider.dart';
+import '../providers/forum_stats_provider.dart';
 
 class MainNavigationBar extends StatefulWidget {
   const MainNavigationBar({super.key});
@@ -51,6 +53,8 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
     final authService = AuthService();
     await authService.logout();
     if (!mounted) return;
+    context.read<AuthProvider>().logout();
+    context.read<ForumStatsProvider>().notifyUserLogout();
     Provider.of<WalletProvider>(context, listen: false).clear();
     setState(() {
       _isLoggedIn = false;
@@ -109,6 +113,17 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider? authProvider;
+    try {
+      authProvider = context.watch<AuthProvider>();
+    } catch (_) {
+      authProvider = null;
+    }
+    final isLoggedIn = (authProvider?.isLoggedIn ?? false) || _isLoggedIn;
+    final currentUsername = (authProvider != null && authProvider.username.isNotEmpty)
+        ? authProvider.username
+        : _username;
+
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -178,6 +193,12 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                             child: PopupMenuButton<String>(
                               offset: const Offset(0, 40),
                               color: const Color(0xFF131A30),
+                              popUpAnimationStyle: AnimationStyle(
+                                duration: const Duration(milliseconds: 150),
+                                reverseDuration: const Duration(milliseconds: 120),
+                                curve: Curves.easeOutCubic,
+                                reverseCurve: Curves.easeInCubic,
+                              ),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                               tooltip: 'Ứng dụng',
                               onOpened: () => setState(() => _isAppMenuOpen = true),
@@ -190,9 +211,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                                 } else if (result == 'almanac') {
                                   target = '/almanac';
                                 }
-                                if (!_isLoggedIn && target.isNotEmpty) {
-                                  context.go('/login?redirect=$target');
-                                } else if (target.isNotEmpty) {
+                                if (target.isNotEmpty) {
                                   context.go(target);
                                 }
                               },
@@ -247,14 +266,23 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                             child: PopupMenuButton<String>(
                               offset: const Offset(0, 40),
                               color: const Color(0xFF131A30),
+                              popUpAnimationStyle: AnimationStyle(
+                                duration: const Duration(milliseconds: 150),
+                                reverseDuration: const Duration(milliseconds: 120),
+                                curve: Curves.easeOutCubic,
+                                reverseCurve: Curves.easeInCubic,
+                              ),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                              constraints: const BoxConstraints(minWidth: 220, maxWidth: 320),
                               tooltip: 'Danh mục diễn đàn',
                               onOpened: () => setState(() => _isForumMenuOpen = true),
                               onCanceled: () => setState(() => _isForumMenuOpen = false),
                               onSelected: (String result) {
                                 setState(() => _isForumMenuOpen = false);
                                 String target = '';
-                                if (result == 'bai_viet_moi') {
+                                if (result == 'dien_dan') {
+                                  target = '/forum';
+                                } else if (result == 'bai_viet_moi') {
                                   target = '/forum/new-posts';
                                 } else if (result == 'bai_chua_xem') {
                                   target = '/forum/unread-posts';
@@ -266,13 +294,32 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                                   target = '/forum/search';
                                 }
                                 
-                                if (!_isLoggedIn && target.isNotEmpty) {
+                                if (result == 'dien_dan') {
+                                  context.go(target);
+                                } else if (!_isLoggedIn && target.isNotEmpty) {
                                   context.go('/login?redirect=$target');
                                 } else if (target.isNotEmpty) {
                                   context.go(target);
                                 }
                               },
                               itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 'dien_dan',
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.forum, color: Colors.white, size: 18),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          'Trang chủ Diễn đàn',
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const PopupMenuDivider(height: 1),
                                 const PopupMenuItem(value: 'bai_viet_moi', child: Text('Bài viết mới', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
                                 const PopupMenuItem(value: 'bai_chua_xem', child: Text('Bài chưa xem', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
                                 const PopupMenuItem(value: 'bai_cua_ban', child: Text('Bài của bạn', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15))),
@@ -281,19 +328,28 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                                   children: const [
                                     Icon(Icons.search, color: Colors.white, size: 18),
                                     SizedBox(width: 6),
-                                    Text('Tìm kiếm', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                                    Expanded(
+                                      child: Text(
+                                        'Tìm kiếm',
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
                                   ],
                                 )),
                               ],
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10, top: 8, bottom: 8),
-                                child: Text(
-                                  '▼',
-                                  style: TextStyle(
-                                    color: _isForumMenuOpen ? const Color(0xFF00E5FF) : const Color(0xFFD4AF37),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    shadows: _isForumMenuOpen ? const [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)] : null,
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4, right: 12, top: 8, bottom: 8),
+                                  child: Text(
+                                    '▼',
+                                    style: TextStyle(
+                                      color: _isForumMenuOpen ? const Color(0xFF00E5FF) : const Color(0xFFD4AF37),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      shadows: _isForumMenuOpen ? const [Shadow(color: Color(0xFF00E5FF), blurRadius: 8)] : null,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -311,7 +367,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                       const SizedBox(width: 14),
 
                       // User Auth Section
-                      if (_isLoggedIn) ...[
+                      if (isLoggedIn) ...[
                         _buildHeaderTooltip(
                           message: 'Bài viết mới',
                           child: InkWell(
@@ -461,7 +517,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                               } else if (val == 'profile') {
                                 context.go('/forum/ucp');
                               } else if (val == 'view_profile') {
-                                context.go('/forum/member/Gacon1980');
+                                context.go('/forum/member/$currentUsername');
                               }
                             },
                             child: const CircleAvatar(
@@ -470,7 +526,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                               child: Icon(Icons.person, size: 19, color: Colors.white),
                             ),
                             itemBuilder: (context) => [
-                              PopupMenuItem(enabled: false, child: Text(_username, style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
+                              PopupMenuItem(enabled: false, child: Text(currentUsername, style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
                               const PopupMenuDivider(),
                               const PopupMenuItem(value: 'profile', child: Text('Thiết lập cá nhân', style: TextStyle(color: Colors.white))),
                               const PopupMenuItem(value: 'view_profile', child: Text('Xem thông tin cá nhân', style: TextStyle(color: Colors.white))),

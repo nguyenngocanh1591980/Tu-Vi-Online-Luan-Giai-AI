@@ -9,12 +9,12 @@ class AuthService {
   // For Android emulator, use 10.0.2.2 instead of localhost
   static String get baseUrl {
     if (kIsWeb) {
-      return 'http://localhost:5169/api/auth';
+      return 'http://localhost:5000/api/v1/auth';
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:5169/api/auth';
+      return 'http://10.0.2.2:5000/api/v1/auth';
     }
-    return 'http://localhost:5169/api/auth';
+    return 'http://localhost:5000/api/v1/auth';
   }
   Future<String?> login(String username, String password, {bool rememberMe = false, bool hideOnlineStatus = false}) async {
     try {
@@ -35,10 +35,15 @@ class AuthService {
         
         if (token == null) return 'Lỗi: Không nhận được token từ server';
 
-        // Save token
+        final previousVisit = data['previousVisitTime'] ?? data['PreviousVisitTime'];
+
+        // Save token and session info
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt_token', token);
         await prefs.setString('username', username);
+        if (previousVisit != null && previousVisit.toString().isNotEmpty) {
+          await prefs.setString('previous_visit_time', previousVisit.toString());
+        }
         
         // Decode JWT to extract role
         final role = _extractRoleFromJwt(token);
@@ -92,6 +97,17 @@ class AuthService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final data = jsonDecode(response.body);
+          final token = data['token'] ?? data['Token'];
+          if (token != null && token.toString().isNotEmpty) {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('jwt_token', token.toString());
+            await prefs.setString('username', username);
+            final role = _extractRoleFromJwt(token.toString());
+            await prefs.setString('role', role);
+          }
+        } catch (_) {}
         return null; // Success
       } else {
         return 'Lỗi từ server (${response.statusCode}): ${response.body}';
@@ -102,12 +118,6 @@ class AuthService {
     }
   }
 
-  Future<void> _clearTokens() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('jwt_token');
-    await prefs.remove('username');
-    await prefs.remove('role');
-  }
 
   String _extractRoleFromJwt(String token) {
     try {
@@ -132,11 +142,33 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
     await prefs.remove('username');
+    await prefs.remove('role');
   }
 
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('jwt_token');
+  }
+
+  Future<String?> getRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('role');
+    if (role != null && role.isNotEmpty) return role;
+    final token = await getToken();
+    if (token != null && token.isNotEmpty) {
+      return _extractRoleFromJwt(token);
+    }
+    return null;
+  }
+
+  Future<String?> getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
+  Future<bool> isAdmin() async {
+    final role = await getRole();
+    return role != null && role.trim().toLowerCase() == 'admin';
   }
 
   Future<String?> recoverAccount(String email) async {

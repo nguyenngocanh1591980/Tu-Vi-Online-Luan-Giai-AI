@@ -1,0 +1,80 @@
+[
+  {
+    "id": 6,
+    "username": "nncuong",
+    "email": "nncuong@lyso.vn",
+    "role": "Sáng lập",
+    "posts": 3713,
+    "joinDate": "13:44, 03/09/08",
+    "badgeText": "SÁNG LẬP",
+    "badgeType": "badge_red",
+    "nameColor": "#EF5350",
+    "website": "",
+    "isBold": true
+  },
+  {
+    "id": 7,
+    "username": "phuongdonganh",
+    "email": "phuongdonganh@lyso.vn",
+    "role": "Quản lý",
+    "posts": 185,
+    "joinDate": "13:45, 03/09/08",
+    "badgeText": "QUẢN LÝ",
+    "badgeType": "badge_blue",
+    "nameColor": "#42A5F5",
+    "website": "",
+    "isBold": true
+  },
+  {
+    "id": 8,
+    "username": "phamthaiduy",
+    "email": "phamthaiduy@lyso.vn",
+    "role": "Hội viên",
+    "posts": 243,
+    "joinDate": "13:42, 03/09/08",
+    "badgeText": "HỘI VIÊN",
+    "badgeType": "badge_purple",
+    "nameColor": "#AB47BC",
+    "website": "",
+    "isBold": true
+  },
+  {
+    "id": 9,
+    "username": "tester_vip_001",
+    "email": "tester@vip.com",
+    "role": "User",
+    "posts": 0,
+    "joinDate": "11:32, 03/09/08",
+    "badgeText": "HỘI VIÊN",
+    "badgeType": "badge_purple",
+    "nameColor": "#AB47BC",
+    "website": "",
+    "isBold": true
+  },
+  {
+    "id": 12,
+    "username": "test_persistent_user_8",
+    "email": "test_persistent_user_8@tuvionline.vn",
+    "role": "User",
+    "posts": 0,
+    "joinDate": "18:37, 06/10/26",
+    "badgeText": "HỘI VIÊN",
+    "badgeType": "badge_purple",
+    "nameColor": "#AB47BC",
+    "website": "",
+    "isBold": true
+  },
+  {
+    "id": 18,
+    "username": "Admin",
+    "email": "nguyenngocanh.1591980@gmail.com",
+    "role": "Admin",
+    "posts": 0,
+    "joinDate": "16:28, 09/10/26",
+    "badgeText": "QUẢN LÝ",
+    "badgeType": "badge_blue",
+    "nameColor": "#EF5350",
+    "website": "",
+    "isBold": true
+  }
+]

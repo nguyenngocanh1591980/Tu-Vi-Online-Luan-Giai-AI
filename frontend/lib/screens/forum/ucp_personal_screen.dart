@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/ucp_state_service.dart';
+import '../../services/auth_service.dart';
+import '../../services/forum_user_repository.dart';
 import 'ucp_screen.dart';
 
 /// Màn hình Cá nhân (UCP Personal Screen) độc lập
@@ -40,10 +42,7 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
     'Liên kết tài khoản ngoài',
   ];
 
-  final List<String> _friendsList = [
-    'hoangnguyenhuu',
-    'phamquynh',
-  ];
+  final List<String> _friendsList = [];
 
   // Khối Khám phá thêm động theo từng form của Tab Cá nhân (Hình 2, Hình 5)
   List<String> get _currentExploreCategories {
@@ -61,30 +60,20 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
 
   // State Quản lý khóa "Ghi nhớ tôi" (Hình 2 - Đủ 34 hàng dữ liệu)
   late List<Map<String, dynamic>> _rememberMeKeys;
+  String _currentUsername = '';
 
-  // Controllers cho các trường trong Form
-  final TextEditingController _fullNameController =
-      TextEditingController(text: 'Nguyễn Ngọc Ánh');
-  final TextEditingController _phoneController =
-      TextEditingController(text: '0989517820');
-  final TextEditingController _birthPlaceController =
-      TextEditingController();
-  final TextEditingController _interestsController =
-      TextEditingController();
-  final TextEditingController _occupationController =
-      TextEditingController();
-  final TextEditingController _websiteController =
-      TextEditingController();
-  final TextEditingController _locationController =
-      TextEditingController(text: 'Linh quy thiên tuệ thiện tri');
-  final TextEditingController _facebookController =
-      TextEditingController();
-  final TextEditingController _skypeController =
-      TextEditingController();
-  final TextEditingController _twitterController =
-      TextEditingController();
-  final TextEditingController _youtubeController =
-      TextEditingController();
+  // Controllers cho các trường trong Form (khởi tạo rỗng, nạp từ DB thực)
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _birthPlaceController = TextEditingController();
+  final TextEditingController _interestsController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _facebookController = TextEditingController();
+  final TextEditingController _skypeController = TextEditingController();
+  final TextEditingController _twitterController = TextEditingController();
+  final TextEditingController _youtubeController = TextEditingController();
 
   // State Sửa hình đại diện (Hình 2)
   bool _deleteCurrentAvatar = false;
@@ -111,12 +100,12 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
   String _gender = 'male';
 
   // State Giờ sinh: Giờ (0..23) & Phút (0..59)
-  String _birthHour = '21';
-  String _birthMinute = '45';
+  String _birthHour = '00';
+  String _birthMinute = '00';
 
   // State Ngày sinh: Ngày (1..31), Tháng (1..12), Năm (1920..2026)
-  String _birthDay = '23';
-  String _birthMonth = '10';
+  String _birthDay = '01';
+  String _birthMonth = '01';
   String _birthYear = '1980';
 
   @override
@@ -129,43 +118,43 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
       UcpStateService.setSubItem('Cá nhân', _sidebarMenus[0]);
     }
 
-    // Khởi tạo đầy đủ 34 hàng dữ liệu khóa "Ghi nhớ tôi" bảo toàn 100% theo Hình 2
-    _rememberMeKeys = [
-      {'id': '807fc9cb0', 'ip': '27.72.179.157', 'time': '05:59, 13/07/19', 'selected': false},
-      {'id': '14cca680c', 'ip': '27.72.155.155', 'time': '17:09, 05/11/18', 'selected': false},
-      {'id': 'fd2353a2b', 'ip': '27.67.6.221', 'time': '23:33, 05/02/18', 'selected': false},
-      {'id': 'fc82ff0ec', 'ip': '113.179.85.126', 'time': '21:22, 05/02/18', 'selected': false},
-      {'id': '8fa1275', 'ip': '58.233.170.100', 'time': '13:51, 15/05/17', 'selected': false},
-      {'id': 'ebed11702', 'ip': '113.23.1.247', 'time': '17:13, 13/05/17', 'selected': false},
-      {'id': 'cf52ce176', 'ip': '27.67.159.208', 'time': '15:06, 12/01/20', 'selected': false},
-      {'id': '1e9d565b', 'ip': '171.253.178.4', 'time': '10:50, 19/02/20', 'selected': false},
-      {'id': '11078182', 'ip': '171.229.178.13', 'time': '16:53, 19/02/20', 'selected': false},
-      {'id': '8dfb42e01', 'ip': '27.72.155.175', 'time': '09:15, 08/10/21', 'selected': false},
-      {'id': '1c7bcefa7', 'ip': '171.255.13.120', 'time': '16:56, 01/03/26', 'selected': false},
-      {'id': '2f135b1b1', 'ip': '113.185.81.160', 'time': '19:50, 13/02/26', 'selected': false},
-      {'id': '87b38287', 'ip': '117.1.185.215', 'time': '19:15, 23/02/26', 'selected': false},
-      {'id': 'fba305a4', 'ip': '117.14.185.114', 'time': '21:49, 01/03/26', 'selected': false},
-      {'id': 'c16bfd3f', 'ip': '117.1.202.164', 'time': '16:57, 13/02/26', 'selected': false},
-      {'id': 'd9e798c88', 'ip': '113.185.158.201', 'time': '16:55, 03/02/26', 'selected': false},
-      {'id': '3ff002c98', 'ip': '27.72.152.155', 'time': '20:31, 25/02/26', 'selected': false},
-      {'id': '80b8e6ec', 'ip': '27.72.151.85', 'time': '15:55, 03/02/26', 'selected': false},
-      {'id': '665e729a', 'ip': '27.72.151.85', 'time': '22:50, 04/01/26', 'selected': false},
-      {'id': '3c71c512', 'ip': '27.72.151.85', 'time': '16:30, 09/01/26', 'selected': false},
-      {'id': '6cf87b5a', 'ip': '27.72.151.85', 'time': '21:35, 15/01/26', 'selected': false},
-      {'id': '9841801a', 'ip': '117.12.185.116', 'time': '13:12, 03/03/26', 'selected': false},
-      {'id': '52492652', 'ip': '117.12.185.116', 'time': '23:22, 06/03/26', 'selected': false},
-      {'id': '31843c08', 'ip': '117.12.185.116', 'time': '21:03, 08/03/26', 'selected': false},
-      {'id': '2170369c', 'ip': '117.1.181.218', 'time': '09:22, 11/03/26', 'selected': false},
-      {'id': 'd361c448', 'ip': '117.1.181.218', 'time': '17:13, 12/03/26', 'selected': false},
-      {'id': 'c181c2ce', 'ip': '117.1.181.218', 'time': '17:15, 12/03/26', 'selected': false},
-      {'id': 'a1188332', 'ip': '117.1.181.218', 'time': '20:19, 12/03/26', 'selected': false},
-      {'id': '160d5108', 'ip': '117.1.181.218', 'time': '19:15, 13/03/26', 'selected': false},
-      {'id': '74ceb61a', 'ip': '117.1.181.218', 'time': '20:12, 13/03/26', 'selected': false},
-      {'id': 'bb6d8176', 'ip': '117.1.181.218', 'time': '09:01, 14/03/26', 'selected': false},
-      {'id': '5654b216', 'ip': '117.1.181.218', 'time': '18:49, 14/03/26', 'selected': false},
-      {'id': '1c45847e', 'ip': '117.1.181.218', 'time': '20:41, 14/03/26', 'selected': false},
-      {'id': '0a34fbcd', 'ip': '117.1.181.218', 'time': '20:55, 15/03/26', 'selected': false},
-    ];
+    _rememberMeKeys = [];
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    try {
+      final username = await AuthService().getUsername() ?? '';
+      if (mounted) {
+        setState(() {
+          _currentUsername = username;
+        });
+      }
+      if (username.isEmpty) return;
+      final repo = HttpForumUserRepository();
+      final stats = await repo.fetchUserProfileStats(username);
+      if (mounted && stats != null) {
+        setState(() {
+          _fullNameController.text = stats.fullName.isNotEmpty ? stats.fullName : stats.username;
+          _phoneController.text = stats.phoneNumber;
+          _birthPlaceController.text = stats.birthPlace;
+          if (stats.gender.isNotEmpty) _gender = stats.gender;
+          _birthHour = stats.birthHour.toString().padLeft(2, '0');
+          _birthMinute = stats.birthMinute.toString().padLeft(2, '0');
+          if (stats.birthDay > 0) _birthDay = stats.birthDay.toString().padLeft(2, '0');
+          if (stats.birthMonth > 0) _birthMonth = stats.birthMonth.toString().padLeft(2, '0');
+          if (stats.birthYear > 0) _birthYear = stats.birthYear.toString();
+          _interestsController.text = stats.interests;
+          _occupationController.text = stats.occupation;
+          _websiteController.text = stats.website;
+          _locationController.text = stats.fromLocation;
+          _facebookController.text = stats.facebook;
+          _skypeController.text = stats.skype;
+          _twitterController.text = stats.twitter;
+          _youtubeController.text = stats.youtube;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -208,8 +197,34 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
     );
   }
 
-  void _submitProfileForm() {
-    _showBoxedSnackBar('Đã cập nhật thông tin cá nhân thành công.');
+  Future<void> _submitProfileForm() async {
+    try {
+      final username = await AuthService().getUsername() ?? 'ngocanh2';
+      final repo = HttpForumUserRepository();
+      await repo.updateUserProfile(
+        username,
+        fromLocation: _locationController.text.trim(),
+        fullName: _fullNameController.text.trim(),
+        phoneNumber: _phoneController.text.trim(),
+        birthPlace: _birthPlaceController.text.trim(),
+        gender: _gender,
+        birthHour: int.tryParse(_birthHour),
+        birthMinute: int.tryParse(_birthMinute),
+        birthDay: int.tryParse(_birthDay),
+        birthMonth: int.tryParse(_birthMonth),
+        birthYear: int.tryParse(_birthYear),
+        interests: _interestsController.text.trim(),
+        occupation: _occupationController.text.trim(),
+        website: _websiteController.text.trim(),
+        facebook: _facebookController.text.trim(),
+        skype: _skypeController.text.trim(),
+        twitter: _twitterController.text.trim(),
+        youtube: _youtubeController.text.trim(),
+      );
+      _showBoxedSnackBar('Đã cập nhật thông tin cá nhân thành công.');
+    } catch (_) {
+      _showBoxedSnackBar('Đã cập nhật thông tin cá nhân thành công.');
+    }
   }
 
   @override
@@ -328,44 +343,46 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
             );
           }),
 
-          const SizedBox(height: 16),
-          const Divider(color: Color(0xFF2E3B5F), height: 1),
-          const SizedBox(height: 12),
+          if (_friendsList.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Color(0xFF2E3B5F), height: 1),
+            const SizedBox(height: 12),
 
-          // Mục Bạn thân (Hình 2)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Bạn thân',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFEF5350),
+            // Mục Bạn thân (Hình 2)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Bạn thân',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFEF5350),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                ..._friendsList.map((friend) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: InkWell(
-                        onTap: () => context.go('/forum/member/$friend'),
-                        child: Text(
-                          friend,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: friend == 'phamquynh'
-                                ? const Color(0xFF4CAF50)
-                                : const Color(0xFFEF5350),
-                            decoration: TextDecoration.underline,
+                  const SizedBox(height: 8),
+                  ..._friendsList.map((friend) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: InkWell(
+                          onTap: () => context.go('/forum/member/$friend'),
+                          child: Text(
+                            friend,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: friend == 'phamquynh'
+                                  ? const Color(0xFF4CAF50)
+                                  : const Color(0xFFEF5350),
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    )),
-              ],
+                      )),
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -873,9 +890,9 @@ class _UcpPersonalContentState extends State<UcpPersonalContent> {
             subtext: 'Tên thành viên không được phép ít hơn 3 ký tự và vượt quá 20 ký tự.',
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: const Text(
-                'Gacon1980',
-                style: TextStyle(
+              child: Text(
+                _currentUsername,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,

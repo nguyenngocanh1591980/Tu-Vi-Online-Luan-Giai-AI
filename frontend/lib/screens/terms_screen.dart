@@ -6,9 +6,9 @@ class TermsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

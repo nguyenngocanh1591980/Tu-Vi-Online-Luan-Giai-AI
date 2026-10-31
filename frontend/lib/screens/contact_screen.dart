@@ -85,10 +85,9 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
-        child: Padding(
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -114,7 +113,6 @@ class _ContactScreenState extends State<ContactScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 

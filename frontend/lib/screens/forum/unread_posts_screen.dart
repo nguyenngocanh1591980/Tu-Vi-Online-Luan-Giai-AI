@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../utils/boxed_snack_bar.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
 
@@ -14,6 +15,40 @@ class _UnreadPostsScreenState extends State<UnreadPostsScreen> {
   int _currentMobileIndex = 2; // Tab Diễn đàn
   int _currentPage = 1;
   final TextEditingController _searchController = TextEditingController();
+  bool _isNavigating = false;
+  DateTime? _lastNavigationTime;
+
+  void _navigateToTopic(BuildContext context, Map<String, dynamic> topic) {
+    final now = DateTime.now();
+    if (_isNavigating ||
+        (_lastNavigationTime != null &&
+            now.difference(_lastNavigationTime!).inMilliseconds < 500)) {
+      return;
+    }
+
+    final dynamic rawId = topic['id'] ?? topic['topicId'] ?? topic['Id'];
+    final String? id = (rawId != null && rawId.toString().trim().isNotEmpty)
+        ? rawId.toString().trim()
+        : null;
+
+    if (id == null || id.isEmpty) {
+      showErrorSnackBar(context, 'Dữ liệu chủ đề bị lỗi');
+      return;
+    }
+
+    _isNavigating = true;
+    _lastNavigationTime = now;
+
+    context.push('/forum/post/').then((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    }).catchError((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    });
+  }
   String _selectedJumpCategory = 'Chuyển đến';
 
   final List<String> _jumpCategories = [
@@ -723,20 +758,26 @@ class _UnreadPostsScreenState extends State<UnreadPostsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Icon phong bì / bài viết
-                Container(
-                  margin: const EdgeInsets.only(top: 2, right: 10),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF131A30),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF2E3B5F)),
-                    ),
-                    child: const Icon(
-                      Icons.mark_as_unread_outlined,
-                      size: 16,
-                      color: Color(0xFFEF5350),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => _navigateToTopic(context, post),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 2, right: 10),
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF131A30),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFF2E3B5F)),
+                        ),
+                        child: const Icon(
+                          Icons.mark_as_unread_outlined,
+                          size: 16,
+                          color: Color(0xFFEF5350),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -746,17 +787,9 @@ class _UnreadPostsScreenState extends State<UnreadPostsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          post['title'],
-                          style: const TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFEF5350), // Màu link đỏ nguyên bản
-                            height: 1.3,
-                          ),
-                        ),
+                      _HoverableUnreadPostTitle(
+                        title: post['title'] ?? '',
+                        onTap: () => _navigateToTopic(context, post),
                       ),
                       const SizedBox(height: 4),
                       RichText(
@@ -866,7 +899,13 @@ class _UnreadPostsScreenState extends State<UnreadPostsScreen> {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => _navigateToTopic(context, post),
+                        child: const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -1044,7 +1083,49 @@ class _UnreadPostsScreenState extends State<UnreadPostsScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
+      ),
+    );
+  }
+}
+
+class _HoverableUnreadPostTitle extends StatefulWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  const _HoverableUnreadPostTitle({
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverableUnreadPostTitle> createState() => _HoverableUnreadPostTitleState();
+}
+
+class _HoverableUnreadPostTitleState extends State<_HoverableUnreadPostTitle> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final displayColor = _isHovered ? const Color(0xFF1E88E5) : const Color(0xFFEF5350);
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            fontSize: 13.5,
+            fontWeight: FontWeight.bold,
+            color: displayColor,
+            height: 1.3,
+            decoration: _isHovered ? TextDecoration.underline : null,
+            decorationColor: displayColor,
+          ),
+        ),
       ),
     );
   }

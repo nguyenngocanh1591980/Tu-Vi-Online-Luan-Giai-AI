@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/ucp_state_service.dart';
+import '../../services/forum_user_repository.dart';
+import '../../services/auth_service.dart';
 import '../../utils/boxed_snack_bar.dart';
 import 'ucp_subscriptions_screen.dart';
 import 'ucp_favorites_screen.dart';
@@ -30,12 +32,14 @@ class UcpScreen extends StatefulWidget {
 class _UcpScreenState extends State<UcpScreen> {
   late int _selectedTabIndex;
   late int _selectedSidebarIndex;
+  UserProfileStats? _userStats;
 
   @override
   void initState() {
     super.initState();
     _selectedTabIndex = widget.initialTabIndex;
     _selectedSidebarIndex = widget.initialSidebarIndex;
+    _loadUserStats();
 
     if (_selectedTabIndex == 1) {
       UcpStateService.setSubItem('Cá nhân', 'Sửa thông tin cá nhân');
@@ -85,6 +89,19 @@ class _UcpScreenState extends State<UcpScreen> {
     UcpStateService.onClearSubItem = null;
     UcpStateService.onSelectTab = null;
     super.dispose();
+  }
+
+  Future<void> _loadUserStats() async {
+    try {
+      final username = await AuthService().getUsername() ?? 'ngocanh2';
+      final repo = HttpForumUserRepository();
+      final stats = await repo.fetchUserProfileStats(username);
+      if (mounted && stats != null) {
+        setState(() {
+          _userStats = stats;
+        });
+      }
+    } catch (_) {}
   }
 
   final List<String> _tabs = [
@@ -682,9 +699,9 @@ class _UcpScreenState extends State<UcpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildActivityRow('Tham gia:', '12:03, 04/07/12'),
+                _buildActivityRow('Tham gia:', _userStats?.joinDate ?? '12:03, 04/07/12'),
                 const SizedBox(height: 8),
-                _buildActivityRow('Lần hoạt động trước:', '16:38, 18/09/26'),
+                _buildActivityRow('Lần hoạt động trước:', _userStats?.lastActive ?? '-'),
                 const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -706,9 +723,9 @@ class _UcpScreenState extends State<UcpScreen> {
                         children: [
                           Row(
                             children: [
-                              const Text(
-                                '35',
-                                style: TextStyle(
+                              Text(
+                                _userStats != null ? '${_userStats!.postCount}' : '35',
+                                style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -735,7 +752,7 @@ class _UcpScreenState extends State<UcpScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '(0.01 bài viết/ngày / 0.00% trong tổng số bài viết)',
+                            '(${_userStats?.postsPerDay.toStringAsFixed(2) ?? '0.01'} bài viết/ngày / ${_userStats?.postPercentage.toStringAsFixed(2) ?? '0.00'}% trong tổng số bài viết)',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[400],

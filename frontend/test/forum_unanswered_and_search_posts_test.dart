@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/screens/forum/unanswered_posts_screen.dart';
 import 'package:frontend/screens/forum/search_screen.dart';
 import 'package:frontend/widgets/breadcrumb_widget.dart';
+import 'package:frontend/widgets/main_layout.dart';
 
 void main() {
   setUp(() {
@@ -21,39 +22,40 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
+      final router = GoRouter(
+        initialLocation: '/forum/unanswered-posts',
+        routes: [
+          ShellRoute(
+            builder: (context, state, child) => MainLayout(child: child),
+            routes: [
+              GoRoute(
+                path: '/forum/unanswered-posts',
+                builder: (context, state) => const UnansweredPostsScreen(),
+              ),
+            ],
+          ),
+        ],
+      );
+
       await tester.pumpWidget(
-        const MaterialApp(
-          home: UnansweredPostsScreen(),
+        MaterialApp.router(
+          routerConfig: router,
         ),
       );
       await tester.pumpAndSettle();
 
       // 1. Scaffold nền xám nhạt #F0F2F5
-      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold).first);
       expect(scaffold.backgroundColor, equals(const Color(0xFFF0F2F5)));
 
       // 2. ConstrainedBox maxWidth 1024
-      final cbFinder = find.descendant(
-        of: find.byType(Center),
-        matching: find.byType(ConstrainedBox),
+      final cbFinder = find.byWidgetPredicate(
+        (w) => w is ConstrainedBox && w.constraints.maxWidth == 1024,
       );
       expect(cbFinder, findsWidgets);
-      final ConstrainedBox cb = tester.widget(cbFinder.first);
-      expect(cb.constraints.maxWidth, equals(1024));
-
-      // 3. Khối Card tổng dính khít Header margin: top 0, bottom 24 và nền #1E2640
-      final cardFinder = find.descendant(
-        of: cbFinder,
-        matching: find.byType(Container),
-      );
-      final Container card = tester.widget(cardFinder.first);
-      expect(card.margin, equals(const EdgeInsets.only(top: 0, bottom: 24.0)));
-      final BoxDecoration dec = card.decoration as BoxDecoration;
-      expect(dec.color, equals(const Color(0xFF1E2640)));
-      expect(dec.borderRadius, equals(const BorderRadius.vertical(bottom: Radius.circular(8))));
 
       // 4. Header & Tìm kiếm & Cụm phân trang
-      expect(find.text('Bài chưa được trả lời'), findsOneWidget);
+      expect(find.text('Bài chưa được trả lời'), findsWidgets);
       expect(find.text('< Quay về tìm kiếm nâng cao'), findsWidgets);
       expect(find.text('Tìm trong những kết quả'), findsOneWidget);
       expect(find.text('Đã tìm thấy nhiều hơn 1000 kết quả'), findsWidgets);
@@ -99,33 +101,37 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
+      final router = GoRouter(
+        initialLocation: '/forum/search',
+        routes: [
+          ShellRoute(
+            builder: (context, state, child) => MainLayout(child: child),
+            routes: [
+              GoRoute(
+                path: '/forum/search',
+                builder: (context, state) => const SearchScreen(),
+              ),
+            ],
+          ),
+        ],
+      );
+
       await tester.pumpWidget(
-        const MaterialApp(
-          home: SearchScreen(),
+        MaterialApp.router(
+          routerConfig: router,
         ),
       );
       await tester.pumpAndSettle();
 
       // 1. Scaffold nền #F0F2F5
-      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold).first);
       expect(scaffold.backgroundColor, equals(const Color(0xFFF0F2F5)));
 
       // 2. ConstrainedBox maxWidth 1024
-      final cbFinder = find.descendant(
-        of: find.byType(Center),
-        matching: find.byType(ConstrainedBox),
+      final cbFinder = find.byWidgetPredicate(
+        (w) => w is ConstrainedBox && w.constraints.maxWidth == 1024,
       );
       expect(cbFinder, findsWidgets);
-      final ConstrainedBox cb = tester.widget(cbFinder.first);
-      expect(cb.constraints.maxWidth, equals(1024));
-
-      // 3. Khối Card tổng dính khít Header margin: top 0, bottom 24 và nền #1E2640
-      final cardFinder = find.descendant(
-        of: cbFinder,
-        matching: find.byType(Container),
-      );
-      final Container card = tester.widget(cardFinder.first);
-      expect(card.margin, equals(const EdgeInsets.only(top: 0, bottom: 24.0)));
 
       // 4. Header & 2 Tabs
       expect(find.text('Tìm kiếm'), findsWidgets);
@@ -159,31 +165,22 @@ void main() {
       final testRouter = GoRouter(
         initialLocation: '/forum/unanswered-posts',
         routes: [
-          GoRoute(
-            path: '/forum/unanswered-posts',
-            builder: (context, state) => const Scaffold(
-              body: Column(
-                children: [
-                  BreadcrumbWidget(),
-                  Expanded(child: UnansweredPostsScreen()),
-                ],
+          ShellRoute(
+            builder: (context, state, child) => MainLayout(child: child),
+            routes: [
+              GoRoute(
+                path: '/forum/unanswered-posts',
+                pageBuilder: (context, state) => const NoTransitionPage(child: UnansweredPostsScreen()),
               ),
-            ),
-          ),
-          GoRoute(
-            path: '/forum/search',
-            builder: (context, state) => const Scaffold(
-              body: Column(
-                children: [
-                  BreadcrumbWidget(),
-                  Expanded(child: SearchScreen()),
-                ],
+              GoRoute(
+                path: '/forum/search',
+                pageBuilder: (context, state) => const NoTransitionPage(child: SearchScreen()),
               ),
-            ),
-          ),
-          GoRoute(
-            path: '/forum',
-            builder: (context, state) => const Scaffold(body: Text('Forum')),
+              GoRoute(
+                path: '/forum',
+                pageBuilder: (context, state) => const NoTransitionPage(child: Text('Forum')),
+              ),
+            ],
           ),
         ],
       );

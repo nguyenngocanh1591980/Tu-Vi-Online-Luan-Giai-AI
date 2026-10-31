@@ -43,7 +43,7 @@ void main() {
             GoRoute(
               path: '/',
               builder: (context, state) =>
-                  const Scaffold(body: Text('Màn hình chính diễn đàn')),
+                  const Material(color: Colors.transparent, child: Center(child: Text('Màn hình chính diễn đàn'))),
             ),
           ],
         ),

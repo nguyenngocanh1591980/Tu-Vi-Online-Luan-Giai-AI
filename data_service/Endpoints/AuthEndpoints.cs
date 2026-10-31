@@ -36,6 +36,9 @@ public static class AuthEndpoints
             }
             var secureToken = Convert.ToBase64String(tokenBytes).Replace('+', '-').Replace('/', '_').TrimEnd('=');
 
+            var isRootAdmin = request.Username.Equals("admin", StringComparison.OrdinalIgnoreCase) || 
+                              request.Email.Equals("nguyenngocanh.1591980@gmail.com", StringComparison.OrdinalIgnoreCase);
+
             var user = new User
             {
                 Username = request.Username,
@@ -46,18 +49,53 @@ public static class AuthEndpoints
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 PreferredLanguage = request.PreferredLanguage ?? "Tiếng Việt",
-                IsEmailVerified = false,
-                EmailVerificationToken = secureToken,
-                EmailVerificationExpiry = DateTime.UtcNow.AddHours(24),
-                Role = "User" // Cưỡng ép Role mặc định là User
+                IsEmailVerified = true,
+                EmailVerificationToken = null,
+                EmailVerificationExpiry = null,
+                Role = isRootAdmin ? "Admin" : "User",
+                PostCount = 0,
+                CreatedAt = DateTime.UtcNow,
+                BadgeText = isRootAdmin ? "QUẢN LÝ" : "HỘI VIÊN",
+                BadgeType = isRootAdmin ? "badge_blue" : "badge_purple",
+                NameColor = isRootAdmin ? "#EF5350" : "#AB47BC",
+                Website = "",
+                LastVisitTime = DateTime.UtcNow,
+                PreviousVisitTime = null
             };
 
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();
 
-            await emailService.SendVerificationEmailAsync(user.Email, user.EmailVerificationToken);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtKey = configuration["JwtSettings:Key"] ?? "tuvi_online_manager_super_secret_key_1234567890";
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+            var expirationTime = DateTime.UtcNow.AddDays(30);
 
-            return Results.Created("", new { message = "Vui lòng kiểm tra email" });
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role ?? "User")
+                }),
+                Expires = expirationTime,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = configuration["JwtSettings:Issuer"],
+                Audience = configuration["JwtSettings:Audience"]
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Results.Created("", new 
+            { 
+                message = "Đăng ký thành công!",
+                token = tokenString,
+                username = user.Username,
+                role = user.Role,
+                createdAt = user.CreatedAt
+            });
         });
 
         group.MapPost("/login", async (LoginRequest request, AppDbContext dbContext) =>
@@ -70,10 +108,12 @@ public static class AuthEndpoints
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 return Results.Unauthorized();
 
-            if (!user.IsEmailVerified)
-                return Results.Json(new { error = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email để xác nhận." }, statusCode: 403);
-
-            // Cập nhật trạng thái IsInvisible vào Database nếu người dùng có tick chọn
+            // Cập nhật PreviousVisitTime (lần đăng nhập trước đó) và LastVisitTime (phiên hiện tại) vào Database
+            if (user.LastVisitTime.HasValue)
+            {
+                user.PreviousVisitTime = user.LastVisitTime.Value;
+            }
+            user.LastVisitTime = DateTime.UtcNow;
             user.IsInvisible = request.HideOnlineStatus;
             await dbContext.SaveChangesAsync();
 
@@ -108,11 +148,27 @@ public static class AuthEndpoints
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
+            string? prevVisitFormatted = null;
+            if (user.PreviousVisitTime.HasValue)
+            {
+                try
+                {
+                    var tzVn = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                    prevVisitFormatted = TimeZoneInfo.ConvertTimeFromUtc(user.PreviousVisitTime.Value, tzVn).ToString("HH:mm, dd/MM/yy");
+                }
+                catch
+                {
+                    prevVisitFormatted = user.PreviousVisitTime.Value.AddHours(7).ToString("HH:mm, dd/MM/yy");
+                }
+            }
+
             return Results.Ok(new 
             { 
                 Token = tokenString, 
                 Username = user.Username,
+                Role = user.Role,
                 IsInvisible = user.IsInvisible,
+                PreviousVisitTime = prevVisitFormatted,
                 ExpiresIn = request.RememberMe ? "30d" : "1h" 
             });
         });

@@ -1,0 +1,25 @@
+{
+  "general_stats": {
+    "posts_count": 0,
+    "topics_count": 0,
+    "members_count": 27,
+    "newest_member": "elizaasyre"
+  },
+  "online_stats": {
+    "total_online": 1,
+    "registered_count": 1,
+    "hidden_count": 0,
+    "guest_count": 0,
+    "active_window_minutes": 60,
+    "most_online_count": 1,
+    "most_online_time": "21:39, 30/10/26",
+    "users": [
+      {
+        "name": "Admin",
+        "color": "#AB47BC",
+        "isBold": true
+      }
+    ],
+    "roles_legend": []
+  }
+}

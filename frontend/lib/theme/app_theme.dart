@@ -4,6 +4,18 @@ class AppTheme {
   static const Color snackBarBackground = Color(0xFF323232);
   static const double maxSnackBarWidth = 1024.0;
   static const double mobilePadding = 16.0;
+  static const String primaryFontFamily = 'Roboto';
+  static const List<String> defaultFontFamilyFallback = <String>[
+    'Roboto',
+    'NotoFallbackSymbols',
+    'Arial',
+    'Segoe UI',
+    'Segoe UI Symbol',
+    'Segoe UI Emoji',
+    'Noto Sans',
+    'Noto Color Emoji',
+    'sans-serif',
+  ];
 
   /// SnackBarTheme chuẩn hóa toàn cục.
   ///
@@ -30,11 +42,25 @@ class AppTheme {
         insetPadding: EdgeInsets.zero,
       );
 
-  static ThemeData get lightTheme => ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade900),
-        useMaterial3: true,
-        snackBarTheme: snackBarTheme,
-      );
+  static ThemeData get lightTheme {
+    final base = ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade900),
+      useMaterial3: true,
+      fontFamily: primaryFontFamily,
+      fontFamilyFallback: defaultFontFamilyFallback,
+      snackBarTheme: snackBarTheme,
+    );
+    return base.copyWith(
+      textTheme: base.textTheme.apply(
+        fontFamily: primaryFontFamily,
+        fontFamilyFallback: defaultFontFamilyFallback,
+      ),
+      primaryTextTheme: base.primaryTextTheme.apply(
+        fontFamily: primaryFontFamily,
+        fontFamilyFallback: defaultFontFamilyFallback,
+      ),
+    );
+  }
 
   /// Builder responsive dự phòng (giữ tương thích ngược cho test cũ).
   /// Trong kiến trúc mới, ScaffoldMessenger cục bộ trong MainLayout

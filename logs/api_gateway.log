@@ -1,0 +1,167 @@
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
+FROM pg_class AS cls
+JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+WHERE
+        cls.relkind IN ('r', 'v', 'm', 'f', 'p') AND
+        ns.nspname NOT IN ('pg_catalog', 'information_schema') AND
+        -- Exclude tables which are members of PG extensions
+        NOT EXISTS (
+            SELECT 1 FROM pg_depend WHERE
+                classid=(
+                    SELECT cls.oid
+                    FROM pg_class AS cls
+                             JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+                    WHERE relname='pg_class' AND ns.nspname='pg_catalog'
+                ) AND
+                objid=cls.oid AND
+                deptype IN ('e', 'x')
+        )
+==========================================================
+[DATABASE SEEDING] Bat dau kiem tra va seed du lieu test...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Categories" AS c)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "MasterProfiles" AS m)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "Bookings" AS b)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."Content", a."Palace", a."Star", a."State"
+      FROM "AstrologyInterpretations" AS a
+      WHERE a."Star" = 'Tử Vi' AND a."Palace" = 'Mệnh' AND a."State" = 'Miếu địa'
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM "BoardMembers" AS b)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."CancelledBookingDays", m."IsActive", m."IsApproved", m."IsSeed", m."JoinDate", m."MasterName", m."MasterShare", m."OfflineBookingDays", m."OnlineBookingDays", m."PlatformShare", m."RankTitle", m."RevenueShareRatio", m."Specialization", m."StarLevel", m."ThanksCount", m."TitleLogo", m."TotalBookedClients", m."UserId", m."Username", m."WeeklyEarnings"
+      FROM "MasterProfiles" AS m
+[DATABASE SEEDING] Hoan tat toan bo du lieu Seed!
+==========================================================
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: E:\Tu vi online\APIGateway_CS
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (21ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT count(*)::int
+      FROM "Users" AS u
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (22ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Badge", u."BadgeType", u."BirthHour", u."BirthMinute", u."BirthPlace", u."CoinBalance", u."CreatedAt", u."DateOfBirth", u."Email", u."Facebook", u."FromLocation", u."FullName", u."Gender", u."Interests", u."IsActive", u."Occupation", u."PasswordHash", u."PhoneNumber", u."PostCount", u."RankTitle", u."Role", u."RoleId", u."SecondaryEmail", u."Signature", u."Skype", u."StarLevel", u."TitleLogo", u."Twitter", u."UserGroups", u."Username", u."Website", u."YouTube"
+      FROM "Users" AS u
+      ORDER BY u."Id"
+      LIMIT @__p_1 OFFSET @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."GroupLevel", b."LogoAsset", b."ManagedCategories", b."ManagedTopics", b."ManagementPermission", b."NameColor", b."PrimaryGroup", b."PrimaryGroupColor", b."RankBadge", b."RibbonAsset", b."SortOrder", b."Username"
+      FROM "BoardMembers" AS b
+      ORDER BY b."SortOrder"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT count(*)::int
+      FROM "Users" AS u
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Badge", u."BadgeType", u."BirthHour", u."BirthMinute", u."BirthPlace", u."CoinBalance", u."CreatedAt", u."DateOfBirth", u."Email", u."Facebook", u."FromLocation", u."FullName", u."Gender", u."Interests", u."IsActive", u."Occupation", u."PasswordHash", u."PhoneNumber", u."PostCount", u."RankTitle", u."Role", u."RoleId", u."SecondaryEmail", u."Signature", u."Skype", u."StarLevel", u."TitleLogo", u."Twitter", u."UserGroups", u."Username", u."Website", u."YouTube"
+      FROM "Users" AS u
+      ORDER BY u."Id"
+      LIMIT @__p_1 OFFSET @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT count(*)::int
+      FROM "MasterProfiles" AS m
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."CancelledBookingDays", m."IsActive", m."IsApproved", m."IsSeed", m."JoinDate", m."MasterName", m."MasterShare", m."OfflineBookingDays", m."OnlineBookingDays", m."PlatformShare", m."RankTitle", m."RevenueShareRatio", m."Specialization", m."StarLevel", m."ThanksCount", m."TitleLogo", m."TotalBookedClients", m."UserId", m."Username", m."WeeklyEarnings"
+      FROM "MasterProfiles" AS m
+      ORDER BY m."Id"
+      LIMIT @__p_1 OFFSET @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (162ms) [Parameters=[@__userIds_0='?' (DbType = Object), @__usernames_1='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Badge", u."BadgeType", u."BirthHour", u."BirthMinute", u."BirthPlace", u."CoinBalance", u."CreatedAt", u."DateOfBirth", u."Email", u."Facebook", u."FromLocation", u."FullName", u."Gender", u."Interests", u."IsActive", u."Occupation", u."PasswordHash", u."PhoneNumber", u."PostCount", u."RankTitle", u."Role", u."RoleId", u."SecondaryEmail", u."Signature", u."Skype", u."StarLevel", u."TitleLogo", u."Twitter", u."UserGroups", u."Username", u."Website", u."YouTube"
+      FROM "Users" AS u
+      WHERE u."Id" = ANY (@__userIds_0) OR lower(u."Username") = ANY (@__usernames_1)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."GroupLevel", b."LogoAsset", b."ManagedCategories", b."ManagedTopics", b."ManagementPermission", b."NameColor", b."PrimaryGroup", b."PrimaryGroupColor", b."RankBadge", b."RibbonAsset", b."SortOrder", b."Username"
+      FROM "BoardMembers" AS b
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id" AS id, u."Username" AS username, u."Role" AS role, u."RoleId" AS "roleId", COALESCE(u."Badge", 'Thành viên') AS badge, COALESCE(u."BadgeType", 'badge_yellow') AS "badgeType", COALESCE(u."RankTitle", 'Thành viên') AS "rankTitle", u."StarLevel" AS "starLevel"
+      FROM "Users" AS u
+      ORDER BY u."Id"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id" AS id, u."Username" AS username, CASE
+          WHEN u."StarLevel" < 2 THEN 2
+          WHEN u."StarLevel" > 9 THEN 9
+          ELSE u."StarLevel"
+      END AS "starLevel", COALESCE(u."RankTitle", 'Thành viên') AS "rankTitle", COALESCE(u."Badge", 'Thành viên') AS badge, COALESCE(u."BadgeType", 'badge_purple') AS "badgeType"
+      FROM "Users" AS u
+      WHERE u."Role" = 'User' OR u."RoleId" = 4 OR (u."RankTitle" IS NOT NULL AND u."RankTitle" LIKE '%Thành viên%')
+      ORDER BY u."Id"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id" AS id, m."UserId" AS "userId", m."MasterName" AS "masterName", m."Specialization" AS specialization, CASE
+          WHEN m."StarLevel" < 1 THEN 1
+          ELSE m."StarLevel"
+      END AS "starLevel", COALESCE(m."RankTitle", 'Nhất Đẳng') AS "rankTitle", m."IsApproved" AS "isApproved"
+      FROM "MasterProfiles" AS m
+      ORDER BY m."Id"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT count(*)::int
+      FROM "Users" AS u
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Badge", u."BadgeType", u."BirthHour", u."BirthMinute", u."BirthPlace", u."CoinBalance", u."CreatedAt", u."DateOfBirth", u."Email", u."Facebook", u."FromLocation", u."FullName", u."Gender", u."Interests", u."IsActive", u."Occupation", u."PasswordHash", u."PhoneNumber", u."PostCount", u."RankTitle", u."Role", u."RoleId", u."SecondaryEmail", u."Signature", u."Skype", u."StarLevel", u."TitleLogo", u."Twitter", u."UserGroups", u."Username", u."Website", u."YouTube"
+      FROM "Users" AS u
+      ORDER BY u."Id"
+      LIMIT @__p_1 OFFSET @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."GroupLevel", b."LogoAsset", b."ManagedCategories", b."ManagedTopics", b."ManagementPermission", b."NameColor", b."PrimaryGroup", b."PrimaryGroupColor", b."RankBadge", b."RibbonAsset", b."SortOrder", b."Username"
+      FROM "BoardMembers" AS b
+      ORDER BY b."SortOrder"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT count(*)::int
+      FROM "MasterProfiles" AS m
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__p_1='?' (DbType = Int32), @__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT m."Id", m."CancelledBookingDays", m."IsActive", m."IsApproved", m."IsSeed", m."JoinDate", m."MasterName", m."MasterShare", m."OfflineBookingDays", m."OnlineBookingDays", m."PlatformShare", m."RankTitle", m."RevenueShareRatio", m."Specialization", m."StarLevel", m."ThanksCount", m."TitleLogo", m."TotalBookedClients", m."UserId", m."Username", m."WeeklyEarnings"
+      FROM "MasterProfiles" AS m
+      ORDER BY m."Id"
+      LIMIT @__p_1 OFFSET @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__userIds_0='?' (DbType = Object), @__usernames_1='?' (DbType = Object)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Badge", u."BadgeType", u."BirthHour", u."BirthMinute", u."BirthPlace", u."CoinBalance", u."CreatedAt", u."DateOfBirth", u."Email", u."Facebook", u."FromLocation", u."FullName", u."Gender", u."Interests", u."IsActive", u."Occupation", u."PasswordHash", u."PhoneNumber", u."PostCount", u."RankTitle", u."Role", u."RoleId", u."SecondaryEmail", u."Signature", u."Skype", u."StarLevel", u."TitleLogo", u."Twitter", u."UserGroups", u."Username", u."Website", u."YouTube"
+      FROM "Users" AS u
+      WHERE u."Id" = ANY (@__userIds_0) OR lower(u."Username") = ANY (@__usernames_1)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT b."Id", b."GroupLevel", b."LogoAsset", b."ManagedCategories", b."ManagedTopics", b."ManagementPermission", b."NameColor", b."PrimaryGroup", b."PrimaryGroupColor", b."RankBadge", b."RibbonAsset", b."SortOrder", b."Username"
+      FROM "BoardMembers" AS b
+^C

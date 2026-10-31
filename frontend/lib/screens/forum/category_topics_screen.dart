@@ -1,8 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/forum_topic_repository.dart';
+import '../../services/breadcrumb_state_service.dart';
+import '../../services/forum_category_data_helper.dart';
+import '../../services/signalr_service.dart';
+import '../../utils/forum_text_helper.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
+import '../../utils/time_formatter.dart';
 
 enum ForumCategoryType {
   thongBaoSuKien,
@@ -37,10 +45,12 @@ enum ForumCategoryType {
 
 class CategoryTopicsScreen extends StatefulWidget {
   final String slug;
+  final bool? useMockData;
 
   const CategoryTopicsScreen({
     super.key,
     required this.slug,
+    this.useMockData,
   });
 
   @override
@@ -56,19 +66,280 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
   String _sortBy = 'Thời gian gửi';
   String _sortOrder = 'Giảm dần';
   bool _isLoggedIn = false;
+  bool _isAdmin = false;
+  int? _lastHandledRefreshTimestamp;
+  DateTime? _lastNavigationTime;
+
+  void _navigateToTopic(BuildContext context, Map<String, dynamic> topic) {
+    final now = DateTime.now();
+    // Cơ chế Debounce 800ms an toàn (Safe Navigation Lock 2026): Chống click liên tục, không rò rỉ bộ nhớ
+    if (_lastNavigationTime != null && now.difference(_lastNavigationTime!).inMilliseconds < 800) {
+      return;
+    }
+
+    final dynamic rawId = topic['id'] ?? topic['topicId'] ?? topic['Id'];
+    final String topicTitle = (topic['title'] ?? topic['Title'] ?? '').toString();
+    // Cơ chế Fallback ID an toàn cho chủ đề tĩnh: nếu thiếu ID thì dùng hash title hoặc ID 166
+    final String id = (rawId != null && rawId.toString().trim().isNotEmpty)
+        ? rawId.toString().trim()
+        : (topicTitle.isNotEmpty ? (topicTitle.hashCode.abs() % 1000 + 1).toString() : '166');
+
+    _lastNavigationTime = now;
+
+    final String catSlug = widget.slug.isNotEmpty ? widget.slug : 'thong-bao-su-kien';
+    final String catTitle = _categoryTitle.isNotEmpty ? _categoryTitle : 'Thông báo - Sự kiện';
+
+    BreadcrumbStateService.updateCurrentTopic(
+      topicId: id,
+      categorySlug: catSlug,
+      categoryTitle: catTitle,
+      topicTitle: topicTitle,
+    );
+
+    context.push(
+      '/forum/post/$id',
+      extra: {
+        'categorySlug': catSlug,
+        'categoryTitle': catTitle,
+        'topicTitle': topicTitle,
+      },
+    );
+  }
+
+  bool get _effectiveUseMockData => widget.useMockData ?? ForumCategoryDataHelper.useMockData;
+
+  // Dữ liệu thời gian thực từ Docker / API khi useMockData = false
+  final List<Map<String, dynamic>> _liveThongBaoPinnedTopics = [];
+  final List<Map<String, dynamic>> _liveThongBaoTopics = [];
 
   @override
   void initState() {
     super.initState();
     _checkLoginStatus();
+    _initSignalR();
+    if (widget.slug == 'thong-bao-su-kien' && !_effectiveUseMockData) {
+      _loadLiveTopicsFromDocker();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    try {
+      final state = GoRouterState.of(context);
+      final extra = state.extra;
+      if (extra is Map && extra['refresh'] == true) {
+        final timestamp = extra['timestamp'] ?? DateTime.now().millisecondsSinceEpoch;
+        final tsInt = timestamp is int ? timestamp : int.tryParse(timestamp.toString()) ?? DateTime.now().millisecondsSinceEpoch;
+        if (tsInt != _lastHandledRefreshTimestamp) {
+          // Memory Leak Guard 2026: Khóa cờ ngay lập tức trước khi gọi async
+          _lastHandledRefreshTimestamp = tsInt;
+          if (widget.slug == 'thong-bao-su-kien') {
+            if (!_effectiveUseMockData) {
+              _loadLiveTopicsFromDocker();
+            } else {
+              setState(() {});
+            }
+          } else {
+            _loadLiveTopicsFromDocker();
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  StreamSubscription<String?>? _signalRReconnectSub;
+
+  void _initSignalR() {
+    try {
+      signalRService.listenToTopicUpdated(_onSignalRTopicUpdated);
+      signalRService.listenToTopicBatchDeleted(_onSignalRTopicDeleted);
+      signalRService.listenToTopicDeleted(_onSignalRTopicDeleted);
+      _signalRReconnectSub?.cancel();
+      _signalRReconnectSub = signalRService.onReconnected.listen((_) {
+        if (mounted && !_effectiveUseMockData) {
+          _loadLiveTopicsFromDocker();
+        }
+      });
+    } catch (_) {}
+  }
+
+  void _handleDeletedTopicIds(List<dynamic> ids) {
+    if (!mounted || ids.isEmpty) return;
+    final idSet = ids.map((e) => e.toString()).toSet();
+    setState(() {
+      _pinnedTopics.removeWhere((t) =>
+          (t['id'] != null && idSet.contains(t['id'].toString())) ||
+          (t['title'] != null && idSet.contains(t['title'].toString())));
+      _thongBaoSuKienTopics.removeWhere((t) =>
+          (t['id'] != null && idSet.contains(t['id'].toString())) ||
+          (t['title'] != null && idSet.contains(t['title'].toString())));
+      _liveThongBaoPinnedTopics.removeWhere((t) =>
+          (t['id'] != null && idSet.contains(t['id'].toString())) ||
+          (t['title'] != null && idSet.contains(t['title'].toString())));
+      _liveThongBaoTopics.removeWhere((t) =>
+          (t['id'] != null && idSet.contains(t['id'].toString())) ||
+          (t['title'] != null && idSet.contains(t['title'].toString())));
+      for (final id in idSet) {
+        ForumCategoryDataHelper.removeTopicFromCache(widget.slug, id);
+      }
+    });
+  }
+
+  void _onSignalRTopicDeleted(List<Object?>? args) {
+    if (!mounted || args == null || args.isEmpty) return;
+    try {
+      final raw = args.first;
+      Map<String, dynamic>? data;
+      if (raw is Map) {
+        data = Map<String, dynamic>.from(raw['data'] is Map ? raw['data'] : raw);
+      } else if (raw is String) {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map) {
+          data = Map<String, dynamic>.from(decoded['data'] is Map ? decoded['data'] : decoded);
+        }
+      }
+      if (data != null) {
+        final catSlug = data['categorySlug']?.toString() ?? data['category_slug']?.toString();
+        if (catSlug == null || catSlug == widget.slug) {
+          final List<dynamic> ids = [];
+          if (data['ids'] is List) ids.addAll(data['ids']);
+          if (data['deleted_ids'] is List) ids.addAll(data['deleted_ids']);
+          if (data['id'] != null) ids.add(data['id']);
+          _handleDeletedTopicIds(ids);
+        }
+      }
+    } catch (_) {}
+  }
+
+  bool _updateTopicInPlace(List<Map<String, dynamic>> list, Map<String, dynamic> topicData, String? targetId) {
+    if (targetId == null && topicData['title'] == null) return false;
+    for (int i = 0; i < list.length; i++) {
+      if ((targetId != null && list[i]['id']?.toString() == targetId) ||
+          (list[i]['title'] != null && list[i]['title'] == topicData['title'])) {
+        list[i] = Map<String, dynamic>.from(topicData);
+        if (topicData['icon'] == 'fire') {
+          list[i]['hasFlameIcon'] = true;
+        } else if (topicData['icon'] == 'heart') {
+          list[i]['hasHeartBadge'] = true;
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void _onSignalRTopicUpdated(List<Object?>? args) {
+    if (!mounted || args == null || args.isEmpty) return;
+    try {
+      final raw = args.first;
+      Map<String, dynamic>? data;
+      String? action;
+      if (raw is Map) {
+        action = raw['action']?.toString();
+        data = Map<String, dynamic>.from(raw['data'] is Map ? raw['data'] : raw);
+      } else if (raw is String) {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map) {
+          action = decoded['action']?.toString();
+          data = Map<String, dynamic>.from(decoded['data'] is Map ? decoded['data'] : decoded);
+        }
+      }
+      if (data != null) {
+        final Map<String, dynamic> topicData = data;
+        final catSlug = topicData['categorySlug']?.toString() ?? topicData['category_slug']?.toString();
+        if (catSlug == null || catSlug == widget.slug) {
+          action = action ?? topicData['action']?.toString();
+          if (action == 'batch_delete' || action == 'delete') {
+            final List<dynamic> ids = [];
+            if (topicData['ids'] is List) ids.addAll(topicData['ids']);
+            if (topicData['deleted_ids'] is List) ids.addAll(topicData['deleted_ids']);
+            if (topicData['id'] != null) ids.add(topicData['id']);
+            _handleDeletedTopicIds(ids);
+            return;
+          }
+
+          final targetId = topicData['id']?.toString();
+          final isCreate = action == 'create';
+          final isAnnouncement = topicData['type'] == 'thong_bao';
+
+          bool updatedAny = false;
+          setState(() {
+            if (isCreate) {
+              if (isAnnouncement) {
+                _liveThongBaoPinnedTopics.insert(0, topicData);
+                _pinnedTopics.insert(0, topicData);
+              } else {
+                _liveThongBaoTopics.insert(0, topicData);
+                _thongBaoSuKienTopics.insert(0, topicData);
+              }
+              updatedAny = true;
+            } else {
+              if (_updateTopicInPlace(_pinnedTopics, topicData, targetId)) updatedAny = true;
+              if (_updateTopicInPlace(_thongBaoSuKienTopics, topicData, targetId)) updatedAny = true;
+              if (_updateTopicInPlace(_liveThongBaoPinnedTopics, topicData, targetId)) updatedAny = true;
+              if (_updateTopicInPlace(_liveThongBaoTopics, topicData, targetId)) updatedAny = true;
+            }
+          });
+
+          // Data Desync Guard: Nếu bài viết sửa không tồn tại trong danh sách hiện tại, nạp lại từ Docker
+          if (!isCreate && !updatedAny && widget.slug == 'thong-bao-su-kien' && !_effectiveUseMockData) {
+            debugPrint('[Data Desync Guard] Topic $targetId not found in local state, resyncing with Docker...');
+            _loadLiveTopicsFromDocker();
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  @override
+  void dispose() {
+    _signalRReconnectSub?.cancel();
+    try {
+      signalRService.removeTopicUpdatedListener(_onSignalRTopicUpdated);
+      signalRService.removeTopicBatchDeletedListener(_onSignalRTopicDeleted);
+      signalRService.removeTopicDeletedListener(_onSignalRTopicDeleted);
+    } catch (_) {}
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadLiveTopicsFromDocker() async {
+    try {
+      final repo = HttpForumTopicRepository();
+      final res = await repo.fetchTopics(categorySlug: widget.slug);
+      if (res != null && mounted) {
+        final dockerPinned = res['pinned'] as List<dynamic>? ?? [];
+        final dockerTopics = res['topics'] as List<dynamic>? ?? [];
+        setState(() {
+          _liveThongBaoPinnedTopics.clear();
+          for (var p in dockerPinned) {
+            final map = p is Map ? Map<String, dynamic>.from(p) : Map<String, dynamic>.from((p as dynamic).toMap());
+            _liveThongBaoPinnedTopics.add(map);
+          }
+          _liveThongBaoTopics.clear();
+          for (var t in dockerTopics) {
+            final map = t is Map ? Map<String, dynamic>.from(t) : Map<String, dynamic>.from((t as dynamic).toMap());
+            _liveThongBaoTopics.add(map);
+          }
+        });
+      }
+    } catch (_) {}
   }
 
   Future<void> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
+    final token = prefs.getString('auth_token') ?? prefs.getString('jwt_token');
+    final role = prefs.getString('role');
+    final username = prefs.getString('username');
     if (mounted) {
       setState(() {
         _isLoggedIn = token != null && token.isNotEmpty;
+        _isAdmin = (role != null && role.trim().toLowerCase() == 'admin') ||
+            (username != null &&
+                (username.trim().toLowerCase() == 'admin' ||
+                    username.trim().toLowerCase() == 'admin_user')) ||
+            (token != null && token.toLowerCase().contains('admin'));
       });
     }
   }
@@ -357,12 +628,13 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
       !_isRestrictedCategory;
 
   bool get _isRestrictedCategory =>
-      _categoryType == ForumCategoryType.lopHocTuVi ||
-      _categoryType == ForumCategoryType.lopHocTuTru ||
-      _categoryType == ForumCategoryType.lopHocChiemTinh ||
-      _categoryType == ForumCategoryType.lopHocPhongThuy ||
-      _categoryType == ForumCategoryType.lopHocTongHop ||
-      _categoryType == ForumCategoryType.lopHocDichLy;
+      !_isAdmin &&
+      (_categoryType == ForumCategoryType.lopHocTuVi ||
+          _categoryType == ForumCategoryType.lopHocTuTru ||
+          _categoryType == ForumCategoryType.lopHocChiemTinh ||
+          _categoryType == ForumCategoryType.lopHocPhongThuy ||
+          _categoryType == ForumCategoryType.lopHocTongHop ||
+          _categoryType == ForumCategoryType.lopHocDichLy);
 
   String get _onlineUsersText {
     switch (_categoryType) {
@@ -569,200 +841,11 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
     'Câu lạc bộ - Giao lưu - Kết bạn',
   ];
 
-  // 5 Chủ đề Thông báo (Ghim) bảo toàn 100% chuẩn xác theo ảnh gốc
-  static final List<Map<String, dynamic>> _pinnedTopics = [
-    {
-      'title': 'Talkshow hướng nghiệp tháng 7/2026',
-      'author': 'nmcxung',
-      'time': '10:01, 02/07/26',
-      'category': 'Hướng nghiệp',
-      'replies': 1,
-      'views': 348,
-      'lastAuthor': 'nmcxung',
-      'lastTime': '10:50, 23/07/26',
-      'isHighlighted': false,
-    },
-    {
-      'title': 'Tư vấn có ủng hộ phí để duy trì diễn đàn',
-      'author': 'Ban tư vấn',
-      'time': '15:45, 21/05/13',
-      'category': 'Thông báo - Sự kiện',
-      'replies': 0,
-      'views': 56456,
-      'lastAuthor': 'Ban tư vấn',
-      'lastTime': '15:45, 21/05/13',
-      'isHighlighted': false,
-    },
-    {
-      'title': 'Hướng dẫn sử dụng diễn đàn',
-      'author': 'Admin',
-      'time': '21:37, 20/12/08',
-      'category': 'Thông báo - Sự kiện',
-      'replies': 0,
-      'views': 7605,
-      'lastAuthor': 'Admin',
-      'lastTime': '21:37, 20/12/08',
-      'isHighlighted': true, // Dòng highlight nền tương phản nhẹ (#2A3654 / #3D381E)
-    },
-    {
-      'title': 'Bảng giá dịch vụ tư vấn tại Lý số Hội quán',
-      'author': 'Admin',
-      'time': '13:35, 08/12/08',
-      'category': 'Thông báo - Sự kiện',
-      'replies': 0,
-      'views': 59292,
-      'lastAuthor': 'Admin',
-      'lastTime': '13:35, 08/12/08',
-      'isHighlighted': false,
-    },
-    {
-      'title': 'Nội quy diễn đàn Lý số Việt Nam',
-      'author': 'Admin',
-      'time': '10:16, 04/09/08',
-      'category': 'Thông báo - Sự kiện',
-      'replies': 0,
-      'views': 75620,
-      'lastAuthor': 'Admin',
-      'lastTime': '10:16, 04/09/08',
-      'isHighlighted': false,
-    },
-  ];
+  // Danh sách chủ đề Thông báo (Ghim) của Thông báo - Sự kiện (Đã làm sạch về rỗng theo yêu cầu)
+  static final List<Map<String, dynamic>> _pinnedTopics = [];
 
-  // 12 Chủ đề thường "Thông báo - Sự kiện" chuẩn 100% theo ảnh 1
-  static final List<Map<String, dynamic>> _thongBaoSuKienTopics = [
-    {
-      'title': 'Nhân dịp KN 15 năm thành lập diễn đàn, tặng 50% giá trị gói tư vấn lý số khảo trắc',
-      'author': 'Quản trị',
-      'time': '14:03, 26/05/23',
-      'replies': 0,
-      'views': 4935,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '14:03, 26/05/23',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Diễn đàn tuyển Điều hành viên, Biên tập viên',
-      'author': 'Quản trị',
-      'time': '13:06, 12/02/04',
-      'replies': 0,
-      'views': 6352,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '13:06, 12/02/04',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'KHAI XUÂN CÙNG RƯỢU MƠ NÚI TẢN',
-      'author': 'LSHQ',
-      'time': '10:23, 25/01/13',
-      'replies': 0,
-      'views': 6658,
-      'lastAuthor': 'LSHQ',
-      'lastTime': '10:23, 25/01/13',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Thông báo về tư vấn trực tuyến',
-      'author': 'nmcxung',
-      'time': '20:55, 26/05/12',
-      'replies': 4,
-      'views': 58817,
-      'lastAuthor': 'LSHQ',
-      'lastTime': '20:55, 26/05/12',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Công cụ hiển thị Quẻ Dịch',
-      'author': 'nmcxung',
-      'time': '00:08, 01/05/12',
-      'replies': 0,
-      'views': 5567,
-      'lastAuthor': 'nmcxung',
-      'lastTime': '00:08, 01/05/12',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Công cụ lấy lá số tử vi và cách chèn lá số vào bài viết',
-      'author': 'nmcxung',
-      'time': '14:28, 08/02/09',
-      'replies': 2,
-      'views': 24205,
-      'lastAuthor': 'nmcxung',
-      'lastTime': '15:25, 26/03/09',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Thay đổi về nâng cấp trình an sao và các ứng dụng lý số khác',
-      'author': 'Quản trị',
-      'time': '16:26, 28/10/12',
-      'replies': 2,
-      'views': 4146,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '16:03, 28/11/25',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Lý số Hội Quán tuyển sinh lớp học khóa mới 2025',
-      'author': 'Quản trị',
-      'time': '06:06, 01/07/25',
-      'replies': 4,
-      'views': 1702,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '23:11, 02/08/25',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Yêu cầu lấy lá số và gửi vào bài viết đúng quy định',
-      'author': 'Quản trị',
-      'time': '15:40, 13/11/24',
-      'replies': 0,
-      'views': 655,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '15:40, 13/11/24',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'KHAI GIẢNG LỚP TỨ TRỤ VÀ QUẺ DỊCH.',
-      'author': 'Điều hành 7',
-      'time': '10:40, 05/02/21',
-      'replies': 0,
-      'views': 2517,
-      'lastAuthor': 'Điều hành 7',
-      'lastTime': '10:40, 05/02/21',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Khai giảng lớp Quẻ Dịch - Lục hào sơ cấp, năm 2020',
-      'author': 'Quản trị',
-      'time': '16:00, 12/09/20',
-      'replies': 0,
-      'views': 14760,
-      'lastAuthor': 'Quản trị',
-      'lastTime': '16:00, 12/09/20',
-      'badge': null,
-      'pages': null,
-    },
-    {
-      'title': 'Mở lại lớp tử vi nâng cao online trên diễn đàn.',
-      'badge': 'Lý học kỳ môn độn',
-      'author': 'nmcxung',
-      'time': '15:15, 19/05/20',
-      'replies': 0,
-      'views': 7673,
-      'lastAuthor': 'nmcxung',
-      'lastTime': '15:15, 19/05/20',
-      'pages': null,
-    },
-  ];
+  // Danh sách chủ đề thường "Thông báo - Sự kiện" (Đã làm sạch về rỗng theo yêu cầu)
+  static final List<Map<String, dynamic>> _thongBaoSuKienTopics = [];
 
   // 7 Chủ đề thường "Kiến thức Cơ bản" chuẩn 100% theo ảnh 2
   static final List<Map<String, dynamic>> _kienThucCoBanTopics = [
@@ -2689,10 +2772,16 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
         _categoryType == ForumCategoryType.xemBangCacMonKhac) {
       return _xemTuViPinnedTopics;
     }
+    if (_categoryType == ForumCategoryType.thongBaoSuKien && !_effectiveUseMockData) {
+      return _liveThongBaoPinnedTopics;
+    }
     return _pinnedTopics;
   }
 
   String? get _pinnedBadgeText {
+    if (_categoryType == ForumCategoryType.thongBaoSuKien && !_effectiveUseMockData) {
+      return _liveThongBaoPinnedTopics.isEmpty ? null : '${_liveThongBaoPinnedTopics.length} bài';
+    }
     if (_categoryType == ForumCategoryType.thuNgoYkien ||
         _categoryType == ForumCategoryType.xemBangCacMonKhac ||
         _categoryType == ForumCategoryType.coHocVanHoaTinNguong ||
@@ -2719,7 +2808,7 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
       case ForumCategoryType.lopHocPhongThuy:
       case ForumCategoryType.lopHocTongHop:
       case ForumCategoryType.lopHocDichLy:
-        topicsList = const [];
+        topicsList = ForumCategoryDataHelper.getTopicsForCategory(widget.slug);
         break;
       case ForumCategoryType.kienThucSinhTrac:
         topicsList = _kienThucSinhTracTopics;
@@ -2785,7 +2874,7 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
         topicsList = _cauLacBoGiaoLuuKetBanTopics;
         break;
       case ForumCategoryType.thongBaoSuKien:
-        topicsList = _thongBaoSuKienTopics;
+        topicsList = _effectiveUseMockData ? _thongBaoSuKienTopics : _liveThongBaoTopics;
         break;
     }
 
@@ -2827,6 +2916,12 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                             // 1. Tiêu đề chuyên mục
                             _buildCategoryHeader(),
                             const SizedBox(height: 12),
+
+                            // Cụm 3 nút Admin (Dòng 1 - Trên cùng)
+                            if (_isAdmin) ...[
+                              _buildAdminActionButtons(),
+                              const SizedBox(height: 12),
+                            ],
 
                             // 2. Khung Nội quy chuyên mục (khi có quy định)
                             if (_hasRuleBox) ...[
@@ -2870,6 +2965,126 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                             _buildForumFooter(),
                           ],
         ],
+      ),
+    );
+  }
+
+  // --- Cụm 3 Nút Bấm Quản Trị Admin (Dòng 1 - Trên cùng) ---
+  Widget _buildAdminActionButtons() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildAdminActionButtonItem(
+              icon: Icons.add_circle_outline,
+              label: ForumTextHelper.getNewTopicButtonLabel(widget.slug),
+              backgroundColor: const Color(0xFF00897B),
+              onTap: () async {
+                final result = await context.push(
+                  '/forum/create-topic',
+                  extra: {
+                    'categorySlug': widget.slug,
+                    'categoryTitle': _categoryTitle,
+                  },
+                );
+                if (result != null && result is Map) {
+                  final mapData = Map<String, dynamic>.from(result);
+                  final isAnnouncement = mapData['type'] == 'thong_bao';
+                  setState(() {
+                    if (isAnnouncement) {
+                      _liveThongBaoPinnedTopics.removeWhere((t) => t['id'] != null && t['id'].toString() == mapData['id']?.toString());
+                      _liveThongBaoPinnedTopics.insert(0, mapData);
+                      _pinnedTopics.removeWhere((t) => t['id'] != null && t['id'].toString() == mapData['id']?.toString());
+                      _pinnedTopics.insert(0, mapData);
+                    } else {
+                      _liveThongBaoTopics.removeWhere((t) => t['id'] != null && t['id'].toString() == mapData['id']?.toString());
+                      _liveThongBaoTopics.insert(0, mapData);
+                      _thongBaoSuKienTopics.removeWhere((t) => t['id'] != null && t['id'].toString() == mapData['id']?.toString());
+                      _thongBaoSuKienTopics.insert(0, mapData);
+                    }
+                  });
+                }
+                if (widget.slug == 'thong-bao-su-kien' && !_effectiveUseMockData) {
+                  _loadLiveTopicsFromDocker();
+                }
+              },
+            ),
+            const SizedBox(width: 8),
+            _buildAdminActionButtonItem(
+              icon: Icons.edit_outlined,
+              label: ForumTextHelper.getEditTopicButtonLabel(widget.slug),
+              backgroundColor: const Color(0xFF6D4C41),
+              onTap: () {
+                final encodedTitle = Uri.encodeComponent(_categoryTitle);
+                context.push(
+                  '/forum/category/${widget.slug}/edit-topics?categoryTitle=$encodedTitle',
+                  extra: {
+                    'categorySlug': widget.slug,
+                    'categoryTitle': _categoryTitle,
+                  },
+                ).then((_) {
+                  if (widget.slug == 'thong-bao-su-kien' && !_effectiveUseMockData) {
+                    _loadLiveTopicsFromDocker();
+                  }
+                });
+              },
+            ),
+            const SizedBox(width: 8),
+            _buildAdminActionButtonItem(
+              icon: Icons.delete_outline,
+              label: ForumTextHelper.getDeleteTopicButtonLabel(widget.slug),
+              backgroundColor: const Color(0xFFE53935),
+              onTap: () {
+                final encodedTitle = Uri.encodeComponent(_categoryTitle);
+                context.push(
+                  '/forum/category/${widget.slug}/delete-topics?categoryTitle=$encodedTitle',
+                  extra: {
+                    'categorySlug': widget.slug,
+                    'categoryTitle': _categoryTitle,
+                    // 'isDeleteMode': true,
+                  },
+                ).then((_) {
+                  if (widget.slug == 'thong-bao-su-kien' && !_effectiveUseMockData) {
+                    _loadLiveTopicsFromDocker();
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdminActionButtonItem({
+    required IconData icon,
+    required String label,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 16, color: Colors.white),
+      label: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12.5,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black38,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        shape: const StadiumBorder(),
+        visualDensity: VisualDensity.compact,
       ),
     );
   }
@@ -3417,13 +3632,13 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                       borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Expanded(
                           flex: 6,
                           child: Text(
-                            'Chủ đề',
-                            style: TextStyle(
+                            ForumTextHelper.getTopicNoun(widget.slug),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 13.5,
@@ -3490,34 +3705,42 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0, right: 8.0),
-                  child: topic['hasFlameIcon'] == true
-                      ? Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFFEF5350), width: 1.2),
-                          ),
-                          child: const Icon(Icons.local_fire_department, size: 14, color: Color(0xFFEF5350)),
-                        )
-                      : (topic['hasHeartBadge'] == true
-                          ? Stack(
-                              clipBehavior: Clip.none,
-                              children: const [
-                                Icon(Icons.description_outlined, size: 18, color: Color(0xFFEF5350)),
-                                Positioned(
-                                  left: -2,
-                                  bottom: -2,
-                                  child: Icon(Icons.favorite, size: 9, color: Color(0xFFEF5350)),
-                                ),
-                              ],
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => _navigateToTopic(context, topic),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2.0, right: 8.0),
+                      child: (topic['hasFlameIcon'] == true || topic['icon'] == 'fire')
+                          ? Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: const Color(0xFFEF5350), width: 1.2),
+                              ),
+                              child: const Icon(Icons.local_fire_department, size: 14, color: Color(0xFFEF5350)),
                             )
-                          : Icon(
-                              topic['hasLightbulbIcon'] == true ? Icons.lightbulb_outline : Icons.description_outlined,
-                              size: 18,
-                              color: const Color(0xFFEF5350),
-                            )),
+                          : (topic['hasHeartBadge'] == true || topic['icon'] == 'heart')
+                              ? Stack(
+                                  clipBehavior: Clip.none,
+                                  children: const [
+                                    Icon(Icons.description_outlined, size: 18, color: Color(0xFFEF5350)),
+                                    Positioned(
+                                      left: -2,
+                                      bottom: -2,
+                                      child: Icon(Icons.favorite, size: 9, color: Color(0xFFEF5350)),
+                                    ),
+                                  ],
+                                )
+                              : (topic['icon'] == 'star'
+                                  ? const Icon(Icons.star, size: 18, color: Color(0xFFFFD700))
+                                  : Icon(
+                                      topic['hasLightbulbIcon'] == true ? Icons.lightbulb_outline : Icons.description_outlined,
+                                      size: 18,
+                                      color: const Color(0xFFEF5350),
+                                    )),
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Column(
@@ -3528,24 +3751,22 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           if (topic['hasPinIcon'] == true) ...[
-                            const Padding(
-                              padding: EdgeInsets.only(right: 4.0),
-                              child: Icon(Icons.article_outlined, size: 13, color: Color(0xFFEF5350)),
-                            ),
-                          ],
-                          InkWell(
-                            onTap: () {},
-                            child: Text(
-                              topic['title'],
-                              style: TextStyle(
-                                color: topic['isRedTitle'] == true
-                                    ? const Color(0xFFEF5350)
-                                    : (isHighlighted ? const Color(0xFFFFD700) : Colors.white),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13.0,
-                                decoration: topic['isRedTitle'] == true ? TextDecoration.underline : null,
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () => _navigateToTopic(context, topic),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(right: 4.0),
+                                  child: Icon(Icons.article_outlined, size: 13, color: Color(0xFFEF5350)),
+                                ),
                               ),
                             ),
+                          ],
+                          _HoverableTopicTitle(
+                            title: topic['title'] ?? '',
+                            isRedTitle: topic['isRedTitle'] == true,
+                            isHighlighted: isHighlighted,
+                            onTap: () => _navigateToTopic(context, topic),
                           ),
                           if (badge != null) ...[
                             const SizedBox(width: 6),
@@ -3589,7 +3810,23 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            TextSpan(text: ' » ${topic['time']}'),
+                            if (topic['showBadgeLogo'] == true || topic['ShowBadgeLogo'] == true || topic['show_badge_logo'] == true) ...[
+                              WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Image.asset(
+                                    'assets/images/logo_admin.png',
+                                    height: 18,
+                                    fit: BoxFit.contain,
+                                    cacheHeight: 36,
+                                    cacheWidth: 36,
+                                    errorBuilder: (ctx, err, stack) => const Icon(Icons.admin_panel_settings, size: 16, color: Colors.amber),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            TextSpan(text: ' » ${_formatTopicTime(topic['time'] ?? topic['created_at'] ?? topic['createdAt'] ?? topic['lastTime'])}'),
                             if (topic['category'] != null) ...[
                               const TextSpan(text: ' trong '),
                               TextSpan(
@@ -3692,11 +3929,17 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
                       ),
                     ),
                     const SizedBox(width: 2),
-                    const Icon(Icons.play_arrow, size: 10, color: Color(0xFFEF5350)),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => _navigateToTopic(context, topic),
+                        child: const Icon(Icons.play_arrow, size: 10, color: Color(0xFFEF5350)),
+                      ),
+                    ),
                   ],
                 ),
                 Text(
-                  topic['lastTime'] as String,
+                  _formatTopicTime(topic['lastTime'] ?? topic['time'] ?? topic['created_at']),
                   style: TextStyle(color: Colors.grey[400], fontSize: 11),
                 ),
               ],
@@ -3705,6 +3948,10 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
         ],
       ),
     );
+  }
+
+  String _formatTopicTime(dynamic rawTime) {
+    return TimeFormatter.formatVietnamTime(rawTime);
   }
 
   // --- 7. Form Sắp Xếp Theo ---
@@ -4311,6 +4558,61 @@ class _CategoryTopicsScreenState extends State<CategoryTopicsScreen> {
           ],
         ),
         desktopBody: SingleChildScrollView(child: _buildBody(context)),
+      ),
+    );
+  }
+}
+
+class _HoverableTopicTitle extends StatefulWidget {
+  final String title;
+  final bool isRedTitle;
+  final bool isHighlighted;
+  final VoidCallback onTap;
+
+  const _HoverableTopicTitle({
+    required this.title,
+    required this.isRedTitle,
+    required this.isHighlighted,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverableTopicTitle> createState() => _HoverableTopicTitleState();
+}
+
+class _HoverableTopicTitleState extends State<_HoverableTopicTitle> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Color defaultColor;
+    if (widget.isRedTitle) {
+      defaultColor = const Color(0xFFEF5350);
+    } else if (widget.isHighlighted) {
+      defaultColor = const Color(0xFFFFD700);
+    } else {
+      defaultColor = Colors.white;
+    }
+
+    final displayColor = _isHovered ? const Color(0xFF1E88E5) : defaultColor;
+    final isUnderline = _isHovered || widget.isRedTitle;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            color: displayColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 13.0,
+            decoration: isUnderline ? TextDecoration.underline : null,
+            decorationColor: displayColor,
+          ),
+        ),
       ),
     );
   }

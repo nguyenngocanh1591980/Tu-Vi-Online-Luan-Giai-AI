@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
+import '../../services/auth_service.dart';
+import '../../services/forum_topic_repository.dart';
 
 class UserPostsScreen extends StatefulWidget {
-  const UserPostsScreen({super.key});
+  final String? username;
+  final ForumTopicRepository? repository;
+
+  const UserPostsScreen({
+    super.key,
+    this.username,
+    this.repository,
+  });
 
   @override
   State<UserPostsScreen> createState() => _UserPostsScreenState();
@@ -14,6 +23,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
   int _currentMobileIndex = 2; // Tab Diễn đàn
   final TextEditingController _searchController = TextEditingController();
   String _selectedJumpCategory = 'Chuyển đến';
+  bool _isLoading = false;
 
   final List<String> _jumpCategories = [
     'Chuyển đến',
@@ -192,6 +202,44 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
     },
   ];
 
+  late final ForumTopicRepository _topicRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    _topicRepository = widget.repository ?? HttpForumTopicRepository();
+    _loadUserPosts();
+  }
+
+  Future<void> _loadUserPosts() async {
+    String effectiveUsername = widget.username ?? '';
+    if (effectiveUsername.isEmpty) {
+      try {
+        final loggedIn = await AuthService().getUsername();
+        if (loggedIn != null && loggedIn.isNotEmpty) {
+          effectiveUsername = loggedIn;
+        } else {
+          effectiveUsername = 'ngocanh2';
+        }
+      } catch (_) {
+        effectiveUsername = 'ngocanh2';
+      }
+    }
+    _isLoading = true;
+    try {
+      final fetched = await _topicRepository.fetchUserPosts(effectiveUsername);
+      if (mounted && fetched.isNotEmpty) {
+        setState(() {
+          _posts.clear();
+          _posts.addAll(fetched);
+        });
+      }
+    } catch (_) {
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -204,9 +252,10 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
     });
   }
 
-  // --- Layout Tổng Thể — MainLayout đã bọc sẵn 1024px ---
+  // --- Layout Tổng Thể — Boxed Layout tím đen phẳng liền mạch (Hình 4 & 6) ---
   Widget _buildBody(BuildContext context) {
-    return Padding(
+    return Container(
+      color: const Color(0xFF1E2640), // Nền tím đen phẳng liền mạch
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -219,7 +268,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
           _buildSearchAndPaginationBar(isTop: true),
           const SizedBox(height: 12),
 
-          // 3. Bảng Danh Sách 10 Bài Viết
+          // 3. Bảng Danh Sách Bài Viết
           _buildPostsTable(),
           const SizedBox(height: 12),
 
@@ -240,12 +289,13 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
 
   // --- 1. Tiêu Đề Màn Hình ---
   Widget _buildPageHeader() {
+    final count = _posts.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Đã tìm thấy 10 kết quả',
-          style: TextStyle(
+        Text(
+          'Đã tìm thấy $count kết quả',
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -334,9 +384,9 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
           ),
 
           // Thông tin kết quả & trang
-          const Text(
-            'Đã tìm thấy 10 kết quả • Trang 1 trên 1',
-            style: TextStyle(
+          Text(
+            'Đã tìm thấy ${_posts.length} kết quả • Trang 1 trên 1',
+            style: const TextStyle(
               color: Colors.white70,
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -371,9 +421,9 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
               ),
 
               // Text phân trang
-              const Text(
-                'Đã tìm thấy 10 kết quả • Trang 1 trên 1',
-                style: TextStyle(
+              Text(
+                'Đã tìm thấy ${_posts.length} kết quả • Trang 1 trên 1',
+                style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -532,7 +582,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon chủ đề (folder / flame)
+                // Icon chủ đề (tài liệu đỏ chuẩn Hình 2 & 6)
                 Container(
                   margin: const EdgeInsets.only(top: 2, right: 10),
                   child: Stack(
@@ -549,7 +599,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
                         child: Icon(
                           isHot ? Icons.local_fire_department : Icons.description_outlined,
                           size: 16,
-                          color: isHot ? const Color(0xFFFF7043) : Colors.white70,
+                          color: isHot ? const Color(0xFFFF7043) : const Color(0xFFEF5350),
                         ),
                       ),
                       if (isFavorite)
@@ -572,13 +622,18 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          final topicId = post['id'] ?? 1;
+                          context.push('/forum/post/$topicId');
+                        },
                         child: Text(
-                          post['title'],
+                          post['title']?.toString() ?? '',
                           style: const TextStyle(
                             fontSize: 13.5,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFEF5350), // Màu link đỏ nguyên bản
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFFEF5350),
                             height: 1.3,
                           ),
                         ),
@@ -589,19 +644,43 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
                           style: const TextStyle(fontSize: 12, color: Colors.white60),
                           children: [
                             const TextSpan(text: 'gửi bởi '),
-                            TextSpan(
-                              text: post['author'],
-                              style: const TextStyle(
-                                color: Color(0xFFEF5350),
-                                fontWeight: FontWeight.bold,
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: InkWell(
+                                onTap: () {
+                                  final authorName = (post['author'] ?? 'ngocanh2').toString();
+                                  context.push('/forum/member/$authorName');
+                                },
+                                child: Text(
+                                  (post['author'] ?? '').toString(),
+                                  style: const TextStyle(
+                                    color: Color(0xFFEF5350),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Color(0xFFEF5350),
+                                  ),
+                                ),
                               ),
                             ),
                             TextSpan(text: ' » ${post['time']} » trong '),
-                            TextSpan(
-                              text: post['category'],
-                              style: const TextStyle(
-                                color: Color(0xFFEF5350),
-                                fontWeight: FontWeight.w500,
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: InkWell(
+                                onTap: () {
+                                  final slug = (post['categorySlug'] ?? 'xem-tu-vi').toString();
+                                  context.push('/forum/category/$slug');
+                                },
+                                child: Text(
+                                  (post['category'] ?? 'Xem Tử vi').toString(),
+                                  style: const TextStyle(
+                                    color: Color(0xFFEF5350),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Color(0xFFEF5350),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -680,23 +759,37 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
                   children: [
                     const Text('gửi bởi ', style: TextStyle(fontSize: 12, color: Colors.white60)),
                     Flexible(
-                      child: Text(
-                        post['lastPostAuthor'],
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFFEF5350),
-                          fontWeight: FontWeight.bold,
+                      child: InkWell(
+                        onTap: () {
+                          final lastAuthor = (post['lastPostAuthor'] ?? '').toString();
+                          context.push('/forum/member/$lastAuthor');
+                        },
+                        child: Text(
+                          (post['lastPostAuthor'] ?? '').toString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFEF5350),
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFFEF5350),
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                    InkWell(
+                      onTap: () {
+                        final topicId = post['id'] ?? 1;
+                        context.push('/forum/post/$topicId');
+                      },
+                      child: const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  post['lastPostTime'],
+                  (post['lastPostTime'] ?? '').toString(),
                   style: const TextStyle(fontSize: 11.5, color: Colors.white54),
                 ),
               ],
@@ -869,7 +962,7 @@ class _UserPostsScreenState extends State<UserPostsScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
       ),
     );
   }

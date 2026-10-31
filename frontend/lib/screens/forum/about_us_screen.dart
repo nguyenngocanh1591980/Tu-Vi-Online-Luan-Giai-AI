@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import '../../services/signalr_service.dart';
 
 typedef TeamScreen = AboutUsScreen;
 
@@ -47,7 +50,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
   ];
 
   // 5 nhóm phân cấp quản trị chuẩn xác từ Hình 3
-  final List<Map<String, dynamic>> _groups = [
+  List<Map<String, dynamic>> _groups = [
     {
       'groupTitle': 'Quản trị viên',
       'members': [
@@ -258,6 +261,117 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       'emptyMessage': null,
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBoardMembers();
+    signalRService.listenToBoardMembersChanged(_onBoardMembersChanged);
+    signalRService.listenToUserRoleChanged(_onUserRoleChanged);
+    signalRService.listenToUserRoleRevoked(_onUserRoleRevoked);
+  }
+
+  @override
+  void dispose() {
+    signalRService.removeBoardMembersChangedListener();
+    signalRService.removeUserRoleChangedListener();
+    signalRService.removeUserRoleRevokedListener();
+    super.dispose();
+  }
+
+  void _onBoardMembersChanged(List<Object?>? args) {
+    if (mounted) {
+      _fetchBoardMembers();
+    }
+  }
+
+  void _onUserRoleChanged(List<Object?>? args) {
+    if (mounted) {
+      _fetchBoardMembers();
+    }
+  }
+
+  void _onUserRoleRevoked(List<Object?>? args) {
+    if (mounted) {
+      _fetchBoardMembers();
+    }
+  }
+
+  Future<void> _fetchBoardMembers() async {
+    try {
+      final response = await http.get(Uri.parse('http://localhost:5000/api/v1/forum/board-members'));
+      if (response.statusCode == 200) {
+        final decoded = json.decode(utf8.decode(response.bodyBytes));
+        final rawGroups = decoded is Map<String, dynamic> ? decoded['groups'] as List? : decoded as List?;
+        if (rawGroups != null && rawGroups.isNotEmpty) {
+          final mapped = rawGroups.map<Map<String, dynamic>>((g) {
+            final groupTitle = g['groupTitle']?.toString() ?? '';
+            final rawMembers = g['members'] as List? ?? [];
+            final validRawMembers = rawMembers.where((m) {
+              final n = m['name']?.toString() ?? m['username']?.toString() ?? '';
+              return n.isNotEmpty && n != '_' && n != '-';
+            }).toList();
+
+            final emptyMessage = validRawMembers.isEmpty
+                ? (g['emptyMessage']?.toString() ?? 'Không tìm thấy thành viên nào thoả điều kiện tìm kiếm này.')
+                : null;
+
+            final members = validRawMembers.map<Map<String, dynamic>>((m) {
+              final rawNameColor = m['nameColor'];
+              Color nameColor = const Color(0xFFEF5350);
+              if (rawNameColor is String && rawNameColor.startsWith('#')) {
+                final hex = rawNameColor.replaceFirst('#', '0xFF');
+                final val = int.tryParse(hex);
+                if (val != null) nameColor = Color(val);
+              }
+
+              final rawPgColor = m['primaryGroupColor'];
+              Color pgColor = const Color(0xFF42A5F5);
+              if (rawPgColor is String && rawPgColor.startsWith('#')) {
+                final hex = rawPgColor.replaceFirst('#', '0xFF');
+                final val = int.tryParse(hex);
+                if (val != null) pgColor = Color(val);
+              }
+
+              final badgeText = m['badgeText']?.toString() ?? m['rank']?.toString() ?? 'QUẢN LÝ';
+              String badgeType = 'badge_blue';
+              if (badgeText.toLowerCase().contains('sáng lập')) {
+                badgeType = 'badge_red';
+              } else if (badgeText.toLowerCase().contains('tư vấn')) {
+                badgeType = 'badge_green';
+              } else if (badgeText.contains('☆')) {
+                badgeType = 'stars_5';
+              }
+
+              return {
+                'name': m['name']?.toString() ?? m['username']?.toString() ?? '',
+                'nameColor': nameColor,
+                'badgeText': badgeText,
+                'badgeType': badgeType,
+                'primaryGroup': m['primaryGroup']?.toString() ?? groupTitle,
+                'primaryGroupColor': pgColor,
+                'managedForums': m['managedCategories']?.toString() ?? m['managedForums']?.toString() ?? 'Tất cả chuyên mục',
+              };
+            }).toList();
+
+            return {
+              'groupTitle': groupTitle,
+              'members': members,
+              'emptyMessage': emptyMessage,
+            };
+          }).toList();
+
+          if (mounted) {
+            setState(() {
+              _groups = mapped;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching board members in about_us_screen: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

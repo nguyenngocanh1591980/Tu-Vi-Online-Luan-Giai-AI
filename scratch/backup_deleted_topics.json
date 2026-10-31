@@ -1,0 +1,73 @@
+{
+  "topics": [
+    {
+      "id": 42,
+      "title": "Re: Talkshow hướng nghiệp tháng 7/2026",
+      "content": "Tôi tháy không phù hợp lắm",
+      "type": "chu_de",
+      "categorySlug": "thong-bao-su-kien",
+      "author": "ngocanh3",
+      "icon": "none",
+      "replies": 0,
+      "views": 1,
+      "createdAt": "2026-10-08 14:21:21.897296+00:00"
+    },
+    {
+      "id": 5,
+      "title": "Nội quy diễn đàn Lý số Việt Nam (Cập nhật)",
+      "content": "Nội dung bài viết đã được cập nhật mới nhất từ Docker",
+      "type": "thong_bao",
+      "categorySlug": "thong-bao-su-kien",
+      "author": "Ban Quản trị",
+      "icon": "fire",
+      "replies": 0,
+      "views": 3,
+      "createdAt": "2026-10-07 10:18:40.602424+00:00"
+    },
+    {
+      "id": 4,
+      "title": "Talkshow hướng nghiệp tháng 9/2026",
+      "content": "Buổi trao đổi (Talkshow) Hướng nghiệp \"Định hướng tương lai, khám phá bản thân\".",
+      "type": "thong_bao",
+      "categorySlug": "xem-tu-tru",
+      "author": "nmcxung",
+      "icon": "document",
+      "replies": 1,
+      "views": 351,
+      "createdAt": "2026-10-04 09:50:06.643969+00:00"
+    },
+    {
+      "id": 41,
+      "title": "Hướng Nghiệp năm 2026",
+      "content": "Hình ảnh\nĐáp ứng nhu cầu lựa chọn ngành học của các em học sinh và phụ huynh, Lý số Hội quán tổ chức 2 buổi talkshow về Hướng nghiệp.\nNội dung:\n- Ngành nghề nào là hấp dẫn trong 10-15 năm tới\n- Tầm quan trọng của việc chọn đúng ngành nghề\n- Các nước chọn ngành học như thế nào\n- Hiểu rõ bản thân để lựa chọn đúng ngành học\n- Chọn ngành nghề bản chất theo Lý số phương Đông\nThời gian: 10h ngày 5/07/2026 và 10h ngày 12/07/2026\nĐịa điểm: Lý số Hội quán, 100 Mai Anh Tuấn, Phường Ô Chợ Dừa, Hà Nội.\n\nDiễn giả là các chuyên gia trong lĩnh vực Giáo dục và Lý số.\nCó thể tham gia thảo luận trực tuyến\nTham gia nhóm thảo luận và nhận link Zoom: Tại đây\nTổng đài: 1900.633316",
+      "type": "thong_bao",
+      "categorySlug": "thong-bao-su-kien",
+      "author": "Ban Quản trị",
+      "icon": "book",
+      "replies": 0,
+      "views": 9,
+      "createdAt": "2026-10-08 14:08:54.453170+00:00"
+    },
+    {
+      "id": 43,
+      "title": "Re: Hướng Nghiệp năm 2026",
+      "content": "aSAs",
+      "type": "chu_de",
+      "categorySlug": "thong-bao-su-kien",
+      "author": "ngocanh3",
+      "icon": "none",
+      "replies": 0,
+      "views": 1,
+      "createdAt": "2026-10-08 14:55:00.326832+00:00"
+    }
+  ],
+  "replies": [
+    {
+      "id": 1,
+      "topicId": 4,
+      "author": "nmcxung",
+      "content": "Cảm ơn mọi người đã quan tâm.",
+      "createdAt": "2026-10-06 09:50:06.651211+00:00"
+    }
+  ]
+}

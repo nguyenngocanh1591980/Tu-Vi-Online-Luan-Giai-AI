@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../utils/boxed_snack_bar.dart';
 import '../../widgets/responsive_layout.dart';
 import '../../widgets/mobile_bottom_nav.dart';
 
@@ -14,6 +15,40 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
   int _currentMobileIndex = 2; // Tab Diễn đàn
   int _currentPage = 1;
   final TextEditingController _searchController = TextEditingController();
+  bool _isNavigating = false;
+  DateTime? _lastNavigationTime;
+
+  void _navigateToTopic(BuildContext context, Map<String, dynamic> topic) {
+    final now = DateTime.now();
+    if (_isNavigating ||
+        (_lastNavigationTime != null &&
+            now.difference(_lastNavigationTime!).inMilliseconds < 500)) {
+      return;
+    }
+
+    final dynamic rawId = topic['id'] ?? topic['topicId'] ?? topic['Id'];
+    final String? id = (rawId != null && rawId.toString().trim().isNotEmpty)
+        ? rawId.toString().trim()
+        : null;
+
+    if (id == null || id.isEmpty) {
+      showErrorSnackBar(context, 'Dữ liệu chủ đề bị lỗi');
+      return;
+    }
+
+    _isNavigating = true;
+    _lastNavigationTime = now;
+
+    context.push('/forum/post/').then((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    }).catchError((_) {
+      if (mounted) {
+        _isNavigating = false;
+      }
+    });
+  }
   String _selectedJumpCategory = 'Chuyển đến';
 
   final List<String> _jumpCategories = [
@@ -755,22 +790,28 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Icon chủ đề
-                Container(
-                  margin: const EdgeInsets.only(top: 2, right: 10),
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF131A30),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isHighlighted ? const Color(0xFFFBC02D) : const Color(0xFF2E3B5F),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => _navigateToTopic(context, post),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 2, right: 10),
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF131A30),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isHighlighted ? const Color(0xFFFBC02D) : const Color(0xFF2E3B5F),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.assignment_late_outlined,
+                          size: 16,
+                          color: isHighlighted ? const Color(0xFFFBC02D) : const Color(0xFFEF5350),
+                        ),
                       ),
-                    ),
-                    child: Icon(
-                      Icons.assignment_late_outlined,
-                      size: 16,
-                      color: isHighlighted ? const Color(0xFFFBC02D) : const Color(0xFFEF5350),
                     ),
                   ),
                 ),
@@ -780,17 +821,10 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          post['title'],
-                          style: TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.bold,
-                            color: isHighlighted ? const Color(0xFFFFD54F) : const Color(0xFFEF5350),
-                            height: 1.3,
-                          ),
-                        ),
+                      _HoverableUnansweredPostTitle(
+                        title: post['title'] ?? '',
+                        isHighlighted: isHighlighted,
+                        onTap: () => _navigateToTopic(context, post),
                       ),
                       const SizedBox(height: 4),
                       RichText(
@@ -873,7 +907,13 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => _navigateToTopic(context, post),
+                        child: const Icon(Icons.arrow_forward_ios, size: 9, color: Color(0xFFEF5350)),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -1053,7 +1093,52 @@ class _UnansweredPostsScreenState extends State<UnansweredPostsScreen> {
             ),
           ],
         ),
-        desktopBody: SingleChildScrollView(child: _buildBody(context)),
+        desktopBody: _buildBody(context),
+      ),
+    );
+  }
+}
+
+class _HoverableUnansweredPostTitle extends StatefulWidget {
+  final String title;
+  final bool isHighlighted;
+  final VoidCallback onTap;
+
+  const _HoverableUnansweredPostTitle({
+    required this.title,
+    required this.isHighlighted,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverableUnansweredPostTitle> createState() => _HoverableUnansweredPostTitleState();
+}
+
+class _HoverableUnansweredPostTitleState extends State<_HoverableUnansweredPostTitle> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Color defaultColor = widget.isHighlighted ? const Color(0xFFFFD54F) : const Color(0xFFEF5350);
+    final displayColor = _isHovered ? const Color(0xFF1E88E5) : defaultColor;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            fontSize: 13.5,
+            fontWeight: FontWeight.bold,
+            color: displayColor,
+            height: 1.3,
+            decoration: _isHovered ? TextDecoration.underline : null,
+            decorationColor: displayColor,
+          ),
+        ),
       ),
     );
   }

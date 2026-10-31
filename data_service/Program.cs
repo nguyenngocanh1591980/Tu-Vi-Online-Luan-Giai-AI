@@ -123,38 +123,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<data_service.Data.AppDbContext>();
     db.Database.EnsureCreated();
-    if (!db.Users.Any(u => u.Username == "tester_vip_001"))
-    {
-        db.Users.Add(new data_service.Models.User
-        {
-            Username = "tester_vip_001",
-            Email = "tester@vip.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-            IsEmailVerified = true,
-            Role = "User"
-        });
-    }
-
-    var rootAdmin = db.Users.FirstOrDefault(u => u.Username == "admin");
-    if (rootAdmin == null)
-    {
-        db.Users.Add(new data_service.Models.User
-        {
-            Username = "admin",
-            Email = "nguyenngocanh.1591980@gmail.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Ngocanh@admin1"), // Mật khẩu root admin
-            IsEmailVerified = true,
-            Role = "Admin"
-        });
-    }
-    else
-    {
-        // Cơ chế Khóa Bất tử: luôn ép lại Role Admin cho root_admin
-        rootAdmin.Role = "Admin";
-        rootAdmin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Ngocanh@admin1");
-    }
-
-    db.SaveChanges();
+    // SEED DA TAT HOAN TOAN THEO GIAO THUC THUC THI KIEN TRUC LOI
 }
 
 app.MapUserEndpoints();

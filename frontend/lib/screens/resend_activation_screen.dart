@@ -75,12 +75,11 @@ class _ResendActivationScreenState extends State<ResendActivationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(color: Colors.transparent, child: 
-      
-      SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
                   // 1. Thanh tiêu đề nội bộ thay thế AppBar để không tràn viền
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -255,7 +254,6 @@ class _ResendActivationScreenState extends State<ResendActivationScreen> {
                   ),
                 ],
               ),
-      ),
     );
   }
 }

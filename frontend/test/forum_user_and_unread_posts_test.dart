@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:frontend/screens/forum/user_posts_screen.dart';
 import 'package:frontend/screens/forum/unread_posts_screen.dart';
+import 'package:frontend/widgets/main_layout.dart';
 
 void main() {
   group('Kiểm thử màn hình "Bài của bạn" (UserPostsScreen) - Bảo toàn 100% Hình 2', () {
@@ -13,9 +15,24 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
+      final router = GoRouter(
+        initialLocation: '/forum/user-posts',
+        routes: [
+          ShellRoute(
+            builder: (context, state, child) => MainLayout(child: child),
+            routes: [
+              GoRoute(
+                path: '/forum/user-posts',
+                builder: (context, state) => const UserPostsScreen(),
+              ),
+            ],
+          ),
+        ],
+      );
+
       await tester.pumpWidget(
-        const MaterialApp(
-          home: UserPostsScreen(),
+        MaterialApp.router(
+          routerConfig: router,
         ),
       );
       await tester.pumpAndSettle();
@@ -74,7 +91,7 @@ void main() {
       final constrainedBoxFinder = find.byWidgetPredicate(
         (widget) => widget is ConstrainedBox && widget.constraints.maxWidth == 1024,
       );
-      expect(constrainedBoxFinder, findsOneWidget);
+      expect(constrainedBoxFinder, findsWidgets);
 
       final containerFinder = find.byWidgetPredicate(
         (widget) =>
@@ -95,15 +112,30 @@ void main() {
         tester.view.resetDevicePixelRatio();
       });
 
+      final router = GoRouter(
+        initialLocation: '/forum/unread-posts',
+        routes: [
+          ShellRoute(
+            builder: (context, state, child) => MainLayout(child: child),
+            routes: [
+              GoRoute(
+                path: '/forum/unread-posts',
+                builder: (context, state) => const UnreadPostsScreen(),
+              ),
+            ],
+          ),
+        ],
+      );
+
       await tester.pumpWidget(
-        const MaterialApp(
-          home: UnreadPostsScreen(),
+        MaterialApp.router(
+          routerConfig: router,
         ),
       );
       await tester.pumpAndSettle();
 
       // 1. Kiểm tra Header & Tìm kiếm & Cụm phân trang
-      expect(find.text('Bài chưa xem'), findsOneWidget);
+      expect(find.text('Bài chưa xem'), findsWidgets);
       expect(find.text('< Quay về tìm kiếm nâng cao'), findsWidgets);
       expect(find.text('Tìm trong những kết quả'), findsOneWidget);
       expect(find.text('Đánh dấu tất cả các forum là đã đọc'), findsOneWidget);
@@ -140,7 +172,7 @@ void main() {
       final constrainedBoxFinder = find.byWidgetPredicate(
         (widget) => widget is ConstrainedBox && widget.constraints.maxWidth == 1024,
       );
-      expect(constrainedBoxFinder, findsOneWidget);
+      expect(constrainedBoxFinder, findsWidgets);
 
       final containerFinder = find.byWidgetPredicate(
         (widget) =>

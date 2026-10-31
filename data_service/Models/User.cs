@@ -67,4 +67,20 @@ public class User
 
     [MaxLength(100)]
     public string? ZaloId { get; set; }
+
+    // Forum profile & Visit persistence
+    public int? PostCount { get; set; } = 0;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    [MaxLength(50)]
+    public string? BadgeText { get; set; } = "HỘI VIÊN";
+    [MaxLength(50)]
+    public string? BadgeType { get; set; } = "badge_purple";
+    [MaxLength(20)]
+    public string? NameColor { get; set; } = "#AB47BC";
+    [MaxLength(200)]
+    public string? Website { get; set; } = "";
+    [MaxLength(500)]
+    public string? FromLocation { get; set; }
+    public DateTime? LastVisitTime { get; set; }
+    public DateTime? PreviousVisitTime { get; set; }
 }
